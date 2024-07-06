@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import java.time.DayOfWeek
 import java.time.LocalTime
 
@@ -19,7 +20,7 @@ import java.time.LocalTime
  */
 @Entity
 data class Lesson(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val dayOfWeek: DayOfWeek,
     val name: String,
     val startTime: LocalTime,
@@ -27,6 +28,5 @@ data class Lesson(
     val classroom: String,
     val teacher: String,
     val subGroup: Int,
-    val frequency: String
-) {
-}
+    val frequency: Frequency
+)
