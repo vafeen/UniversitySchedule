@@ -10,9 +10,11 @@ activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 hiltAndroid = "2.51.1"
 hiltAndroidCompiler = "2.48"
-roomRuntime = "2.6.1"
 retrofit = "2.11.0"
 navigationCompose = "2.7.7"
+# ROOM
+roomCommon = "2.6.1"
+roomKtx = "2.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,8 +33,10 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 # ROOM
-androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCommon" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCommon" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 # HILT
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
