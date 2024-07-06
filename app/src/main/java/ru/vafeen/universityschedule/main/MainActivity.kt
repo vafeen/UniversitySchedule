@@ -27,39 +27,12 @@ import ru.vafeen.universityschedule.utils.createGSheetsService
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val id = "1pCc0c0tYU8RfCusoAuvT45J7bsz1vZxZXsQIfgCfhL4"
-
-    private val gSheetsService = createGSheetsService(id = id)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            var text by remember {
-                mutableStateOf("")
-            }
             UniversityScheduleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues = innerPadding),
-                        verticalArrangement = Arrangement.SpaceAround
-                    ) {
-                        Text(text = text)
-                        Button(onClick = {
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                val response = gSheetsService.getSheetData().string()
-                                if (response.isNotEmpty()) {
-                                    text = response
-                                    Log.d("retrofit", response)
-                                }
-                            }
-                        }) {
-                            Text(text = "get data")
-                        }
-                    }
-                }
+
             }
         }
     }
