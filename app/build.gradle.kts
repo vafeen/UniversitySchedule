@@ -71,9 +71,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // room
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.room.compiler)
-    kapt(libs.androidx.room.room.compiler)
+    implementation (libs.androidx.room.runtime)
+    kapt (libs.androidx.room.compiler)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
