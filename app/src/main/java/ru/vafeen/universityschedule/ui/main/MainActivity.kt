@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import ru.vafeen.universityschedule.ui.navigation.AppNavHost
 import ru.vafeen.universityschedule.ui.theme.MainTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MainTheme {
-
+                AppNavHost()
             }
         }
     }
