@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.ui.screens
+package ru.vafeen.universityschedule.ui.components.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -13,21 +13,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(
+    navController: NavController, viewModel: MainScreenViewModel = viewModel(
+        modelClass = MainScreenViewModel::class.java
+    )
+) {
     var localDateTime by remember {
         mutableStateOf(LocalDateTime.now())
     }
