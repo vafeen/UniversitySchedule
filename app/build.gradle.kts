@@ -69,6 +69,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     // room
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.room.compiler)
@@ -79,4 +80,6 @@ dependencies {
     //retrofit
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    // compose navigation
+    implementation(libs.androidx.navigation.compose)
 }

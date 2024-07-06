@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.main
+package ru.vafeen.universityschedule.ui.main
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
