@@ -42,10 +42,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
+import ru.vafeen.universityschedule.ui.components.TextForThisTheme
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.ui.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
+import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.getDateString
@@ -87,7 +89,8 @@ fun MainScreen(
             }
         }
     }
-    Scaffold(containerColor = ScheduleTheme.colors.singleTheme,
+    Scaffold(
+        containerColor = ScheduleTheme.colors.singleTheme,
         topBar = {
             TopAppBar(
                 colors = TopAppBarColors(
@@ -113,33 +116,30 @@ fun MainScreen(
                             }, fontSize = FontSize.huge, color = ScheduleTheme.colors.oppositeTheme
                         )
 
-                        Text(
+                        TextForThisTheme(
                             text = "|",
                             fontSize = FontSize.huge,
-                            color = ScheduleTheme.colors.oppositeTheme
                         )
 
-                        Text(
+                        TextForThisTheme(
                             text = localDate.getDateString(),
                             fontSize = FontSize.huge,
-                            color = ScheduleTheme.colors.oppositeTheme
                         )
-                        Text(
+
+                        TextForThisTheme(
                             text = "|",
                             fontSize = FontSize.huge,
-                            color = ScheduleTheme.colors.oppositeTheme
                         )
-                        Text(
+                        TextForThisTheme(
                             text = localTime.getTimeStringAsHMS(),
                             fontSize = FontSize.huge,
-                            color = ScheduleTheme.colors.oppositeTheme,
                         )
 
                     }
                 })
         }, bottomBar = {
             BottomBar(
-                clickToScreen2 = { }, selected1 = true
+                clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
             )
         }) { innerPadding ->
 
@@ -147,7 +147,6 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-//                .background(appTheme.dynamicColorOfBack)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
