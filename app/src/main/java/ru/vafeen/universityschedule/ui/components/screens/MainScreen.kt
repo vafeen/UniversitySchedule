@@ -1,5 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -50,6 +51,8 @@ import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.SharedPreferencesValue
+import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
 import ru.vafeen.universityschedule.utils.nowIsLesson
@@ -59,10 +62,21 @@ import java.time.LocalTime
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: MainScreenViewModel = viewModel(
-        modelClass = MainScreenViewModel::class.java
-    )
+    navController: NavController, viewModel: MainScreenViewModel,
+    context: Context
 ) {
+    LaunchedEffect(key1 = null) {
+        viewModel.gSheetsService = context.let {
+            Log.d("link", "link?")
+            it.getSharedPreferences(
+                SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
+            ).getString(SharedPreferencesValue.Link.key, "")
+                ?.let { notNullLink ->
+                    Log.d("link", "link have")
+                    createGSheetsService(link = notNullLink)
+                }
+        }
+    }
 
     val cor = rememberCoroutineScope()
     val lessons: SnapshotStateList<Lesson> = remember {
