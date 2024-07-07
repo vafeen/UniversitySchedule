@@ -8,18 +8,21 @@ import androidx.compose.ui.graphics.Color
 
 data class ScheduleColors(
     val mainColor: Color,
-    val background: Color,
-    val text: Color,
+    val singleTheme: Color,
+    val oppositeTheme: Color,
     val buttonColor: Color,
 )
 
-val basePalette = ScheduleColors(
+val baseLightPalette = ScheduleColors(
     mainColor = Color(0xFF0E568D),
-    background = Color.White,
-    text = Color.Black,
-    buttonColor = Color.DarkGray
+    singleTheme = Color.White,
+    oppositeTheme = Color.Black,
+    buttonColor = Color.Gray
 )
-val baseDarkPalette = basePalette.copy(background = Color.Black)
+val baseDarkPalette = baseLightPalette.copy(
+    singleTheme = Color.Black,
+    oppositeTheme = Color.White
+)
 
 @Composable
 fun MainTheme(
@@ -27,8 +30,8 @@ fun MainTheme(
     content: @Composable () -> Unit,
 ) {
 
-    val colors = if (darkTheme) {
-        basePalette
+    val colors = if (!darkTheme) {
+        baseLightPalette
     } else {
         baseDarkPalette
     }
