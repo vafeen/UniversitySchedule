@@ -26,7 +26,7 @@ fun BottomBar(
     val colors = NavigationBarItemDefaults.colors(
         unselectedIconColor = Color.Gray,
         indicatorColor = ScheduleTheme.colors.mainColor,
-        disabledIconColor = Color.Black
+        disabledIconColor = ScheduleTheme.colors.oppositeTheme
     )
     NavigationBar(
         modifier = Modifier
@@ -42,7 +42,6 @@ fun BottomBar(
                 Icon(
                     Icons.Default.Home,
                     contentDescription = "Icon1",
-//                    tint =
                 )
             },
             colors = colors,
@@ -56,7 +55,6 @@ fun BottomBar(
                 Icon(
                     Icons.AutoMirrored.Filled.List,
                     contentDescription = "Icon2",
-//                    tint =
                 )
             },
             enabled = !selected2,
