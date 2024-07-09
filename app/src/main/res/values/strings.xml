@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">University schedule</string>
+    <string name="no_link">Ссылка отсутсвутет</string>
 </resources>
