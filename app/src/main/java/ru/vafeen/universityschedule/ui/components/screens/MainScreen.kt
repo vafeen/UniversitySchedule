@@ -1,6 +1,5 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
-import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,7 +48,6 @@ import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
-import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
@@ -62,12 +60,10 @@ import java.time.LocalTime
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: MainScreenViewModel, context: Context
+    navController: NavController, viewModel: MainScreenViewModel
 ) {
-    val link = context.getSharedPreferences(
-        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-    ).getString(SharedPreferencesValue.Link.key, "") ?: ""
-    viewModel.gSheetsService = createGSheetsService(link = link)
+
+    viewModel.gSheetsService = createGSheetsService(link = viewModel.link)
 
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())

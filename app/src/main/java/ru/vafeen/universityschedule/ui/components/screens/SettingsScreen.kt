@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.components.EditLinkDialog
@@ -38,7 +37,6 @@ import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
-import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.getVersionName
 import ru.vafeen.universityschedule.utils.openLink
 
@@ -52,23 +50,16 @@ import ru.vafeen.universityschedule.utils.openLink
 @Composable
 fun SettingsScreen(
     navController: NavController,
+    viewModel: SettingsScreenViewModel,
     context: Context,
-    viewModel: SettingsScreenViewModel = viewModel(
-        modelClass = SettingsScreenViewModel::class.java
-    ),
 ) {
-    val noLink = context.getString(R.string.no_link)
-    val pref = context.getSharedPreferences(
-        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-    )
-    val getLinkCallBack = { pref.getString(SharedPreferencesValue.Link.key, noLink) ?: noLink }
     var linkIsEditable by remember {
         mutableStateOf(false)
     }
 
 
     var textLink by remember {
-        mutableStateOf(getLinkCallBack())
+        mutableStateOf(viewModel.getLinkCallBack())
     }
 
     Scaffold(
@@ -89,7 +80,7 @@ fun SettingsScreen(
         ) {
             if (linkIsEditable)
                 EditLinkDialog(context = context) {
-                    textLink = getLinkCallBack()
+                    textLink = viewModel.getLinkCallBack()
                     linkIsEditable = false
                 }
 
@@ -135,7 +126,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
 
                 // View table
-                if (textLink != noLink) {
+                if (textLink != viewModel.noLink) {
                     Card(colors = cardColors) {
                         Row(
                             modifier = Modifier

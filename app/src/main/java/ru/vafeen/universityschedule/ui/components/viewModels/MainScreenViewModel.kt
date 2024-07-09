@@ -9,6 +9,7 @@ import ru.vafeen.universityschedule.database.dao.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.GSheetsService
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
+import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -37,6 +38,9 @@ class MainScreenViewModel @Inject constructor(
     val todayDate: LocalDate = LocalDate.now()
     var nowIsLesson: Boolean = false
     var gSheetsService: GSheetsService? = null
+    val link = context.getSharedPreferences(
+        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
+    ).getString(SharedPreferencesValue.Link.key, "") ?: ""
 
     suspend fun updateLocalDatabase(updateUICallback: (List<Lesson>) -> Unit) {
         val lastLessons = databaseRepository.getAllAsFlowLessons().first()
