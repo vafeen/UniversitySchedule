@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.viewModels
 
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.first
 import ru.vafeen.universityschedule.database.dao.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.GSheetsService
@@ -23,9 +24,14 @@ class MainScreenViewModel @Inject constructor(private val databaseRepository: Da
     var gSheetsService: GSheetsService? = null
 
     suspend fun updateLocalDatabase(updateUICallback: (List<Lesson>) -> Unit) {
+        val lastLessons = databaseRepository.getAllAsFlowLessons().first()
+        updateUICallback(lastLessons)
         gSheetsService?.getLessonsListFromGSheetsTable()
             ?.let {
-                databaseRepository.updateAllLessons(*it.toTypedArray())
+                databaseRepository.apply {
+                    deleteAllLessons(*lastLessons.toTypedArray())
+                    insertAllLessons(*it.toTypedArray())
+                }
                 updateUICallback(it)
             }
     }
