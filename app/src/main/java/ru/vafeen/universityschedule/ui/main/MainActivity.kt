@@ -23,6 +23,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var databaseRepository: DatabaseRepository
 
+    @Inject
+    lateinit var mainScreenViewModelFactory: MainScreenViewModelFactory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,9 +41,7 @@ class MainActivity : ComponentActivity() {
                         MainScreen(
                             navController = navController,
                             viewModel = viewModel(
-                                factory = MainScreenViewModelFactory(
-                                    databaseRepository = databaseRepository
-                                )
+                                factory = mainScreenViewModelFactory
                             ),
                             context = context
                         )

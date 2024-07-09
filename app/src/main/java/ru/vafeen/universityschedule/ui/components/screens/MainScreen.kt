@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
@@ -113,8 +114,7 @@ fun MainScreen(
             ) {
 
                 Text(
-                    text = if (viewModel.weekOfYear == Frequency.Numerator) "Числитель"
-                    else "Знаменатель",
+                    text = stringResource(id = viewModel.weekOfYear.resourceName),
                     fontSize = FontSize.huge,
                     color = ScheduleTheme.colors.oppositeTheme
                 )

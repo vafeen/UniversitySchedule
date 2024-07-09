@@ -1,4 +1,24 @@
 <resources>
     <string name="app_name">University schedule</string>
-    <string name="no_link">Ссылка отсутсвутет</string>
+    <string name="no_link">Ссылка отсутствует</string>
+    <string name="every">Всегда</string>
+    <string name="numerator">Числитель</string>
+    <string name="denominator">Знаменатель</string>
+    <string name="settings">Настройки</string>
+    <string name="link_to_table">Ссылка на таблицу</string>
+    <string name="table">Таблица</string>
+    <string name="code">Код</string>
+    <string name="license">Лицензия</string>
+    <string name="next_lesson">следующая пара</string>
+    <string name="copy">копировать</string>
+    <string name="clear">очистить</string>
+    <string name="paste">вставить</string>
+    <string name="version">version</string>
+    <string name="monday">ПН</string>
+    <string name="tuesday">ВТ</string>
+    <string name="wednesday">СР</string>
+    <string name="thursday">ЧТ</string>
+    <string name="friday">ПТ</string>
+    <string name="satudray">СБ</string>
+    <string name="sunday">ВС</string>
 </resources>

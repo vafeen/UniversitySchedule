@@ -2,4 +2,24 @@
 <resources>
     <string name="app_name">University schedule</string>
     <string name="no_link">No link</string>
+    <string name="every">Every</string>
+    <string name="numerator">Numerator</string>
+    <string name="denominator">Denominator</string>
+    <string name="settings">Settings</string>
+    <string name="link_to_table">Link to table</string>
+    <string name="table">Table</string>
+    <string name="code">Code</string>
+    <string name="license">License</string>
+    <string name="next_lesson">next lesson</string>
+    <string name="copy">copy</string>
+    <string name="clear">clear</string>
+    <string name="paste">paste</string>
+    <string name="version">version</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="satudray">Sat</string>
+    <string name="sunday">Sun</string>
 </resources>

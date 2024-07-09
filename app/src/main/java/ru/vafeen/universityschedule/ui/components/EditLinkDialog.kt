@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -94,7 +95,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                         onDismissRequest()
                     }, enabled = textLink.isNotEmpty()
                 ) {
-                    Text(text = "copy")
+                    Text(text = stringResource(R.string.copy))
                 }
                 Button(
                     onClick = {
@@ -105,7 +106,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                         onDismissRequest()
                     }, enabled = textLink.isNotEmpty()
                 ) {
-                    Text(text = "clear")
+                    Text(text = stringResource(R.string.clear))
                 }
                 Button(onClick = {
                     textLink = context.pasteText() ?: textLink
@@ -115,7 +116,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     }
                     onDismissRequest()
                 }) {
-                    Text(text = "paste")
+                    Text(text = stringResource(R.string.paste))
                 }
             }
 
