@@ -51,7 +51,6 @@ import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
-import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
 import ru.vafeen.universityschedule.utils.nowIsLesson
 import java.time.LocalDate
@@ -73,12 +72,9 @@ fun MainScreen(
         mutableStateOf(listOf<Lesson>())
     }
     LaunchedEffect(key1 = null) {
-        viewModel.gSheetsService?.getLessonsListFromGSheetsTable()
-            ?.let {
-                lessons = it
-
-            }
-
+        viewModel.updateLocalDatabase {
+            lessons = it
+        }
     }
     val cor = rememberCoroutineScope()
     var localTime by remember {

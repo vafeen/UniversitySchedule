@@ -71,16 +71,20 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // room
-    implementation (libs.androidx.room.runtime)
-    kapt (libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     //retrofit
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     // compose navigation
     implementation(libs.androidx.navigation.compose)
+    // compose navigation with viewModels (hiltViewModel)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    // viewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 }
