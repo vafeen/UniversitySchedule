@@ -33,6 +33,7 @@ import ru.vafeen.universityschedule.ui.components.EditLinkDialog
 import ru.vafeen.universityschedule.ui.components.TextForThisTheme
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.viewModels.SettingsScreenViewModel
+import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
@@ -64,7 +65,11 @@ fun SettingsScreen(
         containerColor = ScheduleTheme.colors.singleTheme,
         bottomBar = {
             BottomBar(
-                clickToScreen1 = { navController.popBackStack() }, selected2 = true
+                clickToScreen1 = {
+                    navController.popBackStack()
+                    navController.popBackStack()
+                    navController.navigate(Screen.Main.route)
+                }, selected2 = true
             )
         }) { innerPadding ->
         Column(
