@@ -60,18 +60,19 @@ fun Lesson.StringForSchedule(
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
                     contentDescription = "Icon teacher",
-//                    tint = appTheme.colorOfIcons
+                    tint = ScheduleTheme.colors.oppositeTheme
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = getLessonTimeString(), fontSize = FontSize.medium,
                     color = ScheduleTheme.colors.oppositeTheme
                 )
                 if (classroom.isNotEmpty()) {
                     Spacer(modifier = Modifier.width(7.dp))
-                    Row() {
+                    Row {
                         Icon(
                             imageVector = Icons.Default.Place,
-                            contentDescription = "Icon teacher",
+                            contentDescription = "Icon classroom",
                             tint = ScheduleTheme.colors.oppositeTheme
                         )
 

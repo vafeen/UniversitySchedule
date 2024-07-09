@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,12 +25,10 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -54,34 +51,36 @@ import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
+import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
 import ru.vafeen.universityschedule.utils.nowIsLesson
 import java.time.LocalDate
 import java.time.LocalTime
 
+// для получения данных достаточно просто открыть доступ и вставить ссылку
+
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: MainScreenViewModel,
-    context: Context
+    navController: NavController, viewModel: MainScreenViewModel, context: Context
 ) {
-    LaunchedEffect(key1 = null) {
-        viewModel.gSheetsService = context.let {
-            Log.d("link", "link?")
-            it.getSharedPreferences(
-                SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-            ).getString(SharedPreferencesValue.Link.key, "")
-                ?.let { notNullLink ->
-                    Log.d("link", "link have")
-                    createGSheetsService(link = notNullLink)
-                }
-        }
-    }
+    val link = context.getSharedPreferences(
+        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
+    ).getString(SharedPreferencesValue.Link.key, "") ?: ""
+    viewModel.gSheetsService = createGSheetsService(link = link)
 
-    val cor = rememberCoroutineScope()
-    val lessons: SnapshotStateList<Lesson> = remember {
-        mutableStateListOf()
+    var lessons by remember {
+        mutableStateOf(listOf<Lesson>())
     }
+    LaunchedEffect(key1 = null) {
+        viewModel.gSheetsService?.getLessonsListFromGSheetsTable()
+            ?.let {
+                lessons = it
+
+            }
+
+    }
+    val cor = rememberCoroutineScope()
     var localTime by remember {
         mutableStateOf(LocalTime.now())
     }
@@ -103,60 +102,54 @@ fun MainScreen(
             }
         }
     }
-    Scaffold(
-        containerColor = ScheduleTheme.colors.singleTheme,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarColors(
-                    containerColor = ScheduleTheme.colors.singleTheme,
-                    scrolledContainerColor = ScheduleTheme.colors.singleTheme,
-                    navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
-                    titleContentColor = ScheduleTheme.colors.oppositeTheme,
-                    actionIconContentColor = ScheduleTheme.colors.singleTheme
-                ),
+    Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
+        TopAppBar(colors = TopAppBarColors(
+            containerColor = ScheduleTheme.colors.singleTheme,
+            scrolledContainerColor = ScheduleTheme.colors.singleTheme,
+            navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
+            titleContentColor = ScheduleTheme.colors.oppositeTheme,
+            actionIconContentColor = ScheduleTheme.colors.singleTheme
+        ), modifier = Modifier.fillMaxWidth(), title = {
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-                        Text(
-                            text = if (viewModel.weekOfYear == Frequency.Numerator) {
-                                "Числитель"
-                            } else {
-                                "Знаменатель"
-                            }, fontSize = FontSize.huge, color = ScheduleTheme.colors.oppositeTheme
-                        )
+                Text(
+                    text = if (viewModel.weekOfYear == Frequency.Numerator) "Числитель"
+                    else "Знаменатель",
+                    fontSize = FontSize.huge,
+                    color = ScheduleTheme.colors.oppositeTheme
+                )
 
-                        TextForThisTheme(
-                            text = "|",
-                            fontSize = FontSize.huge,
-                        )
+                TextForThisTheme(
+                    text = "|",
+                    fontSize = FontSize.huge,
+                )
 
-                        TextForThisTheme(
-                            text = localDate.getDateString(),
-                            fontSize = FontSize.huge,
-                        )
+                TextForThisTheme(
+                    text = localDate.getDateString(),
+                    fontSize = FontSize.huge,
+                )
 
-                        TextForThisTheme(
-                            text = "|",
-                            fontSize = FontSize.huge,
-                        )
-                        TextForThisTheme(
-                            text = localTime.getTimeStringAsHMS(),
-                            fontSize = FontSize.huge,
-                        )
+                TextForThisTheme(
+                    text = "|",
+                    fontSize = FontSize.huge,
+                )
 
-                    }
-                })
-        }, bottomBar = {
-            BottomBar(
-                clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
-            )
-        }) { innerPadding ->
+                TextForThisTheme(
+                    text = localTime.getTimeStringAsHMS(),
+                    fontSize = FontSize.huge,
+                )
 
+            }
+        })
+    }, bottomBar = {
+        BottomBar(
+            clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
+        )
+    }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,15 +171,15 @@ fun MainScreen(
                                 cor.launch(Dispatchers.Main) {
                                     pagerState.scrollToPage(index)
                                     localDate =
-                                        viewModel.todayDate.plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
+                                        viewModel.todayDate
+                                            .plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
                                 }
                             }
                             .alpha(
-                                if (day != viewModel.todayDate.dayOfWeek && day != viewModel.daysOfWeek[pagerState.currentPage]) {
-                                    0.5f
-                                } else {
-                                    1f
-                                }
+                                if (day != viewModel.todayDate.dayOfWeek &&
+                                    day != viewModel.daysOfWeek[pagerState.currentPage]
+                                )
+                                    0.5f else 1f
                             ), colors = CardDefaults.cardColors(
                             containerColor =
                             if (day == viewModel.todayDate.dayOfWeek) ScheduleTheme.colors.oppositeTheme
@@ -218,7 +211,6 @@ fun MainScreen(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Text(text = "page = $page")
                     val lessonsOfThisDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == viewModel.weekOfYear || it.frequency == Frequency.Every)
                     }
@@ -245,8 +237,7 @@ fun MainScreen(
                                             padding = 0.dp
                                         )
                                     }
-                                } else thisLesson
-                                    .StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
+                                } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
 
                             }
                         }
