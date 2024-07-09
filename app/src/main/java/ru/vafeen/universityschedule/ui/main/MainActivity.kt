@@ -14,6 +14,7 @@ import ru.vafeen.universityschedule.database.dao.DatabaseRepository
 import ru.vafeen.universityschedule.ui.components.screens.MainScreen
 import ru.vafeen.universityschedule.ui.components.screens.SettingsScreen
 import ru.vafeen.universityschedule.ui.components.viewModels.factories.MainScreenViewModelFactory
+import ru.vafeen.universityschedule.ui.components.viewModels.factories.SettingsScreenViewModelFactory
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.MainTheme
 import javax.inject.Inject
@@ -25,6 +26,10 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var mainScreenViewModelFactory: MainScreenViewModelFactory
+
+    @Inject
+    lateinit var settingsScreenViewModelFactory: SettingsScreenViewModelFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,14 +45,15 @@ class MainActivity : ComponentActivity() {
                     composable(Screen.Main.route) {
                         MainScreen(
                             navController = navController,
-                            viewModel = viewModel(
-                                factory = mainScreenViewModelFactory
-                            ),
-                            context = context
+                            viewModel = viewModel(factory = mainScreenViewModelFactory)
                         )
                     }
                     composable(Screen.Settings.route) {
-                        SettingsScreen(navController = navController, context = context)
+                        SettingsScreen(
+                            navController = navController,
+                            viewModel = viewModel(factory = settingsScreenViewModelFactory),
+                            context = context,
+                        )
                     }
                 }
             }
