@@ -37,6 +37,7 @@ import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
+import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.getVersionName
 import ru.vafeen.universityschedule.utils.openLink
 
@@ -55,11 +56,19 @@ fun SettingsScreen(
         modelClass = SettingsScreenViewModel::class.java
     ),
 ) {
-
+    val noLink = context.getString(R.string.no_link)
+    val pref = context.getSharedPreferences(
+        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
+    )
+    val getLinkCallBack = { pref.getString(SharedPreferencesValue.Link.key, noLink) ?: noLink }
     var linkIsEditable by remember {
         mutableStateOf(false)
     }
 
+
+    var textLink by remember {
+        mutableStateOf(getLinkCallBack())
+    }
 
     Scaffold(
         containerColor = ScheduleTheme.colors.singleTheme,
@@ -79,6 +88,7 @@ fun SettingsScreen(
         ) {
             if (linkIsEditable)
                 EditLinkDialog(context = context) {
+                    textLink = getLinkCallBack()
                     linkIsEditable = false
                 }
 
@@ -124,32 +134,32 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
 
                 // View table
-                Card(colors = cardColors) {
-                    Row(
-                        modifier = Modifier
-                            .clickable {
-
-
-                            }
-                            .padding(horizontal = 10.dp)
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium,
-                            text = "Таблица",
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.table),
-                            contentDescription = "edit link",
-                            tint = ScheduleTheme.colors.oppositeTheme
-                        )
+                if (textLink != noLink) {
+                    Card(colors = cardColors) {
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    openLink(context = context, link = textLink)
+                                }
+                                .padding(horizontal = 10.dp)
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TextForThisTheme(
+                                modifier = Modifier.padding(10.dp),
+                                fontSize = FontSize.medium,
+                                text = "Таблица",
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.table),
+                                contentDescription = "edit link",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
                     }
+                    Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
                 }
-                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
-
                 // CODE
                 Card(colors = cardColors) {
                     Row(modifier = Modifier
