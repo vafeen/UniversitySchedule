@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -17,6 +20,7 @@ import ru.vafeen.universityschedule.ui.components.viewModels.factories.MainScree
 import ru.vafeen.universityschedule.ui.components.viewModels.factories.SettingsScreenViewModelFactory
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.MainTheme
+import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,26 +43,28 @@ class MainActivity : ComponentActivity() {
 
             MainTheme {
                 val navController = rememberNavController()
-                NavHost(
-                    navController = navController, startDestination = Screen.Main.route
-                ) {
-                    composable(Screen.Main.route) {
-                        MainScreen(
-                            navController = navController,
-                            viewModel = viewModel(factory = mainScreenViewModelFactory)
-                        )
-                    }
-                    composable(Screen.Settings.route) {
-                        SettingsScreen(
-                            navController = navController,
-                            viewModel = viewModel(factory = settingsScreenViewModelFactory),
-                            context = context,
-                        )
+                Column(modifier = Modifier.background(ScheduleTheme.colors.singleTheme)) {
+                    NavHost(
+                        navController = navController, startDestination = Screen.Main.route
+                    ) {
+                        composable(Screen.Main.route) {
+                            MainScreen(
+                                navController = navController,
+                                viewModel = viewModel(factory = mainScreenViewModelFactory)
+                            )
+                        }
+                        composable(Screen.Settings.route) {
+                            SettingsScreen(
+                                navController = navController,
+                                viewModel = viewModel(factory = settingsScreenViewModelFactory),
+                                context = context,
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
+
 }
-
-

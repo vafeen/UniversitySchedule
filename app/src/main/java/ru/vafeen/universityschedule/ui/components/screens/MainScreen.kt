@@ -97,53 +97,54 @@ fun MainScreen(
             }
         }
     }
-    Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
-        TopAppBar(colors = TopAppBarColors(
-            containerColor = ScheduleTheme.colors.singleTheme,
-            scrolledContainerColor = ScheduleTheme.colors.singleTheme,
-            navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
-            titleContentColor = ScheduleTheme.colors.oppositeTheme,
-            actionIconContentColor = ScheduleTheme.colors.singleTheme
-        ), modifier = Modifier.fillMaxWidth(), title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+    Scaffold(containerColor = ScheduleTheme.colors.singleTheme,
+        topBar = {
+            TopAppBar(colors = TopAppBarColors(
+                containerColor = ScheduleTheme.colors.singleTheme,
+                scrolledContainerColor = ScheduleTheme.colors.singleTheme,
+                navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
+                titleContentColor = ScheduleTheme.colors.oppositeTheme,
+                actionIconContentColor = ScheduleTheme.colors.singleTheme
+            ), modifier = Modifier.fillMaxWidth(), title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                Text(
-                    text = stringResource(id = viewModel.weekOfYear.resourceName),
-                    fontSize = FontSize.huge,
-                    color = ScheduleTheme.colors.oppositeTheme
-                )
+                    Text(
+                        text = stringResource(id = viewModel.weekOfYear.resourceName),
+                        fontSize = FontSize.huge,
+                        color = ScheduleTheme.colors.oppositeTheme
+                    )
 
-                TextForThisTheme(
-                    text = "|",
-                    fontSize = FontSize.huge,
-                )
+                    TextForThisTheme(
+                        text = "|",
+                        fontSize = FontSize.huge,
+                    )
 
-                TextForThisTheme(
-                    text = localDate.getDateString(),
-                    fontSize = FontSize.huge,
-                )
+                    TextForThisTheme(
+                        text = localDate.getDateString(),
+                        fontSize = FontSize.huge,
+                    )
 
-                TextForThisTheme(
-                    text = "|",
-                    fontSize = FontSize.huge,
-                )
+                    TextForThisTheme(
+                        text = "|",
+                        fontSize = FontSize.huge,
+                    )
 
-                TextForThisTheme(
-                    text = localTime.getTimeStringAsHMS(),
-                    fontSize = FontSize.huge,
-                )
+                    TextForThisTheme(
+                        text = localTime.getTimeStringAsHMS(),
+                        fontSize = FontSize.huge,
+                    )
 
-            }
-        })
-    }, bottomBar = {
-        BottomBar(
-            clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
-        )
-    }) { innerPadding ->
+                }
+            })
+        }, bottomBar = {
+            BottomBar(
+                clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
+            )
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
