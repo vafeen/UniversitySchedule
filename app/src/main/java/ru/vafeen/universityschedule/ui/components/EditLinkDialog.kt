@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.SharedPreferencesValue
@@ -38,7 +39,7 @@ import ru.vafeen.universityschedule.utils.pasteText
 
 @Composable
 fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
-    val noLink = "Ссылка отсутствует"
+    val noLink = context.getString(R.string.no_link)
     var textLink by remember {
         mutableStateOf(noLink)
     }
@@ -47,8 +48,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
     )
     textLink = pref.getString(SharedPreferencesValue.Link.key, noLink) ?: noLink
     Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties()
+        onDismissRequest = { onDismissRequest() }, properties = DialogProperties()
     ) {
         Column(
             modifier = Modifier
@@ -62,12 +62,12 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
                     .align(Alignment.End),
-                onClick = onDismissRequest
+                onClick = { onDismissRequest() },
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(30.dp),
-                    imageVector = Icons.Default.Close, contentDescription = "close",
+                    modifier = Modifier.size(30.dp),
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "close",
                     tint = ScheduleTheme.colors.oppositeTheme
                 )
             }
@@ -92,10 +92,20 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     onClick = {
                         if (textLink.isNotEmpty()) context.copyTextToClipBoard(text = textLink)
                         onDismissRequest()
-                    },
-                    enabled = textLink.isNotEmpty()
+                    }, enabled = textLink.isNotEmpty()
                 ) {
                     Text(text = "copy")
+                }
+                Button(
+                    onClick = {
+                        pref.edit().apply {
+                            remove(SharedPreferencesValue.Link.key)
+                            apply()
+                        }
+                        onDismissRequest()
+                    }, enabled = textLink.isNotEmpty()
+                ) {
+                    Text(text = "clear")
                 }
                 Button(onClick = {
                     textLink = context.pasteText() ?: textLink
