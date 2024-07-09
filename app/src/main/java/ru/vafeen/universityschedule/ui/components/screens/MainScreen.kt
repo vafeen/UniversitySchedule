@@ -215,10 +215,10 @@ fun MainScreen(
                             viewModel.nowIsLesson = false
                             for (indexOfLesson in 0..lessonsOfThisDay.lastIndex) {
                                 val thisLesson = lessonsOfThisDay[indexOfLesson]
-                                if (thisLesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == localDate.dayOfWeek) {
+                                if (thisLesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
                                     viewModel.nowIsLesson = true
                                     thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.mainColor)
-                                } else if (viewModel.daysOfWeek[page] == localDate.dayOfWeek && lessonsOfThisDay.any {
+                                } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
                                         it.startTime > localTime
                                     } && thisLesson == lessonsOfThisDay.filter {
                                         it.startTime > localTime
