@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 
 
 @Composable
@@ -21,15 +22,13 @@ fun CardOfNextLesson(thisContent: @Composable (() -> Unit)) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp),
-        colors = CardDefaults.cardColors(
-//            containerColor = appTheme.dynamicMainColor
-        )
+        colors = CardDefaults.cardColors(containerColor = ScheduleTheme.colors.mainColor)
     ) {
         Text(
             text = stringResource(R.string.next_lesson),
             fontSize = 20.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-//            color = appTheme.colorOfText
+            color = ScheduleTheme.colors.oppositeTheme
         )
         thisContent()
     }

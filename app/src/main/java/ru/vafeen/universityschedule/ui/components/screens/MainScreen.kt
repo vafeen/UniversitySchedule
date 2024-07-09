@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.ui.components.TextForThisTheme
@@ -234,9 +236,20 @@ fun MainScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(15.dp))
 
                         if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(3.dp)
+                                    .background(ScheduleTheme.colors.buttonColor)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.other_lessons_in_this_day),
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                fontSize = FontSize.medium
+                            )
                             for (indexOfLesson in 0..lessonsInOppositeNumAndDenDay.lastIndex) {
                                 lessonsInOppositeNumAndDenDay[indexOfLesson].StringForSchedule(
                                     colorBack = ScheduleTheme.colors.buttonColor,

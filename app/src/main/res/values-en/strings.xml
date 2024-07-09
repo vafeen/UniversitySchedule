@@ -22,4 +22,5 @@
     <string name="friday">Fri</string>
     <string name="satudray">Sat</string>
     <string name="sunday">Sun</string>
+    <string name="other_lessons_in_this_day">Other lessons in this day</string>
 </resources>

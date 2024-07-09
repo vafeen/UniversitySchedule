@@ -14,13 +14,13 @@ data class ScheduleColors(
 )
 
 val baseLightPalette = ScheduleColors(
-    mainColor = Color(0xFFB4B4F8), // Color(0xFF0E568D),
+    mainColor = Color(0xFFFFEB3B), // Color(0xFFB4B4F8)
     singleTheme = Color.White,
     oppositeTheme = Color.Black,
-    buttonColor = Color(0xFFEFEFFF)
+    buttonColor = Color(0xFFEFEEEE)// Color(0xFFEFEFFF)
 )
 val baseDarkPalette = baseLightPalette.copy(
-    mainColor = Color(0xFF242427),
+    mainColor = Color(0xFF161617),
     singleTheme = Color.Black,
     oppositeTheme = Color.White,
     buttonColor = Color(0xFF242427)
