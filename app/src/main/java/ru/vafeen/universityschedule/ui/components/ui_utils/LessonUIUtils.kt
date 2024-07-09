@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -41,11 +42,8 @@ fun Lesson.StringForSchedule(
             .padding(padding)//.clickable {  }
             .fillMaxWidth()
             .alpha(
-                if (lessonOfThisNumAndDenOrNot) {
-                    1.0f
-                } else {
-                    0.55f
-                }
+                if (lessonOfThisNumAndDenOrNot) 1.0f
+                else 0.55f
             ),
         colors = CardDefaults.cardColors(
             containerColor = colorBack
@@ -54,7 +52,7 @@ fun Lesson.StringForSchedule(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(3.dp)
+                .padding(10.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -95,6 +93,7 @@ fun Lesson.StringForSchedule(
             }
 
             if (name.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(5.dp))
                 Text(text = name, color = ScheduleTheme.colors.oppositeTheme, fontSize = 20.sp)
             }
             if (teacher.isNotEmpty()) {

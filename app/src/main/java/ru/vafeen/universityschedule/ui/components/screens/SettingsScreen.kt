@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -93,7 +94,7 @@ fun SettingsScreen(
                 }
 
             TextForThisTheme(
-                text = "Настройки",
+                text = stringResource(R.string.settings),
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 fontSize = FontSize.huge
             )
@@ -122,7 +123,7 @@ fun SettingsScreen(
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
                             fontSize = FontSize.medium,
-                            text = "Ссылка на таблицу",
+                            text = stringResource(R.string.link_to_table),
                         )
                         Icon(
                             imageVector = Icons.Default.Edit,
@@ -149,7 +150,7 @@ fun SettingsScreen(
                             TextForThisTheme(
                                 modifier = Modifier.padding(10.dp),
                                 fontSize = FontSize.medium,
-                                text = "Таблица",
+                                text = stringResource(R.string.table),
                             )
                             Icon(
                                 painter = painterResource(id = R.drawable.table),
@@ -175,7 +176,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium, text = "Код"
+                            fontSize = FontSize.medium, text = stringResource(R.string.code)
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.terminal),
@@ -203,7 +204,7 @@ fun SettingsScreen(
                     ) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium, text = "License"
+                            fontSize = FontSize.medium, text = stringResource(R.string.license)
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.book),
@@ -225,7 +226,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .padding(10.dp),
                     fontSize = FontSize.medium,
-                    text = "version ${getVersionName(context = LocalContext.current)}"
+                    text = "${stringResource(R.string.version)} ${getVersionName(context = LocalContext.current)}"
                 )
             }
         }
