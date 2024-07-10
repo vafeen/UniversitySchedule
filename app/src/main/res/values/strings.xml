@@ -10,9 +10,6 @@
     <string name="code">Код</string>
     <string name="license">Лицензия</string>
     <string name="next_lesson">следующая пара</string>
-    <string name="copy">копировать</string>
-    <string name="clear">очистить</string>
-    <string name="paste">вставить</string>
     <string name="version">version</string>
     <string name="monday">ПН</string>
     <string name="tuesday">ВТ</string>
@@ -22,4 +19,5 @@
     <string name="satudray">СБ</string>
     <string name="sunday">ВС</string>
     <string name="other_lessons_in_this_day">Другие пары в этот день</string>
+    <string name="its_no_google_sheets_link">Это не ссылка Google Sheets</string>
 </resources>
