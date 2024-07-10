@@ -2,11 +2,12 @@ package ru.vafeen.universityschedule.ui.components.bottom_bar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
@@ -25,13 +26,16 @@ fun BottomBar(
 ) {
     val colors = NavigationBarItemDefaults.colors(
         unselectedIconColor = Color.Gray,
+        unselectedTextColor = Color.Gray,
         indicatorColor = ScheduleTheme.colors.mainColor,
-        disabledIconColor = ScheduleTheme.colors.oppositeTheme
+        disabledIconColor = ScheduleTheme.colors.oppositeTheme,
+        disabledTextColor = ScheduleTheme.colors.oppositeTheme
     )
-    NavigationBar(
+    BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .navigationBarsPadding()
+            .height(55.dp),
         containerColor = ScheduleTheme.colors.mainColor
     ) {
         NavigationBarItem(
@@ -44,6 +48,7 @@ fun BottomBar(
                     contentDescription = "Icon1",
                 )
             },
+//            label = { Text(text = "hello") },
             colors = colors,
             enabled = !selected1
         )
@@ -57,6 +62,7 @@ fun BottomBar(
                     contentDescription = "Icon2",
                 )
             },
+//            label = { Text(text = "hello") },
             enabled = !selected2,
             colors = colors
         )
