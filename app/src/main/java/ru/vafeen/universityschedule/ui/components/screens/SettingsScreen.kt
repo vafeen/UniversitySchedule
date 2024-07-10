@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,21 +57,21 @@ fun SettingsScreen(
     var linkIsEditable by remember {
         mutableStateOf(false)
     }
-
+    val gotoMainScreenCallBack = {
+        navController.popBackStack()
+        navController.popBackStack()
+        navController.navigate(Screen.Main.route)
+    }
 
     var textLink by remember {
         mutableStateOf(viewModel.getLinkCallBack())
     }
-
+    BackHandler(onBack = gotoMainScreenCallBack)
     Scaffold(
         containerColor = ScheduleTheme.colors.singleTheme,
         bottomBar = {
             BottomBar(
-                clickToScreen1 = {
-                    navController.popBackStack()
-                    navController.popBackStack()
-                    navController.navigate(Screen.Main.route)
-                }, selected2 = true
+                clickToScreen1 = gotoMainScreenCallBack, selected2 = true
             )
         }) { innerPadding ->
         Column(
