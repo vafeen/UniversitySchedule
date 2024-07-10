@@ -84,3 +84,5 @@ fun String.getResponseFromJson(): ResponseWrapper =
 fun String.dataToJsonString(): String = substringAfter("Query.setResponse(").let {
     it.substring(0, it.lastIndex - 1).removeSubStrings("null,")
 }
+
+fun String.linkIsEmpty(emptyLink: String): Boolean = isEmpty() || this == emptyLink

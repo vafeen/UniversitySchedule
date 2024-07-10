@@ -11,9 +11,6 @@
     <string name="code">Code</string>
     <string name="license">License</string>
     <string name="next_lesson">next lesson</string>
-    <string name="copy">copy</string>
-    <string name="clear">clear</string>
-    <string name="paste">paste</string>
     <string name="version">version</string>
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>
@@ -23,4 +20,5 @@
     <string name="satudray">Sat</string>
     <string name="sunday">Sun</string>
     <string name="other_lessons_in_this_day">Other lessons in this day</string>
+    <string name="its_no_google_sheets_link">It\'s no Google Sheets link</string>
 </resources>
