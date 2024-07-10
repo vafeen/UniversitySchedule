@@ -95,7 +95,6 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                                 if (textLink.linkIsEmpty(emptyLink = noLink)) context.copyTextToClipBoard(
                                     text = textLink
                                 )
-                                onDismissRequest()
                             }
                         ) {
                             Icon(
@@ -107,11 +106,11 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                         }
                         IconButton(
                             onClick = {
+                                textLink = noLink
                                 pref.edit().apply {
                                     remove(SharedPreferencesValue.Link.key)
                                     apply()
                                 }
-                                onDismissRequest()
                             }
                         ) {
                             Icon(
@@ -133,17 +132,16 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                                     it2
                                 }) {
                                 pref.edit().apply {
+                                    textLink = if (!it.contains(Link.PROTOCOL))
+                                        "${Link.PROTOCOL}$it" else it
                                     putString(
                                         SharedPreferencesValue.Link.key,
-                                        if (!it.contains(Link.PROTOCOL)) "${Link.PROTOCOL}$it"
-                                        else it
+                                        textLink
                                     )
                                     apply()
                                 }
                             }
                         }
-
-                        onDismissRequest()
                     }) {
                         Icon(
                             modifier = Modifier.size(iconsSize),
