@@ -34,6 +34,7 @@ import androidx.compose.ui.window.DialogProperties
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.Link
 import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.utils.pasteText
@@ -109,7 +110,11 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     Text(text = stringResource(R.string.clear))
                 }
                 Button(onClick = {
-                    textLink = context.pasteText() ?: textLink
+                    textLink = context.pasteText()?.let {
+                        if (it.contains("docs.google.com/spreadsheets/") &&
+                            !it.contains(Link.PROTOCOL)
+                        ) "${Link.PROTOCOL}$it" else it
+                    } ?: textLink
                     pref.edit().apply {
                         putString(SharedPreferencesValue.Link.key, textLink)
                         apply()
