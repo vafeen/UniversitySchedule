@@ -3,8 +3,6 @@ package ru.vafeen.universityschedule.ui.components
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
@@ -61,8 +58,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     .background(Color.White)
                     .padding(3.dp)
                     .background(ScheduleTheme.colors.singleTheme)
-                    .height(250.dp),
-                verticalArrangement = Arrangement.SpaceAround
+                    .height(250.dp), verticalArrangement = Arrangement.SpaceAround
             ) {
                 IconButton(
                     modifier = Modifier
@@ -82,8 +78,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     text = textLink,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .weight(1f)
-                        .scrollable(rememberScrollState(), orientation = Orientation.Vertical),
+                        .weight(1f),
                     fontSize = FontSize.huge
                 )
 
@@ -129,19 +124,25 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     }
                     IconButton(onClick = {
                         context.pasteText()?.let {
-                            if (it.contains("docs.google.com/spreadsheets/") &&
-                                !it.contains(Link.PROTOCOL)
-                            ) textLink = "${Link.PROTOCOL}$it" else
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.its_no_google_sheets_link),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            if (it.contains("docs.google.com/spreadsheets/").let { it2 ->
+                                    if (!it2) Toast.makeText(
+                                        context,
+                                        context.getString(R.string.its_no_google_sheets_link),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    it2
+                                }) {
+                                pref.edit().apply {
+                                    putString(
+                                        SharedPreferencesValue.Link.key,
+                                        if (!it.contains(Link.PROTOCOL)) "${Link.PROTOCOL}$it"
+                                        else it
+                                    )
+                                    apply()
+                                }
+                            }
                         }
-                        pref.edit().apply {
-                            putString(SharedPreferencesValue.Link.key, textLink)
-                            apply()
-                        }
+
                         onDismissRequest()
                     }) {
                         Icon(
