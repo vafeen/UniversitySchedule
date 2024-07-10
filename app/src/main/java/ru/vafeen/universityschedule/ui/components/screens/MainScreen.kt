@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -50,6 +52,7 @@ import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.GSheetsServiceProblem
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
@@ -64,15 +67,18 @@ import java.time.LocalTime
 fun MainScreen(
     navController: NavController, viewModel: MainScreenViewModel
 ) {
-
+    var networkState by remember {
+        mutableStateOf(GSheetsServiceProblem.Waiting)
+    }
     viewModel.gSheetsService = createGSheetsService(link = viewModel.link)
 
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())
     }
     LaunchedEffect(key1 = null) {
-        viewModel.updateLocalDatabase {
-            lessons = it
+        viewModel.updateLocalDatabase { newLessons, problem ->
+            lessons = newLessons
+            networkState = problem
         }
     }
     val cor = rememberCoroutineScope()
@@ -111,6 +117,35 @@ fun MainScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    when (networkState) {
+                        GSheetsServiceProblem.Waiting -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.sync),
+                                contentDescription = "edit link",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
+
+                        GSheetsServiceProblem.Success -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.updated),
+                                contentDescription = "edit link",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
+
+                        GSheetsServiceProblem.NetworkError -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.no_wifi),
+                                contentDescription = "edit link",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
+                    }
+                    TextForThisTheme(
+                        text = "|",
+                        fontSize = FontSize.huge,
+                    )
 
                     Text(
                         text = stringResource(id = viewModel.weekOfYear.resourceName),
@@ -124,20 +159,9 @@ fun MainScreen(
                     )
 
                     TextForThisTheme(
-                        text = localDate.getDateString(),
+                        text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
                         fontSize = FontSize.huge,
                     )
-
-                    TextForThisTheme(
-                        text = "|",
-                        fontSize = FontSize.huge,
-                    )
-
-                    TextForThisTheme(
-                        text = localTime.getTimeStringAsHMS(),
-                        fontSize = FontSize.huge,
-                    )
-
                 }
             })
         }, bottomBar = {
