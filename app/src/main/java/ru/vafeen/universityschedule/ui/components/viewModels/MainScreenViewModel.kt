@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.viewModels
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -9,6 +10,7 @@ import ru.vafeen.universityschedule.database.dao.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.GSheetsService
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
+import ru.vafeen.universityschedule.utils.GSheetsServiceProblem
 import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import java.time.DayOfWeek
@@ -18,7 +20,7 @@ import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) :
     ViewModel() {
     val ruDaysOfWeek =
@@ -42,16 +44,20 @@ class MainScreenViewModel @Inject constructor(
         SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
     ).getString(SharedPreferencesValue.Link.key, "") ?: ""
 
-    suspend fun updateLocalDatabase(updateUICallback: (List<Lesson>) -> Unit) {
+    suspend fun updateLocalDatabase(updateUICallback: (List<Lesson>, GSheetsServiceProblem) -> Unit) {
         val lastLessons = databaseRepository.getAllAsFlowLessons().first()
-        updateUICallback(lastLessons)
-        gSheetsService?.getLessonsListFromGSheetsTable()
-            ?.let {
-                databaseRepository.apply {
-                    deleteAllLessons(*lastLessons.toTypedArray())
-                    insertAllLessons(*it.toTypedArray())
+        updateUICallback(lastLessons, GSheetsServiceProblem.Waiting)
+        try {
+            gSheetsService?.getLessonsListFromGSheetsTable()
+                ?.let {
+                    databaseRepository.apply {
+                        deleteAllLessons(*lastLessons.toTypedArray())
+                        insertAllLessons(*it.toTypedArray())
+                    }
+                    updateUICallback(it, GSheetsServiceProblem.Success)
                 }
-                updateUICallback(it)
-            }
+        } catch (e: Exception) {
+            updateUICallback(lastLessons, GSheetsServiceProblem.NetworkError)
+        }
     }
 }
