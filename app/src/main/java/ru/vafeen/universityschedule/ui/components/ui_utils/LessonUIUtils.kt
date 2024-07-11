@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.ui.theme.FontSize
-import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.suitableColor
 import java.time.LocalTime
 
 @Composable
@@ -57,13 +57,13 @@ fun Lesson.StringForSchedule(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
-                    contentDescription = "Icon teacher",
-                    tint = ScheduleTheme.colors.oppositeTheme
+                    contentDescription = "Icon schedule",
+                    tint = colorBack.suitableColor()
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = getLessonTimeString(), fontSize = FontSize.medium,
-                    color = ScheduleTheme.colors.oppositeTheme
+                    color = colorBack.suitableColor()
                 )
                 if (classroom.isNotEmpty()) {
                     Spacer(modifier = Modifier.width(7.dp))
@@ -71,12 +71,12 @@ fun Lesson.StringForSchedule(
                         Icon(
                             imageVector = Icons.Default.Place,
                             contentDescription = "Icon classroom",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                            tint = colorBack.suitableColor()
                         )
 
                         Text(
                             text = classroom,
-                            color = ScheduleTheme.colors.oppositeTheme,
+                            color = colorBack.suitableColor(),
                             fontSize = FontSize.medium
                         )
                     }
@@ -94,7 +94,7 @@ fun Lesson.StringForSchedule(
 
             if (name.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(text = name, color = ScheduleTheme.colors.oppositeTheme, fontSize = 20.sp)
+                Text(text = name, color = colorBack.suitableColor(), fontSize = 20.sp)
             }
             if (teacher.isNotEmpty()) {
                 Row(
@@ -104,20 +104,18 @@ fun Lesson.StringForSchedule(
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Icon teacher",
-                        tint = ScheduleTheme.colors.oppositeTheme,
+                        tint = colorBack.suitableColor()
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
                         text = teacher.replace(oldValue = " ", newValue = "\n"),
                         fontSize = 17.sp,
-                        color = ScheduleTheme.colors.oppositeTheme,
+                        color = colorBack.suitableColor(),
                         maxLines = 3
                     )
                 }
             }
         }
-
-
     }
 }
 
