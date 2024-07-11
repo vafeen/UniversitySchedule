@@ -8,4 +8,4 @@ import androidx.core.graphics.ColorUtils
 fun Color.suitableColor(): Color =
     if (this.isDark()) Color.White else Color.Black
 
-fun Color.isDark(): Boolean = ColorUtils.calculateLuminance(this.toArgb()) < 0.8
+fun Color.isDark(): Boolean = ColorUtils.calculateLuminance(this.toArgb()) < 0.5
