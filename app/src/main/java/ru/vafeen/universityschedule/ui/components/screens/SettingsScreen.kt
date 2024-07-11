@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -94,7 +95,6 @@ fun SettingsScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)
-
                     .padding(horizontal = 40.dp),
             ) {
 
@@ -206,6 +206,32 @@ fun SettingsScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+
+                // Color
+                Card(colors = cardColors) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+
+                            }
+                            .padding(horizontal = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TextForThisTheme(
+                            modifier = Modifier.padding(10.dp),
+                            fontSize = FontSize.medium,
+                            text = stringResource(R.string.interface_color)
+                        )
+
+                        Icon(
+                            painter = painterResource(id = R.drawable.palette),
+                            contentDescription = "read license",
+                            tint = ScheduleTheme.colors.oppositeTheme
+                        )
+                    }
+                }
             }
             Spacer(modifier = Modifier.height(30.dp))
             Row(
