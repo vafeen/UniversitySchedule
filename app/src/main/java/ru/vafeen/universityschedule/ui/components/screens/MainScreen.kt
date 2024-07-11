@@ -258,13 +258,13 @@ fun MainScreen(
                                 val thisLesson = lessonsOfThisDay[indexOfLesson]
                                 if (thisLesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
                                     viewModel.nowIsLesson = true
-                                    thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.mainColor)
+                                    thisLesson.StringForSchedule(colorBack = mainColor)
                                 } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
                                         it.startTime > localTime
                                     } && thisLesson == lessonsOfThisDay.filter {
                                         it.startTime > localTime
                                     }[0] && !viewModel.nowIsLesson) {
-                                    CardOfNextLesson {
+                                    CardOfNextLesson(colorOfCard = mainColor) {
                                         thisLesson.StringForSchedule(
                                             colorBack = ScheduleTheme.colors.buttonColor,
                                             padding = 0.dp
