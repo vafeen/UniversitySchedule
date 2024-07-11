@@ -1,5 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
+import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,6 +56,7 @@ import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.GSheetsServiceProblem
+import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
@@ -65,8 +69,18 @@ import java.time.LocalTime
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: MainScreenViewModel
+    context: Context, navController: NavController, viewModel: MainScreenViewModel
 ) {
+    val defaultColor = ScheduleTheme.colors.mainColor
+    val mainColor by remember {
+        mutableStateOf(
+            Color(
+                context.getSharedPreferences(
+                    SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
+                ).getInt(SharedPreferencesValue.Color.key, defaultColor.toArgb())
+            )
+        )
+    }
     var networkState by remember {
         mutableStateOf(GSheetsServiceProblem.Waiting)
     }
@@ -166,6 +180,7 @@ fun MainScreen(
             })
         }, bottomBar = {
             BottomBar(
+                containerColor = mainColor,
                 clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
             )
         }) { innerPadding ->

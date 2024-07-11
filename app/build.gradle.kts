@@ -84,7 +84,9 @@ dependencies {
     // compose navigation
     implementation(libs.androidx.navigation.compose)
     // compose navigation with viewModels (hiltViewModel)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.androidx.hilt.navigation.compose)
     // viewModel
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // color-picker
+    implementation(libs.colorpicker)
 }

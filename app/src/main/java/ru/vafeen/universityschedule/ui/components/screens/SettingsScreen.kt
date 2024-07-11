@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
@@ -25,12 +24,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.ui.components.ColorPickerDialog
 import ru.vafeen.universityschedule.ui.components.EditLinkDialog
 import ru.vafeen.universityschedule.ui.components.TextForThisTheme
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
@@ -39,6 +41,7 @@ import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
+import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.getVersionName
 import ru.vafeen.universityschedule.utils.openLink
 
@@ -55,7 +58,20 @@ fun SettingsScreen(
     viewModel: SettingsScreenViewModel,
     context: Context,
 ) {
+    val defaultColor = ScheduleTheme.colors.mainColor
+    var mainColor by remember {
+        mutableStateOf(
+            Color(
+                context.getSharedPreferences(
+                    SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
+                ).getInt(SharedPreferencesValue.Color.key, defaultColor.toArgb())
+            )
+        )
+    }
     var linkIsEditable by remember {
+        mutableStateOf(false)
+    }
+    var colorIsEditable by remember {
         mutableStateOf(false)
     }
     val gotoMainScreenCallBack = {
@@ -72,7 +88,9 @@ fun SettingsScreen(
         containerColor = ScheduleTheme.colors.singleTheme,
         bottomBar = {
             BottomBar(
-                clickToScreen1 = gotoMainScreenCallBack, selected2 = true
+                containerColor = mainColor,
+                clickToScreen1 = gotoMainScreenCallBack,
+                selected2 = true
             )
         }) { innerPadding ->
         Column(
@@ -84,6 +102,12 @@ fun SettingsScreen(
                 EditLinkDialog(context = context) {
                     textLink = viewModel.getLinkCallBack()
                     linkIsEditable = false
+                }
+            if (colorIsEditable)
+                ColorPickerDialog(
+                    context = context,
+                    onDismissRequest = { colorIsEditable = false }) {
+                    mainColor = it
                 }
 
             TextForThisTheme(
@@ -213,7 +237,7 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-
+                                colorIsEditable = true
                             }
                             .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
