@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.vafeen.universityschedule.R
-import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.suitableColor
 
 
 @Composable
@@ -32,7 +32,7 @@ fun CardOfNextLesson(
             text = stringResource(R.string.next_lesson),
             fontSize = 20.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            color = ScheduleTheme.colors.oppositeTheme
+            color = colorOfCard.suitableColor()
         )
         thisContent()
     }
