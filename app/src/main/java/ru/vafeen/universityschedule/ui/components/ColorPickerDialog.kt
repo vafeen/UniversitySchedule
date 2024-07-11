@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +30,7 @@ import androidx.compose.ui.window.Dialog
 import com.raedapps.alwan.rememberAlwanState
 import com.raedapps.alwan.ui.Alwan
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.SharedPreferencesValue
@@ -72,25 +73,12 @@ fun ColorPickerDialog(
                 text = context.getString(R.string.new_interface_color), fontSize = FontSize.huge,
                 modifier = Modifier.padding(10.dp)
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(3.dp)
-                    .background(newColor)
-                    .padding(5.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Icon(
-                    Icons.Default.Home,
-                    contentDescription = "Icon1",
-                    tint = newColor.suitableColor()
-                )
-                Icon(
-                    Icons.AutoMirrored.Filled.List,
-                    contentDescription = "Icon2",
-                    tint = newColor.suitableColor()
-                )
-            }
+
+            BottomBar(
+                containerColor = newColor,
+                selected2 = true,
+            )
+
             Spacer(modifier = Modifier.height(20.dp))
 // color picker
             Alwan(
@@ -118,7 +106,23 @@ fun ColorPickerDialog(
                         color = newColor.suitableColor()
                     )
                 }
-
+                if (firstColor != defaultColor)
+                    IconButton(onClick = {
+                        pref.edit().apply {
+                            putInt(
+                                SharedPreferencesValue.Color.key,
+                                defaultColor.toArgb()
+                            )
+                            apply()
+                        }
+                        onChangeColorCallback(defaultColor)
+                        onDismissRequest()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "delete this theme"
+                        )
+                    }
                 ColorPickerDialogButton(
                     enabled = newColor.toArgb() != firstColor.toArgb(),
                     color = newColor,
