@@ -22,5 +22,7 @@
     <string name="its_no_google_sheets_link">Это не ссылка Google Sheets</string>
     <string name="interface_color">Цвет интерфейса</string>
     <string name="new_interface_color">Новый цвет интерфейса</string>
+    <string name="cancel">Отмена</string>
+    <string name="apply">Применить</string>
 
 </resources>

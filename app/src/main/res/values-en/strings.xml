@@ -23,4 +23,6 @@
     <string name="its_no_google_sheets_link">It\'s no Google Sheets link</string>
     <string name="interface_color">Interface color</string>
     <string name="new_interface_color">New color of interface</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
 </resources>
