@@ -46,7 +46,10 @@ class MainScreenViewModel @Inject constructor(
 
     suspend fun updateLocalDatabase(updateUICallback: (List<Lesson>, GSheetsServiceProblem) -> Unit) {
         val lastLessons = databaseRepository.getAllAsFlowLessons().first()
-        updateUICallback(lastLessons, GSheetsServiceProblem.Waiting)
+        updateUICallback(
+            lastLessons, if (link.isNotEmpty()) GSheetsServiceProblem.Waiting
+            else GSheetsServiceProblem.NoLink
+        )
         try {
             gSheetsService?.getLessonsListFromGSheetsTable()
                 ?.let {

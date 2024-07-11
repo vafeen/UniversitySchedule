@@ -131,31 +131,30 @@ fun MainScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    when (networkState) {
-                        GSheetsServiceProblem.Waiting -> {
-                            Icon(
-                                painter = painterResource(id = R.drawable.sync),
-                                contentDescription = "edit link",
-                                tint = ScheduleTheme.colors.oppositeTheme
-                            )
-                        }
+                    Icon(
+                        painter = painterResource(
+                            id = when (networkState) {
+                                GSheetsServiceProblem.Waiting -> {
+                                    R.drawable.sync
+                                }
 
-                        GSheetsServiceProblem.Success -> {
-                            Icon(
-                                painter = painterResource(id = R.drawable.updated),
-                                contentDescription = "edit link",
-                                tint = ScheduleTheme.colors.oppositeTheme
-                            )
-                        }
+                                GSheetsServiceProblem.Success -> {
+                                    R.drawable.updated
+                                }
 
-                        GSheetsServiceProblem.NetworkError -> {
-                            Icon(
-                                painter = painterResource(id = R.drawable.no_wifi),
-                                contentDescription = "edit link",
-                                tint = ScheduleTheme.colors.oppositeTheme
-                            )
-                        }
-                    }
+                                GSheetsServiceProblem.NetworkError -> {
+                                    R.drawable.no_wifi
+                                }
+
+                                GSheetsServiceProblem.NoLink -> {
+                                    R.drawable.no_link
+                                }
+                            }
+                        ),
+                        contentDescription = "data updating state",
+                        tint = ScheduleTheme.colors.oppositeTheme
+                    )
+
                     TextForThisTheme(
                         text = "|",
                         fontSize = FontSize.huge,
