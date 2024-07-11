@@ -88,5 +88,5 @@ dependencies {
     // viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     // color-picker
-    implementation(libs.colorpicker)
+    implementation (libs.alwan)
 }

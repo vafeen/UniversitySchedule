@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.suitableColor
 
 
 @Composable
@@ -26,11 +27,9 @@ fun BottomBar(
     selected2: Boolean = false,
 ) {
     val colors = NavigationBarItemDefaults.colors(
-        unselectedIconColor = Color.Gray,
-        unselectedTextColor = Color.Gray,
+        unselectedIconColor = containerColor.suitableColor().copy(alpha = 0.5f),
         indicatorColor = containerColor,
-        disabledIconColor = ScheduleTheme.colors.oppositeTheme,
-        disabledTextColor = ScheduleTheme.colors.oppositeTheme
+        disabledIconColor = containerColor.suitableColor(),
     )
     BottomAppBar(
         modifier = Modifier
@@ -46,7 +45,7 @@ fun BottomBar(
             icon = {
                 Icon(
                     Icons.Default.Home,
-                    contentDescription = "Icon1",
+                    contentDescription = "Icon1"
                 )
             },
 //            label = { Text(text = "hello") },
@@ -60,7 +59,7 @@ fun BottomBar(
             icon = {
                 Icon(
                     Icons.AutoMirrored.Filled.List,
-                    contentDescription = "Icon2",
+                    contentDescription = "Icon2"
                 )
             },
 //            label = { Text(text = "hello") },
