@@ -49,16 +49,17 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Screen.Main.route) {
                             MainScreen(
+                                context = context,
                                 navController = navController,
                                 viewModel = viewModel(factory = mainScreenViewModelFactory)
                             )
                         }
                         composable(Screen.Settings.route) {
                             SettingsScreen(
+                                context = context,
                                 navController = navController,
                                 viewModel = viewModel(factory = settingsScreenViewModelFactory),
-                                context = context,
-                            )
+                                )
                         }
                     }
                 }

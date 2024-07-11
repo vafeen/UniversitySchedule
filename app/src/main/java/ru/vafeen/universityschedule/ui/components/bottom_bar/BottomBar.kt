@@ -19,6 +19,7 @@ import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 
 @Composable
 fun BottomBar(
+    containerColor: Color,
     clickToScreen1: () -> Unit = {},
     clickToScreen2: () -> Unit = {},
     selected1: Boolean = false,
@@ -27,7 +28,7 @@ fun BottomBar(
     val colors = NavigationBarItemDefaults.colors(
         unselectedIconColor = Color.Gray,
         unselectedTextColor = Color.Gray,
-        indicatorColor = ScheduleTheme.colors.mainColor,
+        indicatorColor = containerColor,
         disabledIconColor = ScheduleTheme.colors.oppositeTheme,
         disabledTextColor = ScheduleTheme.colors.oppositeTheme
     )
@@ -36,7 +37,7 @@ fun BottomBar(
             .fillMaxWidth()
             .navigationBarsPadding()
             .height(55.dp),
-        containerColor = ScheduleTheme.colors.mainColor
+        containerColor = containerColor
     ) {
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
