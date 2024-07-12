@@ -14,7 +14,7 @@ data class ScheduleColors(
 )
 
 val baseLightPalette = ScheduleColors(
-    mainColor = Color(0xFFFFEB3B), // Color(0xFFB4B4F8)
+    mainColor = Color(0xFF9FE778),
     singleTheme = Color.White,
     oppositeTheme = Color.Black,
     buttonColor = Color(0xFFEFEEEE)// Color(0xFFEFEFFF)
@@ -32,11 +32,8 @@ fun MainTheme(
     content: @Composable () -> Unit,
 ) {
 
-    val colors = if (!darkTheme) {
-        baseLightPalette
-    } else {
-        baseDarkPalette
-    }
+    val colors = if (!darkTheme) baseLightPalette
+    else baseDarkPalette
 
     CompositionLocalProvider(
         LocalColors provides colors,
