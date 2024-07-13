@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
-import ru.vafeen.universityschedule.database.dao.DatabaseRepository
+import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import javax.inject.Inject
 

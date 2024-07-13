@@ -1,6 +1,7 @@
-package ru.vafeen.universityschedule.database.dao
+package ru.vafeen.universityschedule.database
 
 import kotlinx.coroutines.flow.Flow
+import ru.vafeen.universityschedule.database.dao.LessonDao
 import ru.vafeen.universityschedule.database.entity.Lesson
 import javax.inject.Inject
 

@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ru.vafeen.universityschedule.database.dao.DatabaseRepository
+import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.ui.components.screens.MainScreen
 import ru.vafeen.universityschedule.ui.components.screens.SettingsScreen
 import ru.vafeen.universityschedule.ui.components.viewModels.factories.MainScreenViewModelFactory
