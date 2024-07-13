@@ -25,4 +25,5 @@
     <string name="new_interface_color">New color of interface</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
+    <string name="holiday">Day off</string>
 </resources>
