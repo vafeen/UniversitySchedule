@@ -24,6 +24,6 @@
     <string name="new_interface_color">Новый цвет интерфейса</string>
     <string name="cancel">Отмена</string>
     <string name="apply">Применить</string>
-    <string name="holiday">Входной</string>
+    <string name="holiday">Выходной</string>
 
 </resources>
