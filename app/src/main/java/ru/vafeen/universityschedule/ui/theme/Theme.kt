@@ -14,7 +14,7 @@ data class ScheduleColors(
 )
 
 val baseLightPalette = ScheduleColors(
-    mainColor = Color(0xFF9FE778),
+    mainColor = Color(0xFF68BD45),
     singleTheme = Color.White,
     oppositeTheme = Color.Black,
     buttonColor = Color(0xFFEFEEEE)// Color(0xFFEFEFFF)
