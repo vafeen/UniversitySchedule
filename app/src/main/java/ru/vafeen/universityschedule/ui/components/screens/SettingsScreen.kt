@@ -113,7 +113,7 @@ fun SettingsScreen(
             TextForThisTheme(
                 text = stringResource(R.string.settings),
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                fontSize = FontSize.huge
+                fontSize = FontSize.medium
             )
             Spacer(modifier = Modifier.height(30.dp))
             Column(
@@ -138,7 +138,7 @@ fun SettingsScreen(
                     ) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium,
+                            fontSize = FontSize.small,
                             text = stringResource(R.string.link_to_table),
                         )
                         Icon(
@@ -165,7 +165,7 @@ fun SettingsScreen(
                         ) {
                             TextForThisTheme(
                                 modifier = Modifier.padding(10.dp),
-                                fontSize = FontSize.medium,
+                                fontSize = FontSize.small,
                                 text = stringResource(R.string.table),
                             )
                             Icon(
@@ -192,7 +192,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium, text = stringResource(R.string.code)
+                            fontSize = FontSize.small, text = stringResource(R.string.code)
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.terminal),
@@ -220,7 +220,7 @@ fun SettingsScreen(
                     ) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium, text = stringResource(R.string.license)
+                            fontSize = FontSize.small, text = stringResource(R.string.license)
                         )
                         Icon(
                             painter = painterResource(id = R.drawable.book),
@@ -245,7 +245,7 @@ fun SettingsScreen(
                     ) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.medium,
+                            fontSize = FontSize.small,
                             text = stringResource(R.string.interface_color)
                         )
 
@@ -267,7 +267,7 @@ fun SettingsScreen(
                 TextForThisTheme(
                     modifier = Modifier
                         .padding(10.dp),
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.small,
                     text = "${stringResource(R.string.version)} ${getVersionName(context = LocalContext.current)}"
                 )
             }

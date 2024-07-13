@@ -71,7 +71,7 @@ fun ColorPickerDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = context.getString(R.string.new_interface_color), fontSize = FontSize.huge,
+                text = context.getString(R.string.new_interface_color), fontSize = FontSize.medium,
                 modifier = Modifier.padding(10.dp)
             )
 

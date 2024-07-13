@@ -62,7 +62,7 @@ fun Lesson.StringForSchedule(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = getLessonTimeString(), fontSize = FontSize.medium,
+                    text = getLessonTimeString(), fontSize = FontSize.small,
                     color = colorBack.suitableColor()
                 )
                 if (classroom.isNotEmpty()) {
@@ -77,7 +77,7 @@ fun Lesson.StringForSchedule(
                         Text(
                             text = classroom,
                             color = colorBack.suitableColor(),
-                            fontSize = FontSize.medium
+                            fontSize = FontSize.small
                         )
                     }
                 }
