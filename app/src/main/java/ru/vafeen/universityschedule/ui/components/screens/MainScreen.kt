@@ -48,6 +48,7 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.ui.components.TextForThisTheme
+import ru.vafeen.universityschedule.ui.components.WeekDay
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.ui.components.ui_utils.StringForSchedule
@@ -271,17 +272,20 @@ fun MainScreen(
                                 }
                             } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
 
-                            }
                         }
-
+                    } else WeekDay(
+                        context = context,
+                        modifier = Modifier
+//                        .weight(1f)
+                    )
 
                     if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(15.dp))
                         Spacer(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(23.dp)
-                                .padding(vertical = 10.dp)
+                                .height(13.dp)
+                                .padding(bottom = 10.dp)
                                 .background(ScheduleTheme.colors.buttonColor)
                         )
                         TextForThisTheme(
