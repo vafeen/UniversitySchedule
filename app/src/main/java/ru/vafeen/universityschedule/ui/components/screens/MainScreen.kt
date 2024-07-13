@@ -61,6 +61,7 @@ import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
 import ru.vafeen.universityschedule.utils.nowIsLesson
+import ru.vafeen.universityschedule.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -157,23 +158,23 @@ fun MainScreen(
 
                     TextForThisTheme(
                         text = "|",
-                        fontSize = FontSize.huge,
+                        fontSize = FontSize.medium,
                     )
 
                     Text(
                         text = stringResource(id = viewModel.weekOfYear.resourceName),
-                        fontSize = FontSize.huge,
+                        fontSize = FontSize.medium,
                         color = ScheduleTheme.colors.oppositeTheme
                     )
 
                     TextForThisTheme(
                         text = "|",
-                        fontSize = FontSize.huge,
+                        fontSize = FontSize.medium,
                     )
 
                     TextForThisTheme(
                         text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
-                        fontSize = FontSize.huge,
+                        fontSize = FontSize.medium,
                     )
                 }
             })
@@ -215,15 +216,14 @@ fun MainScreen(
                                     0.5f else 1f
                             ), colors = CardDefaults.cardColors(
                             containerColor =
-                            if (day == viewModel.todayDate.dayOfWeek) ScheduleTheme.colors.oppositeTheme
+                            if (day == viewModel.todayDate.dayOfWeek) mainColor
                             else ScheduleTheme.colors.buttonColor,
-                            contentColor =
-                            if (day == viewModel.todayDate.dayOfWeek) ScheduleTheme.colors.singleTheme
-                            else ScheduleTheme.colors.oppositeTheme
+                            contentColor = (if (day == viewModel.todayDate.dayOfWeek) mainColor
+                            else ScheduleTheme.colors.buttonColor).suitableColor()
                         )) {
                             Text(
                                 text = viewModel.ruDaysOfWeek[index],
-                                fontSize = FontSize.medium,
+                                fontSize = FontSize.small,
                                 modifier = Modifier.padding(
                                     vertical = 5.dp, horizontal = 10.dp
                                 )
@@ -251,64 +251,55 @@ fun MainScreen(
                         it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency != Frequency.Every && it.frequency == viewModel.weekOfYear.getOpposite()
                     }
 
-                    if (lessonsOfThisDay.isNotEmpty() || lessonsInOppositeNumAndDenDay.isNotEmpty()) {
-                        if (lessonsOfThisDay.isNotEmpty()) {
-                            viewModel.nowIsLesson = false
-                            for (indexOfLesson in 0..lessonsOfThisDay.lastIndex) {
-                                val thisLesson = lessonsOfThisDay[indexOfLesson]
-                                if (thisLesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
-                                    viewModel.nowIsLesson = true
-                                    thisLesson.StringForSchedule(colorBack = mainColor)
-                                } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
-                                        it.startTime > localTime
-                                    } && thisLesson == lessonsOfThisDay.filter {
-                                        it.startTime > localTime
-                                    }[0] && !viewModel.nowIsLesson) {
-                                    CardOfNextLesson(colorOfCard = mainColor) {
-                                        thisLesson.StringForSchedule(
-                                            colorBack = ScheduleTheme.colors.buttonColor,
-                                            padding = 0.dp
-                                        )
-                                    }
-                                } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
+                    if (lessonsOfThisDay.isNotEmpty()) {
+                        viewModel.nowIsLesson = false
+                        for (indexOfLesson in 0..lessonsOfThisDay.lastIndex) {
+                            val thisLesson = lessonsOfThisDay[indexOfLesson]
+                            if (thisLesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
+                                viewModel.nowIsLesson = true
+                                thisLesson.StringForSchedule(colorBack = mainColor)
+                            } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
+                                    it.startTime > localTime
+                                } && thisLesson == lessonsOfThisDay.filter {
+                                    it.startTime > localTime
+                                }[0] && !viewModel.nowIsLesson) {
+                                CardOfNextLesson(colorOfCard = mainColor) {
+                                    thisLesson.StringForSchedule(
+                                        colorBack = ScheduleTheme.colors.buttonColor,
+                                        padding = 0.dp
+                                    )
+                                }
+                            } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
 
                             }
                         }
 
 
-                        if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(15.dp))
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(3.dp)
-                                    .background(ScheduleTheme.colors.buttonColor)
+                    if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(23.dp)
+                                .padding(vertical = 10.dp)
+                                .background(ScheduleTheme.colors.buttonColor)
+                        )
+                        TextForThisTheme(
+                            text = stringResource(id = R.string.other_lessons_in_this_day),
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            fontSize = FontSize.medium
+                        )
+                        for (indexOfLesson in 0..lessonsInOppositeNumAndDenDay.lastIndex) {
+                            lessonsInOppositeNumAndDenDay[indexOfLesson].StringForSchedule(
+                                colorBack = ScheduleTheme.colors.buttonColor,
+                                lessonOfThisNumAndDenOrNot = false
                             )
-                            Text(
-                                text = stringResource(id = R.string.other_lessons_in_this_day),
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
-                                fontSize = FontSize.medium
-                            )
-                            for (indexOfLesson in 0..lessonsInOppositeNumAndDenDay.lastIndex) {
-                                lessonsInOppositeNumAndDenDay[indexOfLesson].StringForSchedule(
-                                    colorBack = ScheduleTheme.colors.buttonColor,
-                                    lessonOfThisNumAndDenOrNot = false
-                                )
-                            }
                         }
-
-
-                    } else {
-//                        Cats()
                     }
                 }
-
             }
-
-
         }
     }
-
-
 }
+
 

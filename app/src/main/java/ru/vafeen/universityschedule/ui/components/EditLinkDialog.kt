@@ -80,7 +80,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                         .align(Alignment.CenterHorizontally)
                         .weight(1f)
                         .padding(horizontal = 5.dp),
-                    fontSize = FontSize.huge
+                    fontSize = FontSize.medium
                 )
 
 
