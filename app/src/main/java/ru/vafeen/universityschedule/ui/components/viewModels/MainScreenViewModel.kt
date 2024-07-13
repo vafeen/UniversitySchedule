@@ -1,12 +1,11 @@
 package ru.vafeen.universityschedule.ui.components.viewModels
 
 import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import ru.vafeen.universityschedule.R
-import ru.vafeen.universityschedule.database.dao.DatabaseRepository
+import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.GSheetsService
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
