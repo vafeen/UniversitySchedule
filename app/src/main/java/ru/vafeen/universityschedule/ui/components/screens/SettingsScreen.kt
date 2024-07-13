@@ -54,9 +54,9 @@ import ru.vafeen.universityschedule.utils.openLink
  */
 @Composable
 fun SettingsScreen(
+    context: Context,
     navController: NavController,
     viewModel: SettingsScreenViewModel,
-    context: Context,
 ) {
     val defaultColor = ScheduleTheme.colors.mainColor
     var mainColor by remember {
