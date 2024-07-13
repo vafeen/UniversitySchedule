@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                                 context = context,
                                 navController = navController,
                                 viewModel = viewModel(factory = settingsScreenViewModelFactory),
-                                )
+                            )
                         }
                     }
                 }
