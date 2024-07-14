@@ -204,7 +204,7 @@ fun MainScreen(
                             .padding(horizontal = 3.dp)
                             .clickable {
                                 cor.launch(Dispatchers.Main) {
-                                    pagerState.scrollToPage(index)
+                                    pagerState.animateScrollToPage(index)
                                     localDate =
                                         viewModel.todayDate
                                             .plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
