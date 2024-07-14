@@ -28,7 +28,7 @@ interface DataAccessObject<T> {
     suspend fun update(vararg entities: T)
 
     /**
-     * Updating in database one or more entities
+     * Deleting from database one or more entities
      * @param entities [Set of entities to remove from database]
      */
     @Delete
