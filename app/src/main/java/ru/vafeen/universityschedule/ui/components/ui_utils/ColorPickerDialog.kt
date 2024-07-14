@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.ui.components
+package ru.vafeen.universityschedule.ui.components.ui_utils
 
 import android.content.Context
 import android.util.Log

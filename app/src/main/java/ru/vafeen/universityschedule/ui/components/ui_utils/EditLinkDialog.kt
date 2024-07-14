@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.ui.components
+package ru.vafeen.universityschedule.ui.components.ui_utils
 
 import android.content.Context
 import android.widget.Toast
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.ui.components.TextForThisTheme
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
