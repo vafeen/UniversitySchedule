@@ -2,7 +2,6 @@ package ru.vafeen.universityschedule.ui.components
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -52,109 +50,118 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
     Dialog(
         onDismissRequest = { onDismissRequest() }, properties = DialogProperties()
     ) {
-        Card(colors = CardDefaults.cardColors(containerColor = ScheduleTheme.colors.singleTheme)) {
-            Column(
+        Card(
+            colors =
+            CardDefaults.cardColors(containerColor = ScheduleTheme.colors.oppositeTheme)
+        ) {
+            Card(
                 modifier = Modifier
-                    .background(Color.White)
-                    .padding(3.dp)
-                    .background(ScheduleTheme.colors.singleTheme)
-                    .height(250.dp), verticalArrangement = Arrangement.SpaceAround
+                    .padding(3.dp),
+
+                colors = CardDefaults.cardColors(containerColor = ScheduleTheme.colors.singleTheme)
             ) {
-                IconButton(
+                Column(
                     modifier = Modifier
-                        .padding(horizontal = 5.dp)
-                        .align(Alignment.End),
-                    onClick = { onDismissRequest() },
+
+                        .height(250.dp), verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Icon(
-                        modifier = Modifier.size(30.dp),
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "close",
-                        tint = ScheduleTheme.colors.oppositeTheme
+                    IconButton(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp)
+                            .align(Alignment.End),
+                        onClick = { onDismissRequest() },
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(30.dp),
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "close",
+                            tint = ScheduleTheme.colors.oppositeTheme
+                        )
+                    }
+
+                    TextForThisTheme(
+                        text = textLink,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .weight(1f)
+                            .padding(horizontal = 5.dp),
+                        fontSize = FontSize.medium
                     )
-                }
-
-                TextForThisTheme(
-                    text = textLink,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .weight(1f)
-                        .padding(horizontal = 5.dp),
-                    fontSize = FontSize.medium
-                )
 
 
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (!textLink.linkIsEmpty(emptyLink = noLink)) {
-                        IconButton(
-                            onClick = {
-                                if (textLink.linkIsEmpty(emptyLink = noLink)) context.copyTextToClipBoard(
-                                    text = textLink
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (!textLink.linkIsEmpty(emptyLink = noLink)) {
+                            IconButton(
+                                onClick = {
+                                    if (textLink.linkIsEmpty(emptyLink = noLink)) context.copyTextToClipBoard(
+                                        text = textLink
+                                    )
+                                }
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(iconsSize),
+                                    painter = painterResource(id = R.drawable.copy),
+                                    contentDescription = "copy",
+                                    tint = ScheduleTheme.colors.oppositeTheme
                                 )
                             }
-                        ) {
-                            Icon(
-                                modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = R.drawable.copy),
-                                contentDescription = "copy",
-                                tint = ScheduleTheme.colors.oppositeTheme
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                textLink = noLink
-                                pref.edit().apply {
-                                    remove(SharedPreferencesValue.Link.key)
-                                    apply()
+                            IconButton(
+                                onClick = {
+                                    textLink = noLink
+                                    pref.edit().apply {
+                                        remove(SharedPreferencesValue.Link.key)
+                                        apply()
+                                    }
                                 }
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(iconsSize),
+                                    painter = painterResource(id = R.drawable.clear),
+                                    contentDescription = "clear",
+                                    tint = ScheduleTheme.colors.oppositeTheme
+                                )
                             }
-                        ) {
-                            Icon(
-                                modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = R.drawable.clear),
-                                contentDescription = "clear",
-                                tint = ScheduleTheme.colors.oppositeTheme
-                            )
                         }
-                    }
-                    IconButton(onClick = {
-                        context.pasteText()?.let {
-                            if (it.contains("docs.google.com/spreadsheets/").let { it2 ->
-                                    if (!it2) Toast.makeText(
+                        IconButton(onClick = {
+                            context.pasteText()?.let {
+                                val contains = it.contains("docs.google.com/spreadsheets/")
+                                if (contains)
+                                    pref.edit().apply {
+                                        textLink = if (!it.contains(Link.PROTOCOL))
+                                            "${Link.PROTOCOL}$it" else it
+                                        putString(
+                                            SharedPreferencesValue.Link.key,
+                                            textLink
+                                        )
+                                        apply()
+                                    }
+                                else
+                                    Toast.makeText(
                                         context,
                                         context.getString(R.string.its_no_google_sheets_link),
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    it2
-                                }) {
-                                pref.edit().apply {
-                                    textLink = if (!it.contains(Link.PROTOCOL))
-                                        "${Link.PROTOCOL}$it" else it
-                                    putString(
-                                        SharedPreferencesValue.Link.key,
-                                        textLink
-                                    )
-                                    apply()
-                                }
-                            }
-                        }
-                    }) {
-                        Icon(
-                            modifier = Modifier.size(iconsSize),
-                            painter = painterResource(id = R.drawable.paste),
-                            contentDescription = "paste",
-                            tint = ScheduleTheme.colors.oppositeTheme
-                        )
-                    }
-                }
 
+                            }
+                        }) {
+                            Icon(
+                                modifier = Modifier.size(iconsSize),
+                                painter = painterResource(id = R.drawable.paste),
+                                contentDescription = "paste",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
+                    }
+
+                }
             }
         }
+
 
     }
 }
