@@ -66,13 +66,16 @@ fun ColorPickerDialog(
         Log.d("color", "xxxColor =${newColor.toArgb()}")
         Column(
             modifier = Modifier
+                .background(ScheduleTheme.colors.oppositeTheme)
+                .padding(2.dp)
                 .background(ScheduleTheme.colors.singleTheme)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = context.getString(R.string.new_interface_color), fontSize = FontSize.medium,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(10.dp),
+                color = ScheduleTheme.colors.oppositeTheme
             )
 
             BottomBar(
@@ -121,7 +124,8 @@ fun ColorPickerDialog(
                     }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "delete this theme"
+                            contentDescription = "delete this theme",
+                            tint = ScheduleTheme.colors.oppositeTheme
                         )
                     }
                 ColorPickerDialogButton(
