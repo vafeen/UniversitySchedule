@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.2"
+agp = "8.5.1"
 alwan = "1.0.1"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.0"
@@ -19,7 +19,6 @@ roomCommon = "2.6.1"
 roomKtx = "2.6.1"
 
 [libraries]
-alwan = { module = "com.raedapps:alwan", version.ref = "alwan" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
@@ -55,6 +54,7 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 # color-picker
+alwan = { module = "com.raedapps:alwan", version.ref = "alwan" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
