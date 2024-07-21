@@ -11,14 +11,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -83,6 +89,27 @@ fun SettingsScreen(
     var textLink by remember {
         mutableStateOf(viewModel.getLinkCallBack())
     }
+
+    var key by remember {
+        mutableIntStateOf(1)
+    }
+    val subgroupList = listOf(
+        "Подгруппа1",
+        "Подгруппа2",
+        "Подгруппа3",
+        "Подгруппа4",
+        "Подгруппа5",
+        "Подгруппа6",
+    )
+    var userSubgroup by remember {
+        mutableStateOf(subgroupList[0])
+    }
+    var subGroupIsChanging by remember {
+        mutableStateOf(false)
+    }
+    val subGroupRowState = rememberLazyListState()
+
+
     BackHandler(onBack = gotoMainScreenCallBack)
     Scaffold(
         containerColor = ScheduleTheme.colors.singleTheme,
@@ -177,6 +204,7 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
                 }
+
                 // CODE
                 Card(colors = cardColors) {
                     Row(modifier = Modifier
@@ -256,21 +284,74 @@ fun SettingsScreen(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+
+                // Subgroup
+                Card(colors = cardColors) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            subGroupIsChanging = !subGroupIsChanging
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TextForThisTheme(
+                                modifier = Modifier
+                                    .padding(10.dp),
+                                text = stringResource(R.string.subgroup),
+                                fontSize = FontSize.small
+                            )
+                            Icon(
+                                painter = painterResource(
+                                    id = if (subGroupIsChanging) R.drawable.unfold_more
+                                    else R.drawable.unfold_less
+                                ),
+                                contentDescription = "more",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
+                        if (subGroupIsChanging) {
+                            LaunchedEffect(key1 = key) {
+                                subGroupRowState.scrollToItem(subgroupList.indexOf(userSubgroup))
+                            }
+
+                            LazyRow(
+                                state = subGroupRowState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(50.dp)
+
+                            ) {
+                                items(subgroupList) { subgroup ->
+                                    AssistChip(
+                                        modifier = Modifier.padding(horizontal = 3.dp),
+                                        enabled = subgroup != userSubgroup,
+                                        onClick = {
+                                            userSubgroup = subgroup
+                                        },
+                                        label = { TextForThisTheme(text = subgroup) },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(30.dp))
-            Row(
+//            Spacer(modifier = Modifier.height(30.dp))
+            TextForThisTheme(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 20.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextForThisTheme(
-                    modifier = Modifier
-                        .padding(10.dp),
-                    fontSize = FontSize.small,
-                    text = "${stringResource(R.string.version)} ${getVersionName(context = LocalContext.current)}"
-                )
-            }
+                    .padding(10.dp)
+                    .padding(bottom = 20.dp)
+                    .align(Alignment.End),
+                fontSize = FontSize.small,
+                text = "${stringResource(R.string.version)} ${getVersionName(context = LocalContext.current)}"
+            )
         }
     }
 }

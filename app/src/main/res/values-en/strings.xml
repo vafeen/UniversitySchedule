@@ -26,4 +26,5 @@
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
     <string name="holiday">Day off</string>
+    <string name="subgroup">Subgroup</string>
 </resources>
