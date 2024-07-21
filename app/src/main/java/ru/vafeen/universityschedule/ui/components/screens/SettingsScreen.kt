@@ -38,10 +38,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.vafeen.universityschedule.R
-import ru.vafeen.universityschedule.ui.components.TextForThisTheme
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.ColorPickerDialog
 import ru.vafeen.universityschedule.ui.components.ui_utils.EditLinkDialog
+import ru.vafeen.universityschedule.ui.components.ui_utils.TextForThisTheme
 import ru.vafeen.universityschedule.ui.components.viewModels.SettingsScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
