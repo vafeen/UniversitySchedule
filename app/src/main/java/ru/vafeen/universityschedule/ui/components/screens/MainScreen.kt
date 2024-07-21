@@ -47,11 +47,11 @@ import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
-import ru.vafeen.universityschedule.ui.components.TextForThisTheme
-import ru.vafeen.universityschedule.ui.components.WeekDay
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.ui.components.ui_utils.StringForSchedule
+import ru.vafeen.universityschedule.ui.components.ui_utils.TextForThisTheme
+import ru.vafeen.universityschedule.ui.components.ui_utils.WeekDay
 import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
