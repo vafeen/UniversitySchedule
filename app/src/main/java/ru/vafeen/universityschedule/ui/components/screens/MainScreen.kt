@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,8 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -56,10 +55,11 @@ import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
-import ru.vafeen.universityschedule.utils.GSheetsServiceProblem
-import ru.vafeen.universityschedule.utils.SharedPreferencesValue
-import ru.vafeen.universityschedule.utils.createGSheetsService
+import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.getDateString
+import ru.vafeen.universityschedule.utils.getIconByRequestStatus
+import ru.vafeen.universityschedule.utils.getMainColorForThisTheme
+import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
 import ru.vafeen.universityschedule.utils.nowIsLesson
 import ru.vafeen.universityschedule.utils.suitableColor
@@ -74,23 +74,22 @@ fun MainScreen(
     context: Context, navController: NavController, viewModel: MainScreenViewModel
 ) {
     val defaultColor = ScheduleTheme.colors.mainColor
+    val dark = isSystemInDarkTheme()
+    val settings by remember { mutableStateOf(viewModel.sharedPreferences.getSettingsOrCreateIfNull()) }
     val mainColor by remember {
         mutableStateOf(
-            Color(
-                context.getSharedPreferences(
-                    SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-                ).getInt(SharedPreferencesValue.Color.key, defaultColor.toArgb())
-            )
+            settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
         )
     }
     var networkState by remember {
-        mutableStateOf(GSheetsServiceProblem.Waiting)
+        mutableStateOf(GSheetsServiceRequestStatus.Waiting)
     }
-    viewModel.gSheetsService = createGSheetsService(link = viewModel.link)
+
 
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())
     }
+
     LaunchedEffect(key1 = null) {
         viewModel.updateLocalDatabase { newLessons, problem ->
             lessons = newLessons
@@ -119,72 +118,56 @@ fun MainScreen(
             }
         }
     }
-    Scaffold(containerColor = ScheduleTheme.colors.singleTheme,
-        topBar = {
-            TopAppBar(colors = TopAppBarColors(
-                containerColor = ScheduleTheme.colors.singleTheme,
-                scrolledContainerColor = ScheduleTheme.colors.singleTheme,
-                navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
-                titleContentColor = ScheduleTheme.colors.oppositeTheme,
-                actionIconContentColor = ScheduleTheme.colors.singleTheme
-            ), modifier = Modifier.fillMaxWidth(), title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = when (networkState) {
-                                GSheetsServiceProblem.Waiting -> {
-                                    R.drawable.sync
-                                }
+    Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
+        TopAppBar(colors = TopAppBarColors(
+            containerColor = ScheduleTheme.colors.singleTheme,
+            scrolledContainerColor = ScheduleTheme.colors.singleTheme,
+            navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
+            titleContentColor = ScheduleTheme.colors.oppositeTheme,
+            actionIconContentColor = ScheduleTheme.colors.singleTheme
+        ), modifier = Modifier.fillMaxWidth(), title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = getIconByRequestStatus(networkState = networkState)
+                    ),
+                    contentDescription = "data updating state",
+                    tint = ScheduleTheme.colors.oppositeTheme
+                )
 
-                                GSheetsServiceProblem.Success -> {
-                                    R.drawable.updated
-                                }
+                TextForThisTheme(
+                    text = "|",
+                    fontSize = FontSize.medium,
+                )
 
-                                GSheetsServiceProblem.NetworkError -> {
-                                    R.drawable.no_wifi
-                                }
+                Text(
+                    text = stringResource(id = viewModel.weekOfYear.resourceName),
+                    fontSize = FontSize.medium,
+                    color = ScheduleTheme.colors.oppositeTheme
+                )
 
-                                GSheetsServiceProblem.NoLink -> {
-                                    R.drawable.no_link
-                                }
-                            }
-                        ),
-                        contentDescription = "data updating state",
-                        tint = ScheduleTheme.colors.oppositeTheme
-                    )
+                TextForThisTheme(
+                    text = "|",
+                    fontSize = FontSize.medium,
+                )
 
-                    TextForThisTheme(
-                        text = "|",
-                        fontSize = FontSize.medium,
-                    )
-
-                    Text(
-                        text = stringResource(id = viewModel.weekOfYear.resourceName),
-                        fontSize = FontSize.medium,
-                        color = ScheduleTheme.colors.oppositeTheme
-                    )
-
-                    TextForThisTheme(
-                        text = "|",
-                        fontSize = FontSize.medium,
-                    )
-
-                    TextForThisTheme(
-                        text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
-                        fontSize = FontSize.medium,
-                    )
-                }
-            })
-        }, bottomBar = {
-            BottomBar(
-                containerColor = mainColor,
-                clickToScreen2 = { navController.navigate(Screen.Settings.route) }, selected1 = true
-            )
-        }) { innerPadding ->
+                TextForThisTheme(
+                    text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
+                    fontSize = FontSize.medium,
+                )
+            }
+        })
+    }, bottomBar = {
+        BottomBar(
+            containerColor = mainColor,
+            clickToScreen2 = { navController.navigate(Screen.Settings.route) },
+            selected1 = true
+        )
+    }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -206,18 +189,13 @@ fun MainScreen(
                                 cor.launch(Dispatchers.Main) {
                                     pagerState.animateScrollToPage(index)
                                     localDate =
-                                        viewModel.todayDate
-                                            .plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
+                                        viewModel.todayDate.plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
                                 }
                             }
                             .alpha(
-                                if (day != viewModel.todayDate.dayOfWeek &&
-                                    day != viewModel.daysOfWeek[pagerState.currentPage]
-                                )
-                                    0.5f else 1f
+                                if (day != viewModel.todayDate.dayOfWeek && day != viewModel.daysOfWeek[pagerState.currentPage]) 0.5f else 1f
                             ), colors = CardDefaults.cardColors(
-                            containerColor =
-                            if (day == viewModel.todayDate.dayOfWeek) mainColor
+                            containerColor = if (day == viewModel.todayDate.dayOfWeek) mainColor
                             else ScheduleTheme.colors.buttonColor,
                             contentColor = (if (day == viewModel.todayDate.dayOfWeek) mainColor
                             else ScheduleTheme.colors.buttonColor).suitableColor()
@@ -266,16 +244,14 @@ fun MainScreen(
                                 }[0] && !viewModel.nowIsLesson) {
                                 CardOfNextLesson(colorOfCard = mainColor) {
                                     thisLesson.StringForSchedule(
-                                        colorBack = ScheduleTheme.colors.buttonColor,
-                                        padding = 0.dp
+                                        colorBack = ScheduleTheme.colors.buttonColor, padding = 0.dp
                                     )
                                 }
                             } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
 
                         }
                     } else WeekDay(
-                        context = context,
-                        modifier = Modifier
+                        context = context, modifier = Modifier
 //                        .weight(1f)
                     )
 

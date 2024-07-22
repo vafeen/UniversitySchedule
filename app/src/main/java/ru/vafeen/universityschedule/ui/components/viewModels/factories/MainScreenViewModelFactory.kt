@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
+import ru.vafeen.universityschedule.utils.SharedPreferences
 import javax.inject.Inject
 
 class MainScreenViewModelFactory @Inject constructor(
     private val databaseRepository: DatabaseRepository,
+    private val sharedPreferences: SharedPreferences,
     @ApplicationContext private val context: Context
 ) :
     ViewModelProvider.Factory {
@@ -17,6 +19,7 @@ class MainScreenViewModelFactory @Inject constructor(
         if (modelClass.isAssignableFrom(MainScreenViewModel::class.java)) {
             return MainScreenViewModel(
                 databaseRepository = databaseRepository,
+                sharedPreferences = sharedPreferences,
                 context = context
             ) as T
         }

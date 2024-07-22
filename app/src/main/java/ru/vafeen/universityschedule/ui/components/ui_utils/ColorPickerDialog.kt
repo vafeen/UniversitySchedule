@@ -34,27 +34,18 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
-import ru.vafeen.universityschedule.utils.SharedPreferencesValue
 import ru.vafeen.universityschedule.utils.suitableColor
 
 @Composable
 fun ColorPickerDialog(
     context: Context,
+    firstColor: Color,
     onDismissRequest: () -> Unit,
     onChangeColorCallback: (Color) -> Unit
 ) {
     val defaultColor = ScheduleTheme.colors.mainColor
 
-    val firstColor = Color(
-        context.getSharedPreferences(
-            SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-        ).getInt(SharedPreferencesValue.Color.key, defaultColor.toArgb())
-    )
     val colorState = rememberAlwanState(initialColor = firstColor)
-    val pref = context.getSharedPreferences(
-        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-    )
-
     var newColor by remember {
         mutableStateOf(firstColor)
     }
@@ -112,13 +103,6 @@ fun ColorPickerDialog(
                 }
                 if (firstColor != defaultColor)
                     IconButton(onClick = {
-                        pref.edit().apply {
-                            putInt(
-                                SharedPreferencesValue.Color.key,
-                                defaultColor.toArgb()
-                            )
-                            apply()
-                        }
                         onChangeColorCallback(defaultColor)
                         onDismissRequest()
                     }) {
@@ -132,13 +116,6 @@ fun ColorPickerDialog(
                     enabled = newColor.toArgb() != firstColor.toArgb(),
                     color = newColor,
                     onClick = {
-                        pref.edit().apply {
-                            putInt(
-                                SharedPreferencesValue.Color.key,
-                                newColor.toArgb()
-                            )
-                            apply()
-                        }
                         onChangeColorCallback(newColor)
                         onDismissRequest()
                     }) {
