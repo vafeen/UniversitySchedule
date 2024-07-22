@@ -2,7 +2,7 @@ package ru.vafeen.universityschedule.ui.components.ui_utils
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -55,78 +57,84 @@ fun ColorPickerDialog(
         onDismissRequest = onDismissRequest,
     ) {
         Log.d("color", "xxxColor =${newColor.toArgb()}")
-        Column(
-            modifier = Modifier
-                .background(ScheduleTheme.colors.oppositeTheme)
-                .padding(2.dp)
-                .background(ScheduleTheme.colors.singleTheme)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = ScheduleTheme.colors.singleTheme
+            ),
+            border = BorderStroke(width = 2.dp, color = ScheduleTheme.colors.oppositeTheme)
         ) {
-            Text(
-                text = context.getString(R.string.new_interface_color), fontSize = FontSize.medium,
-                modifier = Modifier.padding(10.dp),
-                color = ScheduleTheme.colors.oppositeTheme
-            )
-
-            BottomBar(
-                containerColor = newColor,
-                selected2 = true,
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-// color picker
-            Alwan(
-                onColorChanged = {
-                    newColor = it
-                },
-                modifier = Modifier.size(300.dp),
-                state = colorState,
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ColorPickerDialogButton(
-                    onClick = onDismissRequest,
-                    color = newColor,
+                Text(
+                    text = context.getString(R.string.new_interface_color),
+                    fontSize = FontSize.medium,
+                    modifier = Modifier.padding(10.dp),
+                    color = ScheduleTheme.colors.oppositeTheme
+                )
+
+                BottomBar(
+                    containerColor = newColor,
+                    selected2 = true,
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+// color picker
+                Alwan(
+                    onColorChanged = {
+                        newColor = it
+                    },
+                    modifier = Modifier.size(300.dp),
+                    state = colorState,
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(
-                        text = stringResource(R.string.cancel),
-                        color = newColor.suitableColor()
-                    )
-                }
-                if (firstColor != defaultColor)
-                    IconButton(onClick = {
-                        onChangeColorCallback(defaultColor)
-                        onDismissRequest()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "delete this theme",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                    ColorPickerDialogButton(
+                        onClick = onDismissRequest,
+                        color = newColor,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.cancel),
+                            color = newColor.suitableColor()
                         )
                     }
-                ColorPickerDialogButton(
-                    enabled = newColor.toArgb() != firstColor.toArgb(),
-                    color = newColor,
-                    onClick = {
-                        onChangeColorCallback(newColor)
-                        onDismissRequest()
-                    }) {
-                    Text(
-                        text = stringResource(R.string.apply),
-                        color = newColor.suitableColor()
-                    )
+                    if (firstColor != defaultColor)
+                        IconButton(onClick = {
+                            onChangeColorCallback(defaultColor)
+                            onDismissRequest()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "delete this theme",
+                                tint = ScheduleTheme.colors.oppositeTheme
+                            )
+                        }
+                    ColorPickerDialogButton(
+                        enabled = newColor.toArgb() != firstColor.toArgb(),
+                        color = newColor,
+                        onClick = {
+                            onChangeColorCallback(newColor)
+                            onDismissRequest()
+                        }) {
+                        Text(
+                            text = stringResource(R.string.apply),
+                            color = newColor.suitableColor()
+                        )
+                    }
                 }
-            }
 
+            }
         }
+
 
     }
 
