@@ -30,6 +30,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -83,8 +84,6 @@ dependencies {
     implementation(libs.converter.gson)
     // compose navigation
     implementation(libs.androidx.navigation.compose)
-    // compose navigation with viewModels (hiltViewModel)
-    implementation(libs.androidx.hilt.navigation.compose)
     // viewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     // color-picker
