@@ -334,7 +334,8 @@ fun SettingsScreen(
                                         leadingIcon = {
                                             if (subgroup == settings.subgroup) Icon(
                                                 imageVector = Icons.Default.Done,
-                                                contentDescription = "this is user subgroup"
+                                                contentDescription = "this is user subgroup",
+                                                tint = ScheduleTheme.colors.oppositeTheme
                                             )
                                         },
                                         modifier = Modifier.padding(horizontal = 3.dp),
