@@ -225,9 +225,11 @@ fun MainScreen(
                 ) {
                     val lessonsOfThisDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == viewModel.weekOfYear || it.frequency == Frequency.Every)
+                                && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
                     }
                     val lessonsInOppositeNumAndDenDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency != Frequency.Every && it.frequency == viewModel.weekOfYear.getOpposite()
+                                && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
                     }
 
                     if (lessonsOfThisDay.isNotEmpty()) {
