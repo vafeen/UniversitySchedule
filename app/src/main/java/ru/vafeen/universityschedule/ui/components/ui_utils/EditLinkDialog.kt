@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -31,21 +32,19 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
-import ru.vafeen.universityschedule.utils.SharedPreferencesValue
+import ru.vafeen.universityschedule.utils.SharedPreferences
 import ru.vafeen.universityschedule.utils.copyTextToClipBoard
-import ru.vafeen.universityschedule.utils.linkIsEmpty
+import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.utils.pasteText
+import ru.vafeen.universityschedule.utils.save
 
 @Composable
-fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
-    val noLink = context.getString(R.string.no_link)
-    var textLink by remember {
-        mutableStateOf(noLink)
-    }
-    val pref = context.getSharedPreferences(
-        SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
-    )
-    textLink = pref.getString(SharedPreferencesValue.Link.key, noLink) ?: noLink
+fun EditLinkDialog(
+    context: Context,
+    sharedPreferences: SharedPreferences,
+    onDismissRequest: () -> Unit
+) {
+    var settings by remember { mutableStateOf(sharedPreferences.getSettingsOrCreateIfNull()) }
     val iconsSize = 30.dp
     Dialog(
         onDismissRequest = { onDismissRequest() }, properties = DialogProperties()
@@ -62,7 +61,6 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
             ) {
                 Column(
                     modifier = Modifier
-
                         .height(250.dp), verticalArrangement = Arrangement.SpaceAround
                 ) {
                     IconButton(
@@ -80,7 +78,7 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                     }
 
                     TextForThisTheme(
-                        text = textLink,
+                        text = settings.link ?: stringResource(id = R.string.no_link),
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .weight(1f)
@@ -95,12 +93,14 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                         horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (!textLink.linkIsEmpty(emptyLink = noLink)) {
+                        if (settings.link != null) {
                             IconButton(
                                 onClick = {
-                                    if (textLink.linkIsEmpty(emptyLink = noLink)) context.copyTextToClipBoard(
-                                        text = textLink
-                                    )
+                                    settings.link?.let {
+                                        context.copyTextToClipBoard(
+                                            text = it
+                                        )
+                                    }
                                 }
                             ) {
                                 Icon(
@@ -112,11 +112,9 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                             }
                             IconButton(
                                 onClick = {
-                                    textLink = noLink
-                                    pref.edit().apply {
-                                        remove(SharedPreferencesValue.Link.key)
-                                        apply()
-                                    }
+                                    settings = settings.copy(link = null).save(
+                                        sharedPreferences = sharedPreferences
+                                    )
                                 }
                             ) {
                                 Icon(
@@ -131,15 +129,10 @@ fun EditLinkDialog(context: Context, onDismissRequest: () -> Unit) {
                             context.pasteText()?.let {
                                 val contains = it.contains("docs.google.com/spreadsheets/")
                                 if (contains)
-                                    pref.edit().apply {
-                                        textLink = if (!it.contains(Link.PROTOCOL))
+                                    settings = settings.copy(
+                                        link = if (!it.contains(Link.PROTOCOL))
                                             "${Link.PROTOCOL}$it" else it
-                                        putString(
-                                            SharedPreferencesValue.Link.key,
-                                            textLink
-                                        )
-                                        apply()
-                                    }
+                                    ).save(sharedPreferences = sharedPreferences)
                                 else
                                     Toast.makeText(
                                         context,

@@ -15,7 +15,7 @@ fun Row.toLesson(): Lesson? = this.cells.toNonNullListString().let {
         endTime = it[3].toTimeOfLessonAsLocalTime(),
         classroom = it[4],
         teacher = it[5],
-        subGroup = it[6].toFloat().toInt(),
+        subGroup = it[6],
         frequency = it[7].toFrequency()
     )
     else null

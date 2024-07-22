@@ -27,6 +27,6 @@ data class Lesson(
     val endTime: LocalTime,
     val classroom: String,
     val teacher: String,
-    val subGroup: Int,
+    val subGroup: String,
     val frequency: Frequency
 )

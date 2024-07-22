@@ -1,6 +1,6 @@
 package ru.vafeen.universityschedule.utils
 
-enum class GSheetsServiceProblem {
+enum class GSheetsServiceRequestStatus {
     Success,
     NetworkError,
     Waiting,
