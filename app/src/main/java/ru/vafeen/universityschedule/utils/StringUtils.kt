@@ -76,7 +76,8 @@ fun String.toFrequency(): Frequency = when (this.normalizeCase()) {
     else -> Frequency.Every
 }
 
-fun String.normalizeCase(): String = this.lowercase().capitalize(Locale.ROOT)
+fun String.normalizeCase(): String = this.lowercase()
+    .replaceFirstChar { it.titlecase(Locale.ROOT) }
 
 fun String.getResponseFromJson(): ResponseWrapper =
     GsonBuilder().setLenient().create().fromJson(this, ResponseWrapper::class.java)
