@@ -15,8 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vafeen.universityschedule.ui.components.screens.MainScreen
 import ru.vafeen.universityschedule.ui.components.screens.SettingsScreen
-import ru.vafeen.universityschedule.ui.components.viewModels.factories.MainScreenViewModelFactory
-import ru.vafeen.universityschedule.ui.components.viewModels.factories.SettingsScreenViewModelFactory
+import ru.vafeen.universityschedule.ui.components.viewModels.factories.provider.ViewModelsFactoryProvider
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.MainTheme
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
@@ -25,10 +24,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var mainScreenViewModelFactory: MainScreenViewModelFactory
-
-    @Inject
-    lateinit var settingsScreenViewModelFactory: SettingsScreenViewModelFactory
+    lateinit var viewModelsFactoryProvider: ViewModelsFactoryProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,14 +43,14 @@ class MainActivity : ComponentActivity() {
                             MainScreen(
                                 context = context,
                                 navController = navController,
-                                viewModel = viewModel(factory = mainScreenViewModelFactory)
+                                viewModel = viewModel(factory = viewModelsFactoryProvider.mainScreenViewModelFactory)
                             )
                         }
                         composable(Screen.Settings.route) {
                             SettingsScreen(
                                 context = context,
                                 navController = navController,
-                                viewModel = viewModel(factory = settingsScreenViewModelFactory),
+                                viewModel = viewModel(factory = viewModelsFactoryProvider.settingsScreenViewModelFactory),
                             )
                         }
                     }
