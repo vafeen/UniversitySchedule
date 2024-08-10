@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.vafeen.universityschedule.database.AppDatabase
-import ru.vafeen.universityschedule.database.dao.LessonDao
 import javax.inject.Singleton
 
 @Module
@@ -23,8 +22,4 @@ class DatabaseDIModule {
             context = context, klass = AppDatabase::class.java, name = name
         ).build()
     }
-
-    @Provides
-    fun provideLessonDao(db: AppDatabase): LessonDao = db.lessonDao()
-
 }

@@ -1,14 +1,11 @@
 package ru.vafeen.universityschedule.database
 
 import kotlinx.coroutines.flow.Flow
-import ru.vafeen.universityschedule.database.dao.LessonDao
 import ru.vafeen.universityschedule.database.entity.Lesson
 import javax.inject.Inject
 
-class DatabaseRepository @Inject constructor(
-    private val lessonDao: LessonDao
-) {
-
+class DatabaseRepository @Inject constructor(db: AppDatabase) {
+    private val lessonDao = db.lessonDao()
     fun getAllAsFlowLessons(): Flow<List<Lesson>> = lessonDao.getAllAsFlow()
 
     /**
