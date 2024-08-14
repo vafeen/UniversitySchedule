@@ -26,4 +26,6 @@
     <string name="apply">Применить</string>
     <string name="holiday">Выходной</string>
     <string name="subgroup">Подгруппа</string>
+    <string name="project_community">Сообщество проекта</string>
+
 </resources>

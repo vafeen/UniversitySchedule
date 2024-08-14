@@ -292,71 +292,100 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
 
                 // Subgroup
-                if (subgroupList.isNotEmpty()) Card(colors = cardColors) {
-                    Column(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            subGroupIsChanging = !subGroupIsChanging
-                        }) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextForThisTheme(
-                                modifier = Modifier.padding(10.dp),
-                                text = stringResource(R.string.subgroup),
-                                fontSize = FontSize.small
-                            )
-                            Icon(
-                                painter = painterResource(
-                                    id = if (subGroupIsChanging) R.drawable.unfold_less
-                                    else R.drawable.unfold_more
-                                ),
-                                contentDescription = "more",
-                                tint = ScheduleTheme.colors.oppositeTheme
-                            )
-                        }
-                        if (subGroupIsChanging) {
+                if (subgroupList.isNotEmpty()) {
+                    Card(colors = cardColors) {
+                        Column(modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                subGroupIsChanging = !subGroupIsChanging
+                            }) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                TextForThisTheme(
+                                    modifier = Modifier.padding(10.dp),
+                                    text = stringResource(R.string.subgroup),
+                                    fontSize = FontSize.small
+                                )
+                                Icon(
+                                    painter = painterResource(
+                                        id = if (subGroupIsChanging) R.drawable.unfold_less
+                                        else R.drawable.unfold_more
+                                    ),
+                                    contentDescription = "more",
+                                    tint = ScheduleTheme.colors.oppositeTheme
+                                )
+                            }
+                            if (subGroupIsChanging) {
 //                            LaunchedEffect(key1 = null) {
 //                                subGroupRowState.scrollToItem(subgroupList.indexOf(userSubgroup))
 //                            }
 
-                            LazyRow(
-                                state = subGroupLazyRowState, modifier = Modifier
-                                    .fillMaxWidth()
+                                LazyRow(
+                                    state = subGroupLazyRowState, modifier = Modifier
+                                        .fillMaxWidth()
 //                                    .height(50.dp)
-                                    .padding(horizontal = 10.dp)
+                                        .padding(horizontal = 10.dp)
 
-                            ) {
-                                items(subgroupList) { subgroup ->
-                                    AssistChip(
-                                        leadingIcon = {
-                                            if (subgroup == settings.subgroup) Icon(
-                                                imageVector = Icons.Default.Done,
-                                                contentDescription = "this is user subgroup",
-                                                tint = ScheduleTheme.colors.oppositeTheme
-                                            )
-                                        },
-                                        modifier = Modifier.padding(horizontal = 3.dp),
+                                ) {
+                                    items(subgroupList) { subgroup ->
+                                        AssistChip(
+                                            leadingIcon = {
+                                                if (subgroup == settings.subgroup) Icon(
+                                                    imageVector = Icons.Default.Done,
+                                                    contentDescription = "this is user subgroup",
+                                                    tint = ScheduleTheme.colors.oppositeTheme
+                                                )
+                                            },
+                                            modifier = Modifier.padding(horizontal = 3.dp),
 //                                        enabled = subgroup != settings.subgroup,
-                                        onClick = {
-                                            settings =
-                                                settings.copy(subgroup = if (settings.subgroup != subgroup) subgroup else null)
-                                                    .save(sharedPreferences = viewModel.sharedPreferences)
+                                            onClick = {
+                                                settings =
+                                                    settings.copy(subgroup = if (settings.subgroup != subgroup) subgroup else null)
+                                                        .save(sharedPreferences = viewModel.sharedPreferences)
 
-                                        },
-                                        label = { TextForThisTheme(text = subgroup) },
-                                    )
+                                            },
+                                            label = { TextForThisTheme(text = subgroup) },
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
+                    Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
                 }
+
+                // VK Group
+                Card(colors = cardColors) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            openLink(
+                                context = context, link = Link.VK_GROUP
+                            )
+                        }
+                        .padding(horizontal = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        TextForThisTheme(
+                            modifier = Modifier.padding(10.dp),
+                            fontSize = FontSize.small,
+                            text = stringResource(R.string.project_community)
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.group),
+                            contentDescription = "read license",
+                            tint = ScheduleTheme.colors.oppositeTheme
+                        )
+                    }
+                }
+
             }
-//            Spacer(modifier = Modifier.height(30.dp))
+
             TextForThisTheme(
                 modifier = Modifier
                     .padding(10.dp)
