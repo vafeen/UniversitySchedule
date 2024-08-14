@@ -166,6 +166,15 @@ fun SettingsScreen(
                     containerColor = ScheduleTheme.colors.buttonColor,
                 )
 
+                // name of section
+                TextForThisTheme(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = FontSize.medium,
+                    text = stringResource(R.string.general)
+                )
+
                 // Edit link
                 Card(colors = cardColors) {
                     Row(modifier = Modifier
@@ -213,58 +222,6 @@ fun SettingsScreen(
                     }
                     Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
                 }
-
-                // CODE
-                Card(colors = cardColors) {
-                    Row(modifier = Modifier
-                        .clickable {
-                            openLink(
-                                context = context, link = Link.CODE
-                            )
-                        }
-                        .padding(horizontal = 10.dp)
-                        .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small,
-                            text = stringResource(R.string.code)
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.terminal),
-                            contentDescription = "view code",
-                            tint = ScheduleTheme.colors.oppositeTheme
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
-
-                // LICENSE
-                Card(colors = cardColors) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            openLink(
-                                context = context, link = Link.LICENSE
-                            )
-                        }
-                        .padding(horizontal = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small,
-                            text = stringResource(R.string.license)
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.book),
-                            contentDescription = "read license",
-                            tint = ScheduleTheme.colors.oppositeTheme
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
 
                 // Color
                 Card(colors = cardColors) {
@@ -359,6 +316,15 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
                 }
 
+                // name of section
+                TextForThisTheme(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = FontSize.medium,
+                    text = stringResource(R.string.contacts)
+                )
+
                 // VK Group
                 Card(colors = cardColors) {
                     Row(modifier = Modifier
@@ -383,6 +349,33 @@ fun SettingsScreen(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+
+                // CODE
+                Card(colors = cardColors) {
+                    Row(modifier = Modifier
+                        .clickable {
+                            openLink(
+                                context = context, link = Link.CODE
+                            )
+                        }
+                        .padding(horizontal = 10.dp)
+                        .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        TextForThisTheme(
+                            modifier = Modifier.padding(10.dp),
+                            fontSize = FontSize.small,
+                            text = stringResource(R.string.code)
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.terminal),
+                            contentDescription = "view code",
+                            tint = ScheduleTheme.colors.oppositeTheme
+                        )
+                    }
+                }
+
 
             }
 
