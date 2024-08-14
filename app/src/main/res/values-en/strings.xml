@@ -28,4 +28,7 @@
     <string name="holiday">Day off</string>
     <string name="subgroup">Subgroup</string>
     <string name="project_community">Project community</string>
+    <string name="general">General</string>
+    <string name="contacts">Contacts</string>
+
 </resources>

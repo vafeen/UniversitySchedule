@@ -27,5 +27,7 @@
     <string name="holiday">Выходной</string>
     <string name="subgroup">Подгруппа</string>
     <string name="project_community">Сообщество проекта</string>
+    <string name="general">Общие</string>
+    <string name="contacts">Контакты</string>
 
 </resources>
