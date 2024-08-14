@@ -8,4 +8,6 @@ data class ResponseWrapper(
     @SerializedName("status") val status: String,
     @SerializedName("sig") val sig: String,
     @SerializedName("table") val table: Table
-)
+) {
+    override fun toString(): String = table.toString()
+}

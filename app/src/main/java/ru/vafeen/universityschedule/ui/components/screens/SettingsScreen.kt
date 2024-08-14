@@ -99,8 +99,10 @@ fun SettingsScreen(
     }
     LaunchedEffect(key1 = key) {
         viewModel.updateLocalDatabase { newLessons, status ->
-            subgroupList = newLessons.map {
-                it.subGroup
+            subgroupList = newLessons.filter {
+                it.subGroup != null
+            }.map {
+                it.subGroup.toString()
             }.distinct()
 
             networkState = status

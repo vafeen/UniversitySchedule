@@ -9,6 +9,7 @@ import ru.vafeen.universityschedule.network.GSheetsService
 fun openLink(context: Context, link: String) {
     context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
 }
+
 suspend fun GSheetsService.getLessonsListFromGSheetsTable(): List<Lesson> =
 //   get data as non-parcelable string
     getSheetData().string()

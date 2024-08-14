@@ -21,12 +21,16 @@ import java.time.LocalTime
 @Entity
 data class Lesson(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val dayOfWeek: DayOfWeek,
-    val name: String,
+    val dayOfWeek: DayOfWeek?,
+    val name: String?,
     val startTime: LocalTime,
     val endTime: LocalTime,
-    val classroom: String,
-    val teacher: String,
-    val subGroup: String,
-    val frequency: Frequency
-)
+    val classroom: String?,
+    val teacher: String?,
+    val subGroup: String?,
+    val frequency: Frequency?
+) {
+    override fun toString(): String {
+        return "\n $dayOfWeek $name $startTime-$endTime $classroom $teacher $subGroup $frequency"
+    }
+}

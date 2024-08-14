@@ -65,7 +65,7 @@ fun Lesson.StringForSchedule(
                     text = getLessonTimeString(), fontSize = FontSize.small,
                     color = colorBack.suitableColor()
                 )
-                if (classroom.isNotEmpty()) {
+                if (classroom?.isNotEmpty() == true) {
                     Spacer(modifier = Modifier.width(7.dp))
                     Row {
                         Icon(
@@ -92,11 +92,11 @@ fun Lesson.StringForSchedule(
 //                }
             }
 
-            if (name.isNotEmpty()) {
+            if (name?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(text = name, color = colorBack.suitableColor(), fontSize = 20.sp)
             }
-            if (teacher.isNotEmpty()) {
+            if (teacher?.isNotEmpty() == true) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
