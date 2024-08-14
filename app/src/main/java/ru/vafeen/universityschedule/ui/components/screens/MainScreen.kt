@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
@@ -109,10 +110,10 @@ fun MainScreen(
 
     LaunchedEffect(key1 = null) {
         withContext(Dispatchers.Main) {
-//            while (true) {
-//                localTime = LocalTime.now()
-//                delay(1000L)
-//            }
+            while (true) {
+                localTime = LocalTime.now()
+                delay(timeMillis = 1000L)
+            }
         }
     }
     Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
