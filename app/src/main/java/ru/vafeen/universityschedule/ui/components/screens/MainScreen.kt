@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -224,11 +223,10 @@ fun MainScreen(
                     val lessonsOfThisDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == null || it.frequency == viewModel.weekOfYear) && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
                     }
-                    Log.d("les", "les in this day = $lessonsOfThisDay")
+
                     val lessonsInOppositeNumAndDenDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency == viewModel.weekOfYear.getOpposite() && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
                     }
-                    Log.d("les", "les in opposite day = $lessonsInOppositeNumAndDenDay")
 
                     if (lessonsOfThisDay.isNotEmpty()) {
                         viewModel.nowIsLesson = false
