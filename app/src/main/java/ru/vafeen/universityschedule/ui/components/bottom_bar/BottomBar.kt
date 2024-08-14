@@ -47,7 +47,6 @@ fun BottomBar(
                     contentDescription = "Icon1"
                 )
             },
-//            label = { Text(text = "hello") },
             colors = colors,
             enabled = !selected1
         )
@@ -61,7 +60,6 @@ fun BottomBar(
                     contentDescription = "Icon2"
                 )
             },
-//            label = { Text(text = "hello") },
             enabled = !selected2,
             colors = colors
         )
