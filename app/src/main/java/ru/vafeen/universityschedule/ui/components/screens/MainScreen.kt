@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,12 +41,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
-import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.ui.components.ui_utils.StringForSchedule
@@ -65,8 +64,6 @@ import ru.vafeen.universityschedule.utils.nowIsLesson
 import ru.vafeen.universityschedule.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
-
-// для получения данных достаточно просто открыть доступ и вставить ссылку
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -112,10 +109,10 @@ fun MainScreen(
 
     LaunchedEffect(key1 = null) {
         withContext(Dispatchers.Main) {
-            while (true) {
-                localTime = LocalTime.now()
-                delay(1000L)
-            }
+//            while (true) {
+//                localTime = LocalTime.now()
+//                delay(1000L)
+//            }
         }
     }
     Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
@@ -224,13 +221,13 @@ fun MainScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     val lessonsOfThisDay = lessons.filter {
-                        it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == viewModel.weekOfYear || it.frequency == Frequency.Every)
-                                && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
+                        it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == null || it.frequency == viewModel.weekOfYear) && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
                     }
+                    Log.d("les", "les in this day = $lessonsOfThisDay")
                     val lessonsInOppositeNumAndDenDay = lessons.filter {
-                        it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency != Frequency.Every && it.frequency == viewModel.weekOfYear.getOpposite()
-                                && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
+                        it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency == viewModel.weekOfYear.getOpposite() && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
                     }
+                    Log.d("les", "les in opposite day = $lessonsInOppositeNumAndDenDay")
 
                     if (lessonsOfThisDay.isNotEmpty()) {
                         viewModel.nowIsLesson = false
