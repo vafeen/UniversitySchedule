@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.ui_utils
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,7 +55,6 @@ fun ColorPickerDialog(
     Dialog(
         onDismissRequest = onDismissRequest,
     ) {
-        Log.d("color", "xxxColor =${newColor.toArgb()}")
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = ScheduleTheme.colors.singleTheme
