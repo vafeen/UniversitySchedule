@@ -3,6 +3,7 @@ package ru.vafeen.universityschedule.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
@@ -43,7 +44,7 @@ fun MainTheme(
 
 object ScheduleTheme {
     val colors: ScheduleColors
-        @Composable
+        @ReadOnlyComposable @Composable
         get() = LocalColors.current
 }
 
