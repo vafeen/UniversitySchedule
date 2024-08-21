@@ -10,13 +10,13 @@ fun Row.toLesson(): Lesson? = this.cells.map {
     try {
         Lesson(
             dayOfWeek = it[0]?.toDayOfWeek(),
-            name = it[1],
+            name = it[1].makeNullIfNull(),
             startTime = "${it[2]}".toTimeOfLessonAsLocalTime(),
             endTime = "${it[3]}".toTimeOfLessonAsLocalTime(),
-            classroom = it[4],
-            teacher = it[5],
-            subGroup = it[6]?.normalizeCase(),
-            frequency = it[7]?.toFrequency()
+            classroom = it[4].makeNullIfNull(),
+            teacher = it[5].makeNullIfNull(),
+            subGroup = it[6].makeNullIfNull()?.normalizeCase(),
+            frequency = it[7].makeNullIfNull()?.toFrequency()
         )
     } catch (e: Exception) {
         null

@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -53,19 +54,24 @@ fun Lesson.StringForSchedule(
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
-                    contentDescription = "Icon schedule",
-                    tint = colorBack.suitableColor()
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = getLessonTimeString(), fontSize = FontSize.small17,
-                    color = colorBack.suitableColor()
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
+                        contentDescription = "Icon schedule",
+                        tint = colorBack.suitableColor()
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = getLessonTimeString(), fontSize = FontSize.small17,
+                        color = colorBack.suitableColor()
+                    )
+                }
                 if (classroom?.isNotEmpty() == true) {
-                    Spacer(modifier = Modifier.width(7.dp))
                     Row {
                         Icon(
                             imageVector = Icons.Default.Place,
@@ -84,8 +90,17 @@ fun Lesson.StringForSchedule(
 
             if (name?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(text = name, color = colorBack.suitableColor(), fontSize = FontSize.medium19)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = name, color = colorBack.suitableColor(),
+                        fontSize = FontSize.big22
+                    )
+                }
             }
+
             if (teacher?.isNotEmpty() == true)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -104,25 +119,41 @@ fun Lesson.StringForSchedule(
                         maxLines = 3
                     )
                 }
-            if (subGroup?.isNotEmpty() == true)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.group),
-                        contentDescription = "Icon subgroup",
-                        tint = colorBack.suitableColor()
-                    )
-                    Spacer(modifier = Modifier.width(3.dp))
-                    Text(
-                        text = subGroup,
-                        fontSize = FontSize.small17,
-                        color = colorBack.suitableColor(),
-                        maxLines = 3
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                if (frequency != null) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = stringResource(id = frequency.resourceName),
+                            color = colorBack.suitableColor(),
+                            fontSize = FontSize.medium19
+                        )
+                    }
                 }
-
+                if (subGroup?.isNotEmpty() == true)
+                    Row(
+                        modifier = Modifier
+                            .weight(1f),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.group),
+                            contentDescription = "Icon subgroup",
+                            tint = colorBack.suitableColor()
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = subGroup,
+                            fontSize = FontSize.small17,
+                            color = colorBack.suitableColor(),
+                            maxLines = 3
+                        )
+                    }
+            }
         }
     }
 }

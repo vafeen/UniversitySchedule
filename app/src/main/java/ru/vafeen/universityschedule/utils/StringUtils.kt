@@ -85,3 +85,5 @@ fun String.getResponseFromJson(): ResponseWrapper =
 fun String.dataToJsonString(): String = substringAfter("Query.setResponse(").let {
     it.substring(0, it.lastIndex - 1)
 }
+
+fun String?.makeNullIfNull(): String? = if (this?.contains("null") == true) null else this
