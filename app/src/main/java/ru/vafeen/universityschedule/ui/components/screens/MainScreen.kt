@@ -40,7 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
@@ -109,10 +108,10 @@ fun MainScreen(
 
     LaunchedEffect(key1 = null) {
         withContext(Dispatchers.Main) {
-            while (true) {
-                localTime = LocalTime.now()
-                delay(timeMillis = 1000L)
-            }
+//            while (true) {
+//                localTime = LocalTime.now()
+//                delay(timeMillis = 1000L)
+//            }
         }
     }
     Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
@@ -184,7 +183,7 @@ fun MainScreen(
                             .padding(horizontal = 3.dp)
                             .clickable {
                                 cor.launch(Dispatchers.Main) {
-                                    pagerState.animateScrollToPage(index)
+                                    pagerState.scrollToPage(index)
                                     localDate =
                                         viewModel.todayDate.plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
                                 }
@@ -221,31 +220,32 @@ fun MainScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     val lessonsOfThisDay = lessons.filter {
-                        it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == null || it.frequency == viewModel.weekOfYear) && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
+                        it.dayOfWeek == viewModel.daysOfWeek[page] &&
+                                (it.frequency == null || it.frequency == viewModel.weekOfYear)
+                                && (it.subGroup == settings.subgroup || it.subGroup == null)
                     }
-
                     val lessonsInOppositeNumAndDenDay = lessons.filter {
-                        it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency == viewModel.weekOfYear.getOpposite() && if (settings.subgroup != null) it.subGroup == settings.subgroup else true
+                        it.dayOfWeek == viewModel.daysOfWeek[page] &&
+                                it.frequency == viewModel.weekOfYear.getOpposite()
+                                && (it.subGroup == settings.subgroup || it.subGroup == null)
                     }
-
                     if (lessonsOfThisDay.isNotEmpty()) {
                         viewModel.nowIsLesson = false
-                        for (indexOfLesson in 0..lessonsOfThisDay.lastIndex) {
-                            val thisLesson = lessonsOfThisDay[indexOfLesson]
-                            if (thisLesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
+                        lessonsOfThisDay.forEach { lesson ->
+                            if (lesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
                                 viewModel.nowIsLesson = true
-                                thisLesson.StringForSchedule(colorBack = mainColor)
+                                lesson.StringForSchedule(colorBack = mainColor)
                             } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
                                     it.startTime > localTime
-                                } && thisLesson == lessonsOfThisDay.filter {
+                                } && lesson == lessonsOfThisDay.filter {
                                     it.startTime > localTime
                                 }[0] && !viewModel.nowIsLesson) {
                                 CardOfNextLesson(colorOfCard = mainColor) {
-                                    thisLesson.StringForSchedule(
+                                    lesson.StringForSchedule(
                                         colorBack = ScheduleTheme.colors.buttonColor, padding = 0.dp
                                     )
                                 }
-                            } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
+                            } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
 
                         }
                     } else WeekDay(context = context, modifier = Modifier)
@@ -264,8 +264,8 @@ fun MainScreen(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             fontSize = FontSize.big22
                         )
-                        for (indexOfLesson in 0..lessonsInOppositeNumAndDenDay.lastIndex) {
-                            lessonsInOppositeNumAndDenDay[indexOfLesson].StringForSchedule(
+                        lessonsInOppositeNumAndDenDay.forEach { lesson ->
+                            lesson.StringForSchedule(
                                 colorBack = ScheduleTheme.colors.buttonColor,
                                 lessonOfThisNumAndDenOrNot = false
                             )

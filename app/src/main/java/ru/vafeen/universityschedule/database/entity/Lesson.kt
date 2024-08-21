@@ -30,6 +30,6 @@ data class Lesson(
     val frequency: Frequency?
 ) {
     override fun toString(): String {
-        return "\n $dayOfWeek $name $startTime-$endTime $classroom $teacher $subGroup $frequency"
+        return "\n dayOfWeek=${dayOfWeek ?: "\"is null\""} name=${name ?: "\"is null\""} st=${startTime}-et=${endTime} classrom=${classroom ?: "\"is null\""} tchr=${teacher ?: "\"is null\""} sbgr=${subGroup ?: "\"is null\""} fr=${frequency ?: "\"is null\""}"
     }
 }
