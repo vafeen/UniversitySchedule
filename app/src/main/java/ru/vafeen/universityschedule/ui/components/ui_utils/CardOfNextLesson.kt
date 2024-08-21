@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.utils.suitableColor
 
 
@@ -30,7 +30,7 @@ fun CardOfNextLesson(
     ) {
         Text(
             text = stringResource(R.string.next_lesson),
-            fontSize = 20.sp,
+            fontSize = FontSize.medium19,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = colorOfCard.suitableColor()
         )

@@ -138,23 +138,23 @@ fun MainScreen(
 
                 TextForThisTheme(
                     text = "|",
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                 )
 
                 Text(
                     text = stringResource(id = viewModel.weekOfYear.resourceName),
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                     color = ScheduleTheme.colors.oppositeTheme
                 )
 
                 TextForThisTheme(
                     text = "|",
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                 )
 
                 TextForThisTheme(
                     text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                 )
             }
         })
@@ -199,7 +199,7 @@ fun MainScreen(
                         )) {
                             Text(
                                 text = viewModel.ruDaysOfWeek[index],
-                                fontSize = FontSize.small,
+                                fontSize = FontSize.small17,
                                 modifier = Modifier.padding(
                                     vertical = 5.dp, horizontal = 10.dp
                                 )
@@ -262,7 +262,7 @@ fun MainScreen(
                         TextForThisTheme(
                             text = stringResource(id = R.string.other_lessons_in_this_day),
                             modifier = Modifier.align(Alignment.CenterHorizontally),
-                            fontSize = FontSize.medium
+                            fontSize = FontSize.big22
                         )
                         for (indexOfLesson in 0..lessonsInOppositeNumAndDenDay.lastIndex) {
                             lessonsInOppositeNumAndDenDay[indexOfLesson].StringForSchedule(

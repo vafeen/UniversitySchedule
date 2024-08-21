@@ -158,7 +158,7 @@ fun SettingsScreen(
                 )
                 Spacer(modifier = Modifier.width(15.dp))
                 TextForThisTheme(
-                    text = stringResource(R.string.settings), fontSize = FontSize.medium
+                    text = stringResource(R.string.settings), fontSize = FontSize.big22
                 )
             }
 
@@ -178,7 +178,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .padding(10.dp)
                         .align(Alignment.CenterHorizontally),
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                     text = stringResource(R.string.general)
                 )
 
@@ -192,7 +192,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small,
+                            fontSize = FontSize.small17,
                             text = stringResource(R.string.link_to_table),
                         )
                         Icon(
@@ -217,7 +217,7 @@ fun SettingsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween) {
                             TextForThisTheme(
                                 modifier = Modifier.padding(10.dp),
-                                fontSize = FontSize.small,
+                                fontSize = FontSize.small17,
                                 text = stringResource(R.string.table),
                             )
                             Icon(
@@ -242,7 +242,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small,
+                            fontSize = FontSize.small17,
                             text = stringResource(R.string.interface_color)
                         )
 
@@ -273,7 +273,7 @@ fun SettingsScreen(
                                 TextForThisTheme(
                                     modifier = Modifier.padding(10.dp),
                                     text = stringResource(R.string.subgroup),
-                                    fontSize = FontSize.small
+                                    fontSize = FontSize.small17
                                 )
                                 Icon(
                                     painter = painterResource(
@@ -285,14 +285,9 @@ fun SettingsScreen(
                                 )
                             }
                             if (subGroupIsChanging) {
-//                            LaunchedEffect(key1 = null) {
-//                                subGroupRowState.scrollToItem(subgroupList.indexOf(userSubgroup))
-//                            }
-
                                 LazyRow(
                                     state = subGroupLazyRowState, modifier = Modifier
                                         .fillMaxWidth()
-//                                    .height(50.dp)
                                         .padding(horizontal = 10.dp)
 
                                 ) {
@@ -306,7 +301,6 @@ fun SettingsScreen(
                                                 )
                                             },
                                             modifier = Modifier.padding(horizontal = 3.dp),
-//                                        enabled = subgroup != settings.subgroup,
                                             onClick = {
                                                 settings =
                                                     settings.copy(subgroup = if (settings.subgroup != subgroup) subgroup else null)
@@ -328,7 +322,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .padding(10.dp)
                         .align(Alignment.CenterHorizontally),
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                     text = stringResource(R.string.contacts)
                 )
 
@@ -346,7 +340,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small,
+                            fontSize = FontSize.small17,
                             text = stringResource(R.string.project_community)
                         )
                         Icon(
@@ -372,7 +366,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         TextForThisTheme(
                             modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small,
+                            fontSize = FontSize.small17,
                             text = stringResource(R.string.code)
                         )
                         Icon(
@@ -386,12 +380,13 @@ fun SettingsScreen(
 
             }
 
+            // version
             TextForThisTheme(
                 modifier = Modifier
                     .padding(10.dp)
                     .padding(bottom = 20.dp)
                     .align(Alignment.End),
-                fontSize = FontSize.small,
+                fontSize = FontSize.small17,
                 text = "${stringResource(R.string.version)} ${getVersionName(context = LocalContext.current)}"
             )
         }

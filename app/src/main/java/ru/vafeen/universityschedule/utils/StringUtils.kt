@@ -83,7 +83,5 @@ fun String.getResponseFromJson(): ResponseWrapper =
     GsonBuilder().setLenient().create().fromJson(this, ResponseWrapper::class.java)
 
 fun String.dataToJsonString(): String = substringAfter("Query.setResponse(").let {
-    it.substring(0, it.lastIndex - 1)//.removeSubStrings("null,")
+    it.substring(0, it.lastIndex - 1)
 }
-
-fun String.linkIsEmpty(emptyLink: String): Boolean = isEmpty() || this == emptyLink

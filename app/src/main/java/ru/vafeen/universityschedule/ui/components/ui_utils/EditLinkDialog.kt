@@ -80,7 +80,7 @@ fun EditLinkDialog(
                         .align(Alignment.CenterHorizontally)
                         .weight(1f)
                         .padding(horizontal = 5.dp),
-                    fontSize = FontSize.medium
+                    fontSize = FontSize.big22
                 )
 
 
