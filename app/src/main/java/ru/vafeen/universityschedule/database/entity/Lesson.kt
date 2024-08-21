@@ -14,9 +14,8 @@ import java.time.LocalTime
  * @param endTime [end time of Lesson]
  * @param classroom [classroom of Lesson]
  * @param teacher [name of teacher of Lesson]
- * @param subGroup [number of subgroup of Lesson: 1 or 2]
- * @param frequency [frequency of Lesson: Numerator, Denominator, Every]
- *
+ * @param subGroup [name of Lesson subgroup]
+ * @param frequency [frequency of Lesson: Numerator, Denominator, None]
  */
 @Entity
 data class Lesson(

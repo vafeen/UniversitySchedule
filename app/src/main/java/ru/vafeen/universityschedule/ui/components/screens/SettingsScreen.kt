@@ -59,10 +59,17 @@ import ru.vafeen.universityschedule.utils.save
 
 /**
  * Screen with settings for application:
- * 1. Link (opening by tap and opening editing dialog by tap on pencil near
- * 2. License
- * 3. Version
- * 4. Page in RUStore
+ *
+ * General:
+ * - Link
+ * - Table
+ * - Interface color
+ * - Subgroup
+ *
+ * Contacts:
+ * - Project community
+ * - Code
+ *
  */
 @Composable
 fun SettingsScreen(

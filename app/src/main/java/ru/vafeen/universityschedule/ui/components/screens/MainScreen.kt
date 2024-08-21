@@ -248,10 +248,7 @@ fun MainScreen(
                             } else thisLesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
 
                         }
-                    } else WeekDay(
-                        context = context, modifier = Modifier
-//                        .weight(1f)
-                    )
+                    } else WeekDay(context = context, modifier = Modifier)
 
                     if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(15.dp))
