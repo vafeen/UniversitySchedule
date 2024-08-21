@@ -24,9 +24,8 @@ fun Row.toLesson(): Lesson? = this.cells.map {
 }
 
 fun ResponseWrapper.toLessonsList(): List<Lesson> {
-    val lessons = this.table.rows
     val result = mutableListOf<Lesson>()
-    for (row in lessons) {
+    for (row in this.table.rows) {
         row.toLesson()?.let { result.add(element = it) }
     }
     return result

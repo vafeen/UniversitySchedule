@@ -2,6 +2,9 @@ package ru.vafeen.universityschedule.network.parcelable
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Class into which the data from GSheets is parsed
+ */
 data class ResponseWrapper(
     @SerializedName("version") val version: String,
     @SerializedName("reqId") val reqId: String,

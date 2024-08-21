@@ -4,6 +4,9 @@ import kotlinx.coroutines.flow.Flow
 import ru.vafeen.universityschedule.database.entity.Lesson
 import javax.inject.Inject
 
+/**
+ * "Abstract" class for manipulations with database
+ */
 class DatabaseRepository @Inject constructor(db: AppDatabase) {
     private val lessonDao = db.lessonDao()
     fun getAllAsFlowLessons(): Flow<List<Lesson>> = lessonDao.getAllAsFlow()
