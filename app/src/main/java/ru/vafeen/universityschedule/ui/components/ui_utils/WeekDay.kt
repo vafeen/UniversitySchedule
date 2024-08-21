@@ -23,7 +23,7 @@ fun WeekDay(context: Context, modifier: Modifier = Modifier) {
     ) {
         TextForThisTheme(
             text = context.getString(R.string.holiday),
-            fontSize = FontSize.huge,
+            fontSize = FontSize.huge27,
             modifier = Modifier
         )
     }

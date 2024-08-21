@@ -68,7 +68,7 @@ fun ColorPickerDialog(
             ) {
                 Text(
                     text = context.getString(R.string.new_interface_color),
-                    fontSize = FontSize.medium,
+                    fontSize = FontSize.big22,
                     modifier = Modifier.padding(10.dp),
                     color = ScheduleTheme.colors.oppositeTheme
                 )
@@ -79,7 +79,8 @@ fun ColorPickerDialog(
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
-// color picker
+
+                // color picker
                 Alwan(
                     onColorChanged = {
                         newColor = it

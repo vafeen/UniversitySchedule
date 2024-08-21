@@ -24,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.ui.theme.FontSize
@@ -62,7 +61,7 @@ fun Lesson.StringForSchedule(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = getLessonTimeString(), fontSize = FontSize.small,
+                    text = getLessonTimeString(), fontSize = FontSize.small17,
                     color = colorBack.suitableColor()
                 )
                 if (classroom?.isNotEmpty() == true) {
@@ -77,7 +76,7 @@ fun Lesson.StringForSchedule(
                         Text(
                             text = classroom,
                             color = colorBack.suitableColor(),
-                            fontSize = FontSize.small
+                            fontSize = FontSize.small17
                         )
                     }
                 }
@@ -85,7 +84,7 @@ fun Lesson.StringForSchedule(
 
             if (name?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(text = name, color = colorBack.suitableColor(), fontSize = 20.sp)
+                Text(text = name, color = colorBack.suitableColor(), fontSize = FontSize.medium19)
             }
             if (teacher?.isNotEmpty() == true)
                 Row(
@@ -100,7 +99,7 @@ fun Lesson.StringForSchedule(
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
                         text = teacher.replace(oldValue = " ", newValue = "\n"),
-                        fontSize = 17.sp,
+                        fontSize = FontSize.small17,
                         color = colorBack.suitableColor(),
                         maxLines = 3
                     )
@@ -118,7 +117,7 @@ fun Lesson.StringForSchedule(
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
                         text = subGroup,
-                        fontSize = 17.sp,
+                        fontSize = FontSize.small17,
                         color = colorBack.suitableColor(),
                         maxLines = 3
                     )
