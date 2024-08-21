@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -81,28 +81,19 @@ fun Lesson.StringForSchedule(
                         )
                     }
                 }
-//                if (typeOfLesson.myIsNotEmpty()) { TODO("ADD TYPE OF LESSON")
-//                    Spacer(modifier = Modifier.width(17.dp))
-//                    Text(
-//                        modifier = Modifier.alpha(0.5f),
-//                        text = typeOfLesson,
-//                        color = ScheduleTheme.colors.text,
-//                        fontSize = FontSize.medium
-//                    )
-//                }
             }
 
             if (name?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(text = name, color = colorBack.suitableColor(), fontSize = 20.sp)
             }
-            if (teacher?.isNotEmpty() == true) {
+            if (teacher?.isNotEmpty() == true)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Person,
+                        painter = painterResource(id = R.drawable.person),
                         contentDescription = "Icon teacher",
                         tint = colorBack.suitableColor()
                     )
@@ -114,7 +105,25 @@ fun Lesson.StringForSchedule(
                         maxLines = 3
                     )
                 }
-            }
+            if (subGroup?.isNotEmpty() == true)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.group),
+                        contentDescription = "Icon subgroup",
+                        tint = colorBack.suitableColor()
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text(
+                        text = subGroup,
+                        fontSize = 17.sp,
+                        color = colorBack.suitableColor(),
+                        maxLines = 3
+                    )
+                }
+
         }
     }
 }
