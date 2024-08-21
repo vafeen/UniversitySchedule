@@ -15,7 +15,7 @@ fun Row.toLesson(): Lesson? = this.cells.map {
             endTime = "${it[3]}".toTimeOfLessonAsLocalTime(),
             classroom = it[4],
             teacher = it[5],
-            subGroup = it[6],
+            subGroup = it[6]?.normalizeCase(),
             frequency = it[7]?.toFrequency()
         )
     } catch (e: Exception) {

@@ -7,7 +7,7 @@ import ru.vafeen.universityschedule.network.GSheetsService
 fun createGSheetsService(link: String): GSheetsService? {
     if (link.isEmpty()) return null
     return try {
-        Retrofit.Builder().baseUrl(link.replace("edit?usp=sharing", "")).build()
+        Retrofit.Builder().baseUrl(link.substringBefore("edit?")).build()
             .create(GSheetsService::class.java)
     } catch (e: Exception) {
         null
