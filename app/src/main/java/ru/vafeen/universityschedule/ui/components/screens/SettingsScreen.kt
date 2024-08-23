@@ -22,8 +22,11 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -71,6 +74,7 @@ import ru.vafeen.universityschedule.utils.save
  * - Code
  *
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     context: Context,
@@ -116,7 +120,36 @@ fun SettingsScreen(
         }
     }
     BackHandler(onBack = gotoMainScreenCallBack)
-    Scaffold(containerColor = ScheduleTheme.colors.singleTheme, bottomBar = {
+    Scaffold(
+        containerColor = ScheduleTheme.colors.singleTheme,
+        topBar = {
+            TopAppBar(colors = TopAppBarColors(
+                containerColor = ScheduleTheme.colors.singleTheme,
+                scrolledContainerColor = ScheduleTheme.colors.singleTheme,
+                navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
+                titleContentColor = ScheduleTheme.colors.oppositeTheme,
+                actionIconContentColor = ScheduleTheme.colors.singleTheme
+            ), modifier = Modifier.fillMaxWidth(), title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = getIconByRequestStatus(networkState = networkState)
+                        ),
+                        contentDescription = "data updating state",
+                        tint = ScheduleTheme.colors.oppositeTheme
+                    )
+                    Spacer(modifier = Modifier.width(15.dp))
+                    TextForThisTheme(
+                        text = stringResource(R.string.settings), fontSize = FontSize.big22
+                    )
+                }
+            })
+        },
+        bottomBar = {
         BottomBar(
             containerColor = settings.getMainColorForThisTheme(isDark = dark)
                 ?: ScheduleTheme.colors.mainColor,
@@ -145,21 +178,6 @@ fun SettingsScreen(
                 settings = (if (dark) settings.copy(
                     darkThemeColor = it
                 ) else settings.copy(lightThemeColor = it)).save(sharedPreferences = viewModel.sharedPreferences)
-            }
-            Row(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = getIconByRequestStatus(networkState = networkState)
-                    ),
-                    contentDescription = "data updating state",
-                    tint = ScheduleTheme.colors.oppositeTheme
-                )
-                Spacer(modifier = Modifier.width(15.dp))
-                TextForThisTheme(
-                    text = stringResource(R.string.settings), fontSize = FontSize.big22
-                )
             }
 
             Spacer(modifier = Modifier.height(30.dp))
