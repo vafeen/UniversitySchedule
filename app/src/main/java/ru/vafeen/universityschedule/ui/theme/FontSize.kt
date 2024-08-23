@@ -7,4 +7,5 @@ object FontSize {
     val medium19 = 19.sp
     val big22 = 22.sp
     val huge27 = 27.sp
+    val gigant = 200.sp
 }
