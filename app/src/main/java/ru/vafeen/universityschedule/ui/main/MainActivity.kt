@@ -42,12 +42,14 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
 
             MainTheme {
-                CheckUpdateAndOpenBottomSheetIfNeed {
-                    val release = viewModel.gitHubDataService.getLatestRelease().body()
-                    if (release != null)
-                        release.name.substringAfter("v") != getVersionName(context = context)
-                    else false
-                }
+                if (!viewModel.updateIsShowed)
+                    CheckUpdateAndOpenBottomSheetIfNeed {
+                        viewModel.updateIsShowed = true
+                        val release = viewModel.gitHubDataService.getLatestRelease().body()
+                        if (release != null)
+                            release.name.substringAfter("v") != getVersionName(context = context)
+                        else false
+                    }
 
                 val navController = rememberNavController()
                 Column(modifier = Modifier.background(ScheduleTheme.colors.singleTheme)) {
