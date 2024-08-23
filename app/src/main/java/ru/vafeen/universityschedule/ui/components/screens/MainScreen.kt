@@ -223,12 +223,13 @@ fun MainScreen(
                     val lessonsOfThisDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] &&
                                 (it.frequency == null || it.frequency == viewModel.weekOfYear)
-                                && (it.subGroup == settings.subgroup || it.subGroup == null)
+                                && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                     }
                     val lessonsInOppositeNumAndDenDay = lessons.filter {
                         it.dayOfWeek == viewModel.daysOfWeek[page] &&
                                 it.frequency == viewModel.weekOfYear.getOpposite()
-                                && (it.subGroup == settings.subgroup || it.subGroup == null)
+                                && (it.subGroup == settings.subgroup || settings.subgroup == null
+                                || it.subGroup == null)
                     }
                     if (lessonsOfThisDay.isNotEmpty()) {
                         viewModel.nowIsLesson = false
