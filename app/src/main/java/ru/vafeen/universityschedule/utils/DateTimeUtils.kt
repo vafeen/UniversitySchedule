@@ -13,7 +13,13 @@ else month.value
 
 
 fun LocalTime.getTimeStringAsHMS(): String =
-    if (hour < 10) "0$hour" else "$hour:" +
-            if (minute < 10) "0$minute" else "$minute:" +
-                    if (second < 10) "0$second" else "$second"
+    "${
+        if (hour < 10) "0$hour" else "$hour"
+    }:${
+        if (minute < 10) "0$minute" else "$minute"
+    }:${
+        if (second < 10) "0$second" else "$second"
+    }"
+
+
 
