@@ -29,5 +29,6 @@
     <string name="project_community">Сообщество проекта</string>
     <string name="general">Общие</string>
     <string name="contacts">Контакты</string>
-
+    <string name="update_need">Приложение устарело, пора обновить!</string>
+    <string name="view_releases">Открыть страницу релизов для обновления по клику на QR</string>
 </resources>
