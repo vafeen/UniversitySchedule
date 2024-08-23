@@ -4,7 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import com.google.gson.GsonBuilder
-import ru.vafeen.universityschedule.network.parcelable.ResponseWrapper
+import ru.vafeen.universityschedule.network.parcelable.googlesheets_service.ResponseWrapper
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import java.time.DayOfWeek
 import java.time.LocalTime

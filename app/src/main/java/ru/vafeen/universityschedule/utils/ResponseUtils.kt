@@ -1,8 +1,8 @@
 package ru.vafeen.universityschedule.utils
 
 import ru.vafeen.universityschedule.database.entity.Lesson
-import ru.vafeen.universityschedule.network.parcelable.ResponseWrapper
-import ru.vafeen.universityschedule.network.parcelable.Row
+import ru.vafeen.universityschedule.network.parcelable.googlesheets_service.ResponseWrapper
+import ru.vafeen.universityschedule.network.parcelable.googlesheets_service.Row
 
 fun Row.toLesson(): Lesson? = this.cells.map {
     it?.value

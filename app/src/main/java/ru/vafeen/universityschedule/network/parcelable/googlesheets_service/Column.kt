@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.network.parcelable
+package ru.vafeen.universityschedule.network.parcelable.googlesheets_service
 
 import com.google.gson.annotations.SerializedName
 
