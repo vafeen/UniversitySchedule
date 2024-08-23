@@ -8,4 +8,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     val gitHubDataService: GitHubDataService
-) : ViewModel()
+) : ViewModel() {
+    var updateIsShowed = false
+}
