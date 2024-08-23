@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
-import ru.vafeen.universityschedule.network.GSheetsService
+import ru.vafeen.universityschedule.network.service.GSheetsService
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.SharedPreferences

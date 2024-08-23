@@ -2,7 +2,7 @@ package ru.vafeen.universityschedule.utils
 
 import retrofit2.Retrofit
 import ru.vafeen.universityschedule.R
-import ru.vafeen.universityschedule.network.GSheetsService
+import ru.vafeen.universityschedule.network.service.GSheetsService
 
 fun createGSheetsService(link: String): GSheetsService? {
     if (link.isEmpty()) return null

@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.network
+package ru.vafeen.universityschedule.network.service
 
 import okhttp3.ResponseBody
 import retrofit2.http.GET

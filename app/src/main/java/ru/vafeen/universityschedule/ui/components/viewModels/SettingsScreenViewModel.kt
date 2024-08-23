@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
-import ru.vafeen.universityschedule.network.GSheetsService
+import ru.vafeen.universityschedule.network.service.GSheetsService
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.SharedPreferences
 import ru.vafeen.universityschedule.utils.createGSheetsService
