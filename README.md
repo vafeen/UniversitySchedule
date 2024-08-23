@@ -17,7 +17,6 @@ Main screen:
 - If you’ve chosen a subgroup in Settings Screen, this screen shows you only lessons for the chosen subgroup; otherwise, for all subgroups
 
 <p>
-<img src="readmemedia/mainscreen.png" alt="Icon" width="210">
 <img src="readmemedia/nextlesson.png" alt="Icon" width="210">
 <img src="readmemedia/currentlesson.png" alt="Icon" width="210">
 </p>
