@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.Modifier
@@ -15,16 +16,23 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vafeen.universityschedule.ui.components.screens.MainScreen
 import ru.vafeen.universityschedule.ui.components.screens.SettingsScreen
+import ru.vafeen.universityschedule.ui.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
+import ru.vafeen.universityschedule.ui.components.viewModels.MainActivityViewModel
 import ru.vafeen.universityschedule.ui.components.viewModels.factories.provider.ViewModelsFactoryProvider
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.MainTheme
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
+import ru.vafeen.universityschedule.utils.getVersionName
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var viewModelsFactoryProvider: ViewModelsFactoryProvider
+
+    private val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel> {
+        viewModelsFactoryProvider.mainActivityViewModelFactory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +42,13 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
 
             MainTheme {
+                CheckUpdateAndOpenBottomSheetIfNeed {
+                    val release = viewModel.gitHubDataService.getLatestRelease().body()
+                    if (release != null)
+                        release.name.substringAfter("v") != getVersionName(context = context)
+                    else false
+                }
+
                 val navController = rememberNavController()
                 Column(modifier = Modifier.background(ScheduleTheme.colors.singleTheme)) {
                     NavHost(
@@ -58,6 +73,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
 }
