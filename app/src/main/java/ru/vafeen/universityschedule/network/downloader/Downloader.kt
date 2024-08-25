@@ -46,41 +46,50 @@ object Downloader {
         url: String, filePath: String
     ) {
         val call = networkRepository.downloadFile(url)
-
         call?.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
                 CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-                    if (response.isSuccessful) {
-                        response.body()?.let { body ->
-                            val file = File(filePath)
-                            val inputStream = body.byteStream()
-                            val outputStream = FileOutputStream(file)
-                            val buffer = ByteArray(8 * 1024)
-                            var bytesRead: Int
-                            var totalBytesRead: Long = 0
-                            val contentLength = body.contentLength()
+                    try {
+                        if (response.isSuccessful) {
+                            response.body()?.let { body ->
+                                val file = File(filePath)
+                                val inputStream = body.byteStream()
+                                val outputStream = FileOutputStream(file)
+                                val buffer = ByteArray(8 * 1024)
+                                var bytesRead: Int
+                                var totalBytesRead: Long = 0
+                                val contentLength = body.contentLength()
 
-                            inputStream.use { input ->
-                                outputStream.use { output ->
-                                    while (input.read(buffer).also { bytesRead = it } != -1) {
-                                        output.write(buffer, 0, bytesRead)
-                                        totalBytesRead += bytesRead
-                                        sizeFlow.emit(
-                                            Progress(
-                                                totalBytesRead = totalBytesRead,
-                                                contentLength = contentLength,
-                                                done = totalBytesRead == contentLength
+                                inputStream.use { input ->
+                                    outputStream.use { output ->
+                                        while (input.read(buffer).also { bytesRead = it } != -1) {
+                                            output.write(buffer, 0, bytesRead)
+                                            totalBytesRead += bytesRead
+                                            sizeFlow.emit(
+                                                Progress(
+                                                    totalBytesRead = totalBytesRead,
+                                                    contentLength = contentLength,
+                                                    done = totalBytesRead == contentLength
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
+                                Log.d("status", "Downloaded")
                             }
-                            Log.d("status", "Downloaded")
+                        } else {
+                            Log.e("status", "Failed to download file")
                         }
-                    } else {
-                        Log.e("status", "Failed to download file")
+                    } catch (e: Exception) {
+                        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
+                            sizeFlow.emit(Progress(failed = true))
+                        }
                     }
                 }
+
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
