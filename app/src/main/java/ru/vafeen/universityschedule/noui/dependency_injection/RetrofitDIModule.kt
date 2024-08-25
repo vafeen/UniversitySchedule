@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.vafeen.universityschedule.network.downloader.DownloadService
+import ru.vafeen.universityschedule.network.service.DownloadService
 import ru.vafeen.universityschedule.network.service.GitHubDataService
 import javax.inject.Singleton
 

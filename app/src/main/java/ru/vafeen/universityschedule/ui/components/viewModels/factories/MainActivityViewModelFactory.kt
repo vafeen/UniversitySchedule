@@ -2,7 +2,7 @@ package ru.vafeen.universityschedule.ui.components.viewModels.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import ru.vafeen.universityschedule.network.downloader.DownloadService
+import ru.vafeen.universityschedule.network.service.DownloadService
 import ru.vafeen.universityschedule.network.service.GitHubDataService
 import ru.vafeen.universityschedule.ui.components.viewModels.MainActivityViewModel
 import javax.inject.Inject

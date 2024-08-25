@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import ru.vafeen.universityschedule.network.downloader.DownloadService
 import ru.vafeen.universityschedule.network.parcelable.github_service.Release
+import ru.vafeen.universityschedule.network.service.DownloadService
 import ru.vafeen.universityschedule.network.service.GitHubDataService
 import ru.vafeen.universityschedule.ui.components.bottom_sheet.UpdaterBottomSheet
 import ru.vafeen.universityschedule.utils.getVersionName
