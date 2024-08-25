@@ -8,22 +8,45 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import ru.vafeen.universityschedule.network.downloader.DownloadService
+import ru.vafeen.universityschedule.network.parcelable.github_service.Release
+import ru.vafeen.universityschedule.network.service.GitHubDataService
 import ru.vafeen.universityschedule.ui.components.bottom_sheet.UpdaterBottomSheet
+import ru.vafeen.universityschedule.utils.getVersionName
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckUpdateAndOpenBottomSheetIfNeed(isUpdateNeededCallback: suspend () -> Boolean) {
+fun CheckUpdateAndOpenBottomSheetIfNeed(
+    downloadService: DownloadService,
+    gitHubDataService: GitHubDataService,
+    onDismissRequest: (Boolean) -> Unit
+) {
+    val context = LocalContext.current
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isUpdateNeeded by remember {
         mutableStateOf(false)
     }
+    var release: Release? by remember {
+        mutableStateOf(null)
+    }
     LaunchedEffect(key1 = null) {
-        isUpdateNeeded = isUpdateNeededCallback()
+        release = gitHubDataService.getLatestRelease().body()
+        if (release != null && release?.tag_name?.substringAfter("v") == getVersionName(context = context))
+            isUpdateNeeded = true
     }
 
     if (isUpdateNeeded)
-        UpdaterBottomSheet(state = bottomSheetState) {
-            isUpdateNeeded = false
+        release?.let { releaseParam ->
+            UpdaterBottomSheet(
+                downloadService = downloadService,
+                release = releaseParam,
+                state = bottomSheetState,
+            ) {
+                isUpdateNeeded = false
+                onDismissRequest(it)
+            }
         }
 }

@@ -82,6 +82,8 @@ dependencies {
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    //okHttp
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     // compose navigation
     implementation(libs.androidx.navigation.compose)
     // viewModel

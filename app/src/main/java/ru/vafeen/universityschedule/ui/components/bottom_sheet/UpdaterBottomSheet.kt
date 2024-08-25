@@ -21,20 +21,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.network.downloader.DownloadService
+import ru.vafeen.universityschedule.network.downloader.Downloader
+import ru.vafeen.universityschedule.network.parcelable.github_service.Release
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.updateAvailableColor
-import ru.vafeen.universityschedule.utils.Link
-import ru.vafeen.universityschedule.utils.openLink
+import ru.vafeen.universityschedule.utils.Path
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdaterBottomSheet(state: SheetState, onDismissRequest: () -> Unit) {
+fun UpdaterBottomSheet(
+    downloadService: DownloadService,
+    release: Release,
+    state: SheetState,
+    onDismissRequest: (Boolean) -> Unit
+) {
     val context = LocalContext.current
     ModalBottomSheet(
         sheetState = state,
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { onDismissRequest(false) },
         containerColor = updateAvailableColor,
     ) {
         Column(
@@ -43,6 +53,7 @@ fun UpdaterBottomSheet(state: SheetState, onDismissRequest: () -> Unit) {
                 .fillMaxSize(0.8f)
                 .padding(10.dp),
         ) {
+
             Text(
                 text = ":)",
                 fontSize = FontSize.gigant,
@@ -65,7 +76,15 @@ fun UpdaterBottomSheet(state: SheetState, onDismissRequest: () -> Unit) {
                 contentDescription = "qr",
                 modifier = Modifier
                     .clickable {
-                        openLink(context = context, link = Link.RELEASES)
+                        Downloader.downloadApk(
+                            service = downloadService,
+                            url = "vafeen/UniversitySchedule/releases/download/${release.tag_name}/${release.assets[0].name}",
+                            filePath = Path.path(context),
+                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Downloader.isUpdateInProcessFlow.emit(true)
+                        }
+                        onDismissRequest(true)
                     }
                     .size(150.dp)
                     .align(Alignment.CenterHorizontally)
