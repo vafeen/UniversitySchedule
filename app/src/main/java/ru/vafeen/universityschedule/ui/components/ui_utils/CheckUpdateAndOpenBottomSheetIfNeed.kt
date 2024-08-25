@@ -24,6 +24,7 @@ fun CheckUpdateAndOpenBottomSheetIfNeed(
     onDismissRequest: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
+    val versionName = getVersionName(context = context)
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isUpdateNeeded by remember {
@@ -34,7 +35,10 @@ fun CheckUpdateAndOpenBottomSheetIfNeed(
     }
     LaunchedEffect(key1 = null) {
         release = gitHubDataService.getLatestRelease().body()
-        if (release != null && release?.tag_name?.substringAfter("v") == getVersionName(context = context))
+        if (release != null && versionName != null &&
+            release?.tag_name?.substringAfter("v") != null &&
+            release?.tag_name?.substringAfter("v") != versionName
+        )
             isUpdateNeeded = true
     }
 

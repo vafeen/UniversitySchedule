@@ -33,7 +33,7 @@ fun UpdateProgress(percentage: MutableState<Progress>) {
     ) {
         TextForThisTheme(
             modifier = Modifier.padding(vertical = 3.dp),
-            text = "${stringResource(id = R.string.updating)}${value}%",
+            text = "${stringResource(id = R.string.updating)} ${value}%",
             fontSize = FontSize.medium19
         )
         LinearProgressIndicator(
