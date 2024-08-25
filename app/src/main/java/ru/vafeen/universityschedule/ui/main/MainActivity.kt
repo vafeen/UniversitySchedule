@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -52,7 +51,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Column(
                     modifier = Modifier
-                        .systemBarsPadding()
                         .background(ScheduleTheme.colors.singleTheme)
                 ) {
                     NavHost(
