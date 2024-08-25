@@ -26,7 +26,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +51,7 @@ import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.ui.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.ui.components.ui_utils.TextForThisTheme
+import ru.vafeen.universityschedule.ui.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.ui.components.ui_utils.WeekDay
 import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
@@ -187,7 +186,7 @@ fun MainScreen(
     }, bottomBar = {
         BottomBar(
             containerColor = mainColor, clickToScreen2 = {
-                navController.navigate(Screen.Settings.route)
+                if (!isUpdateInProcess) navController.navigate(Screen.Settings.route)
             }, selected1 = true
         )
     }) { innerPadding ->
@@ -306,27 +305,5 @@ fun MainScreen(
             }
             if (isUpdateInProcess) UpdateProgress(percentage = progress)
         }
-    }
-}
-
-@Composable
-fun UpdateProgress(percentage: MutableState<Progress>) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(30.dp)
-            .background(Color.LightGray),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TextForThisTheme(
-            text = "update in process ${
-                percentage.value.let {
-                    100 * it.totalBytesRead / (it.contentLength.let { cl ->
-                        if (cl.toFloat() == 0f) 1 else cl
-                    })
-                }
-            }"
-        )
     }
 }
