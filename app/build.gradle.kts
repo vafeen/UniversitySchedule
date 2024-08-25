@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "ru.vafeen.universityschedule"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "ru.vafeen.universityschedule"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -82,8 +82,6 @@ dependencies {
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    //okHttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     // compose navigation
     implementation(libs.androidx.navigation.compose)
     // viewModel
