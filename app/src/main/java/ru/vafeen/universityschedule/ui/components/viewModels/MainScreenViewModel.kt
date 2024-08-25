@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.viewModels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -55,7 +54,6 @@ class MainScreenViewModel @Inject constructor(
     fun updateLocalDatabase(updateUICallback: (List<Lesson>, GSheetsServiceRequestStatus) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val lastLessons = databaseRepository.getAllAsFlowLessons().first()
-            Log.d("lessons", lastLessons.toString())
             withContext(Dispatchers.Main) {
                 updateUICallback(
                     lastLessons,

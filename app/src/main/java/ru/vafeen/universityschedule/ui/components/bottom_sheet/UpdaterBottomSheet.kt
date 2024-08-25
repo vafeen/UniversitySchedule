@@ -25,9 +25,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.R
-import ru.vafeen.universityschedule.network.downloader.DownloadService
 import ru.vafeen.universityschedule.network.downloader.Downloader
 import ru.vafeen.universityschedule.network.parcelable.github_service.Release
+import ru.vafeen.universityschedule.network.service.DownloadService
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.updateAvailableColor
 import ru.vafeen.universityschedule.utils.Path

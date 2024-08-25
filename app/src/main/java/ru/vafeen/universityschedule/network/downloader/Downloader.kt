@@ -12,6 +12,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.vafeen.universityschedule.network.service.DownloadService
 import java.io.File
 import java.io.FileOutputStream
 
@@ -70,10 +71,6 @@ object Downloader {
                                                 contentLength = contentLength,
                                                 done = totalBytesRead == contentLength
                                             )
-                                        )
-                                        Log.d(
-                                            "flow",
-                                            "отдано %${totalBytesRead * 100 / contentLength}"
                                         )
                                     }
                                 }
