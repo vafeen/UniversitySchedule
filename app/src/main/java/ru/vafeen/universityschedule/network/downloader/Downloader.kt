@@ -12,7 +12,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import ru.vafeen.universityschedule.network.service.DownloadService
+import ru.vafeen.universityschedule.network.repository.NetworkRepository
 import java.io.File
 import java.io.FileOutputStream
 
@@ -42,12 +42,12 @@ object Downloader {
     }
 
     fun downloadApk(
-        service: DownloadService,
+        networkRepository: NetworkRepository,
         url: String, filePath: String
     ) {
+        val call = networkRepository.downloadFile(url)
 
-        val call = service.downloadFile(url)
-        call.enqueue(object : Callback<ResponseBody> {
+        call?.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
                     if (response.isSuccessful) {

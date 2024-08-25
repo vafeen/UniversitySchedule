@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.network.downloader.Downloader
 import ru.vafeen.universityschedule.network.parcelable.github_service.Release
-import ru.vafeen.universityschedule.network.service.DownloadService
+import ru.vafeen.universityschedule.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.updateAvailableColor
 import ru.vafeen.universityschedule.utils.Path
@@ -36,7 +36,7 @@ import ru.vafeen.universityschedule.utils.Path
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdaterBottomSheet(
-    downloadService: DownloadService,
+    networkRepository: NetworkRepository,
     release: Release,
     state: SheetState,
     onDismissRequest: (Boolean) -> Unit
@@ -77,7 +77,7 @@ fun UpdaterBottomSheet(
                 modifier = Modifier
                     .clickable {
                         Downloader.downloadApk(
-                            service = downloadService,
+                            networkRepository = networkRepository,
                             url = "vafeen/UniversitySchedule/releases/download/${release.tag_name}/${release.assets[0].name}",
                             filePath = Path.path(context),
                         )
