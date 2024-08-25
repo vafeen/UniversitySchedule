@@ -42,8 +42,7 @@ class MainActivity : ComponentActivity() {
             MainTheme {
                 if (!viewModel.updateIsShowed)
                     CheckUpdateAndOpenBottomSheetIfNeed(
-                        downloadService = viewModel.downloadService,
-                        gitHubDataService = viewModel.gitHubDataService,
+                        networkRepository = viewModel.networkRepository
                     ) {
                         viewModel.updateIsShowed = true
                     }

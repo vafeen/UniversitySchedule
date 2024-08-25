@@ -10,8 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import ru.vafeen.universityschedule.network.parcelable.github_service.Release
-import ru.vafeen.universityschedule.network.service.DownloadService
-import ru.vafeen.universityschedule.network.service.GitHubDataService
+import ru.vafeen.universityschedule.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.ui.components.bottom_sheet.UpdaterBottomSheet
 import ru.vafeen.universityschedule.utils.getVersionName
 
@@ -19,8 +18,7 @@ import ru.vafeen.universityschedule.utils.getVersionName
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckUpdateAndOpenBottomSheetIfNeed(
-    downloadService: DownloadService,
-    gitHubDataService: GitHubDataService,
+    networkRepository: NetworkRepository,
     onDismissRequest: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
@@ -34,7 +32,7 @@ fun CheckUpdateAndOpenBottomSheetIfNeed(
         mutableStateOf(null)
     }
     LaunchedEffect(key1 = null) {
-        release = gitHubDataService.getLatestRelease().body()
+        release = networkRepository.getLatestRelease()?.body()
         if (release != null && versionName != null &&
             release?.tag_name?.substringAfter("v") != null &&
             release?.tag_name?.substringAfter("v") != versionName
@@ -45,7 +43,7 @@ fun CheckUpdateAndOpenBottomSheetIfNeed(
     if (isUpdateNeeded)
         release?.let { releaseParam ->
             UpdaterBottomSheet(
-                downloadService = downloadService,
+                networkRepository = networkRepository,
                 release = releaseParam,
                 state = bottomSheetState,
             ) {
