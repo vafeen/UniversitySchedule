@@ -96,14 +96,16 @@ fun MainScreen(
     }
     LaunchedEffect(key1 = null) {
         Downloader.sizeFlow.collect {
-            progress.value = it
-            if (it.contentLength == it.totalBytesRead) {
-                isUpdateInProcess = false
-                Downloader.installApk(
-                    context = context,
-                    apkFilePath = Path.path(context)
-                )
-            }
+            if (!it.failed) {
+                progress.value = it
+                if (it.contentLength == it.totalBytesRead) {
+                    isUpdateInProcess = false
+                    Downloader.installApk(
+                        context = context,
+                        apkFilePath = Path.path(context)
+                    )
+                }
+            } else isUpdateInProcess = false
         }
     }
     var networkState by remember {
