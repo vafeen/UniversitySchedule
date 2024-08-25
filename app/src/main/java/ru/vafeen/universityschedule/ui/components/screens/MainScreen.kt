@@ -196,45 +196,42 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(3.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    for (index in 0..viewModel.daysOfWeek.lastIndex) {
-                        val day = viewModel.daysOfWeek[index]
-                        Card(modifier = Modifier
-                            .padding(horizontal = 3.dp)
-                            .clickable {
-                                cor.launch(Dispatchers.Main) {
-                                    pagerState.animateScrollToPage(index)
-                                    localDate =
-                                        viewModel.todayDate.plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
-                                }
+                for (index in 0..viewModel.daysOfWeek.lastIndex) {
+                    val day = viewModel.daysOfWeek[index]
+                    Card(modifier = Modifier
+                        .padding(horizontal = 3.dp)
+                        .clickable {
+                            cor.launch(Dispatchers.Main) {
+                                pagerState.animateScrollToPage(index)
+                                localDate =
+                                    viewModel.todayDate.plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
                             }
-                            .alpha(
-                                if (day != viewModel.todayDate.dayOfWeek && day != viewModel.daysOfWeek[pagerState.currentPage]) 0.5f else 1f
-                            ), colors = CardDefaults.cardColors(
-                            containerColor = if (day == viewModel.todayDate.dayOfWeek) mainColor
-                            else ScheduleTheme.colors.buttonColor,
-                            contentColor = (if (day == viewModel.todayDate.dayOfWeek) mainColor
-                            else ScheduleTheme.colors.buttonColor).suitableColor()
-                        )) {
-                            Text(
-                                text = viewModel.ruDaysOfWeek[index],
-                                fontSize = FontSize.small17,
-                                modifier = Modifier.padding(
-                                    vertical = 5.dp, horizontal = 10.dp
-                                )
-                            )
                         }
+                        .alpha(
+                            if (day != viewModel.todayDate.dayOfWeek && day != viewModel.daysOfWeek[pagerState.currentPage]) 0.5f else 1f
+                        ), colors = CardDefaults.cardColors(
+                        containerColor = if (day == viewModel.todayDate.dayOfWeek) mainColor
+                        else ScheduleTheme.colors.buttonColor,
+                        contentColor = (if (day == viewModel.todayDate.dayOfWeek) mainColor
+                        else ScheduleTheme.colors.buttonColor).suitableColor()
+                    )) {
+                        Text(
+                            text = viewModel.ruDaysOfWeek[index],
+                            fontSize = FontSize.small17,
+                            modifier = Modifier.padding(
+                                vertical = 5.dp, horizontal = 10.dp
+                            )
+                        )
                     }
                 }
             }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -275,17 +272,23 @@ fun MainScreen(
                                         )
                                     }
                                 } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
-                                Spacer(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(23.dp)
-                                        .padding(vertical = 10.dp)
-                                        .background(ScheduleTheme.colors.buttonColor)
-                                )
                             }
-                        } else WeekDay(context = context, modifier = Modifier.weight(1f))
+                        } else WeekDay(context = context, modifier = Modifier
+                            .let {
+                                var modifier = Modifier.padding(vertical = 75.dp)
+                                if (lessonsInOppositeNumAndDenDay.isEmpty())
+                                    modifier = Modifier.weight(1f)
+                                modifier
+                            })
 
                         if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(23.dp)
+                                    .padding(vertical = 10.dp)
+                                    .background(ScheduleTheme.colors.buttonColor)
+                            )
                             TextForThisTheme(
                                 text = stringResource(id = R.string.other_lessons_in_this_day),
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
