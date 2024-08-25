@@ -1,6 +1,5 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
-import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +26,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,6 +47,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
+import ru.vafeen.universityschedule.network.downloader.Downloader
+import ru.vafeen.universityschedule.network.downloader.Progress
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.ui.components.ui_utils.StringForSchedule
@@ -55,6 +59,7 @@ import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
+import ru.vafeen.universityschedule.utils.Path
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.utils.getMainColorForThisTheme
@@ -68,9 +73,13 @@ import java.time.LocalTime
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    context: Context, navController: NavController, viewModel: MainScreenViewModel
+    navController: NavController, viewModel: MainScreenViewModel
 ) {
+    val context = LocalContext.current
     val defaultColor = ScheduleTheme.colors.mainColor
+    val progress = remember {
+        mutableStateOf(Progress(totalBytesRead = 0L, contentLength = 0L, done = false))
+    }
     val dark = isSystemInDarkTheme()
     val settings by remember { mutableStateOf(viewModel.sharedPreferences.getSettingsOrCreateIfNull()) }
     val mainColor by remember {
@@ -78,11 +87,29 @@ fun MainScreen(
             settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
         )
     }
+    var isUpdateInProcess by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(key1 = null) {
+        Downloader.isUpdateInProcessFlow.collect {
+            isUpdateInProcess = it
+        }
+    }
+    LaunchedEffect(key1 = null) {
+        Downloader.sizeFlow.collect {
+            progress.value = it
+            if (it.contentLength == it.totalBytesRead) {
+                isUpdateInProcess = false
+                Downloader.installApk(
+                    context = context,
+                    apkFilePath = Path.path(context)
+                )
+            }
+        }
+    }
     var networkState by remember {
         mutableStateOf(GSheetsServiceRequestStatus.Waiting)
     }
-
-
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())
     }
@@ -106,7 +133,6 @@ fun MainScreen(
             7
         }, initialPage = localDate.dayOfWeek.value - 1
     )
-
     LaunchedEffect(key1 = null) {
         withContext(Dispatchers.Main) {
             while (true) {
@@ -160,9 +186,9 @@ fun MainScreen(
         })
     }, bottomBar = {
         BottomBar(
-            containerColor = mainColor,
-            clickToScreen2 = { navController.navigate(Screen.Settings.route) },
-            selected1 = true
+            containerColor = mainColor, clickToScreen2 = {
+                navController.navigate(Screen.Settings.route)
+            }, selected1 = true
         )
     }) { innerPadding ->
         Column(
@@ -170,14 +196,15 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(3.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
-
                     for (index in 0..viewModel.daysOfWeek.lastIndex) {
                         val day = viewModel.daysOfWeek[index]
                         Card(modifier = Modifier
@@ -208,75 +235,95 @@ fun MainScreen(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            HorizontalPager(state = pagerState) { page ->
-                localDate =
-                    viewModel.todayDate.plusDays((pagerState.currentPage + 1 - viewModel.todayDate.dayOfWeek.value).toLong())
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    val lessonsOfThisDay = lessons.filter {
-                        it.dayOfWeek == viewModel.daysOfWeek[page] &&
-                                (it.frequency == null || it.frequency == viewModel.weekOfYear)
-                                && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
-                    }
-                    val lessonsInOppositeNumAndDenDay = lessons.filter {
-                        it.dayOfWeek == viewModel.daysOfWeek[page] &&
-                                it.frequency == viewModel.weekOfYear.getOpposite()
-                                && (it.subGroup == settings.subgroup || settings.subgroup == null
-                                || it.subGroup == null)
-                    }
-                    if (lessonsOfThisDay.isNotEmpty()) {
-                        viewModel.nowIsLesson = false
-                        lessonsOfThisDay.forEach { lesson ->
-                            if (lesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
-                                viewModel.nowIsLesson = true
-                                lesson.StringForSchedule(colorBack = mainColor)
-                            } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
-                                    it.startTime > localTime
-                                } && lesson == lessonsOfThisDay.filter {
-                                    it.startTime > localTime
-                                }[0] && !viewModel.nowIsLesson) {
-                                CardOfNextLesson(colorOfCard = mainColor) {
-                                    lesson.StringForSchedule(
-                                        colorBack = ScheduleTheme.colors.buttonColor, padding = 0.dp
-                                    )
-                                }
-                            } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
-
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                HorizontalPager(
+                    state = pagerState, modifier = Modifier.weight(10f)
+                ) { page ->
+                    localDate =
+                        viewModel.todayDate.plusDays((pagerState.currentPage + 1 - viewModel.todayDate.dayOfWeek.value).toLong())
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        val lessonsOfThisDay = lessons
+                            .filter {
+                                it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == null || it.frequency == viewModel.weekOfYear) && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                            }
+                        val lessonsInOppositeNumAndDenDay = lessons.filter {
+                            it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency == viewModel.weekOfYear.getOpposite() && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                         }
-                    } else WeekDay(context = context, modifier = Modifier)
+                        if (lessonsOfThisDay.isNotEmpty()) {
+                            viewModel.nowIsLesson = false
+                            lessonsOfThisDay.forEach { lesson ->
+                                if (lesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
+                                    viewModel.nowIsLesson = true
+                                    lesson.StringForSchedule(colorBack = mainColor)
+                                } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
+                                        it.startTime > localTime
+                                    } && lesson == lessonsOfThisDay.filter {
+                                        it.startTime > localTime
+                                    }[0] && !viewModel.nowIsLesson) {
+                                    CardOfNextLesson(colorOfCard = mainColor) {
+                                        lesson.StringForSchedule(
+                                            colorBack = ScheduleTheme.colors.buttonColor,
+                                            padding = 0.dp
+                                        )
+                                    }
+                                } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
+                                Spacer(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(23.dp)
+                                        .padding(vertical = 10.dp)
+                                        .background(ScheduleTheme.colors.buttonColor)
+                                )
+                            }
+                        } else WeekDay(context = context, modifier = Modifier.weight(1f))
 
-                    if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(13.dp)
-                                .padding(bottom = 10.dp)
-                                .background(ScheduleTheme.colors.buttonColor)
-                        )
-                        TextForThisTheme(
-                            text = stringResource(id = R.string.other_lessons_in_this_day),
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            fontSize = FontSize.big22
-                        )
-                        lessonsInOppositeNumAndDenDay.forEach { lesson ->
-                            lesson.StringForSchedule(
-                                colorBack = ScheduleTheme.colors.buttonColor,
-                                lessonOfThisNumAndDenOrNot = false
+                        if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
+                            TextForThisTheme(
+                                text = stringResource(id = R.string.other_lessons_in_this_day),
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                fontSize = FontSize.big22
                             )
+                            lessonsInOppositeNumAndDenDay.forEach { lesson ->
+                                lesson.StringForSchedule(
+                                    colorBack = ScheduleTheme.colors.buttonColor,
+                                    lessonOfThisNumAndDenOrNot = false
+                                )
+                            }
                         }
                     }
                 }
             }
+            if (isUpdateInProcess) UpdateProgress(percentage = progress)
         }
     }
 }
 
-
+@Composable
+fun UpdateProgress(percentage: MutableState<Progress>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp)
+            .background(Color.LightGray),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextForThisTheme(
+            text = "update in process ${
+                percentage.value.let {
+                    100 * it.totalBytesRead / (it.contentLength.let { cl ->
+                        if (cl.toFloat() == 0f) 1 else cl
+                    })
+                }
+            }"
+        )
+    }
+}

@@ -31,5 +31,5 @@
     <string name="general">General</string>
     <string name="contacts">Contacts</string>
     <string name="update_need">The app is out of date, time to update!</string>
-    <string name="view_releases">View releases page to update by click on QR</string>
+    <string name="view_releases">Updating by click on QR below</string>
 </resources>

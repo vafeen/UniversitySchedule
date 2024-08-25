@@ -1,5 +1,6 @@
 package ru.vafeen.universityschedule.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,8 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +23,6 @@ import ru.vafeen.universityschedule.ui.components.viewModels.factories.provider.
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.MainTheme
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
-import ru.vafeen.universityschedule.utils.getVersionName
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,38 +34,38 @@ class MainActivity : ComponentActivity() {
         viewModelsFactoryProvider.mainActivityViewModelFactory
     }
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
-            val context = LocalContext.current
-
             MainTheme {
                 if (!viewModel.updateIsShowed)
-                    CheckUpdateAndOpenBottomSheetIfNeed {
+                    CheckUpdateAndOpenBottomSheetIfNeed(
+                        downloadService = viewModel.downloadService,
+                        gitHubDataService = viewModel.gitHubDataService,
+                    ) {
                         viewModel.updateIsShowed = true
-                        val release = viewModel.gitHubDataService.getLatestRelease().body()
-                        if (release != null)
-                            release.name.substringAfter("v") != getVersionName(context = context)
-                        else false
                     }
 
                 val navController = rememberNavController()
-                Column(modifier = Modifier.background(ScheduleTheme.colors.singleTheme)) {
+                Column(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .background(ScheduleTheme.colors.singleTheme)
+                ) {
                     NavHost(
                         navController = navController, startDestination = Screen.Main.route
                     ) {
                         composable(Screen.Main.route) {
                             MainScreen(
-                                context = context,
                                 navController = navController,
                                 viewModel = viewModel(factory = viewModelsFactoryProvider.mainScreenViewModelFactory)
                             )
                         }
                         composable(Screen.Settings.route) {
                             SettingsScreen(
-                                context = context,
                                 navController = navController,
                                 viewModel = viewModel(factory = viewModelsFactoryProvider.settingsScreenViewModelFactory),
                             )

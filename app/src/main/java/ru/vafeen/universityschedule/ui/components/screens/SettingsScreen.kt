@@ -1,6 +1,5 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -77,10 +76,10 @@ import ru.vafeen.universityschedule.utils.save
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    context: Context,
     navController: NavController,
     viewModel: SettingsScreenViewModel,
 ) {
+    val context = LocalContext.current
     val dark = isSystemInDarkTheme()
     var subgroupList by remember { mutableStateOf(listOf<String>()) }
     var settings by remember {
