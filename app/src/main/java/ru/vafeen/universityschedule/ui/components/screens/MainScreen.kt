@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -60,6 +62,7 @@ import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.Path
 import ru.vafeen.universityschedule.utils.getDateString
+import ru.vafeen.universityschedule.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
@@ -74,6 +77,7 @@ import java.time.LocalTime
 fun MainScreen(
     navController: NavController, viewModel: MainScreenViewModel
 ) {
+    val pageNumber = 365
     val context = LocalContext.current
     val defaultColor = ScheduleTheme.colors.mainColor
     val progress = remember {
@@ -89,6 +93,16 @@ fun MainScreen(
     var isUpdateInProcess by remember {
         mutableStateOf(false)
     }
+    val cor = rememberCoroutineScope()
+    var localTime by remember {
+        mutableStateOf(LocalTime.now())
+    }
+    var localDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
+    var weekOfYear by remember {
+        mutableStateOf(viewModel.weekOfYear)
+    }
     LaunchedEffect(key1 = null) {
         Downloader.isUpdateInProcessFlow.collect {
             isUpdateInProcess = it
@@ -101,8 +115,7 @@ fun MainScreen(
                 if (it.contentLength == it.totalBytesRead) {
                     isUpdateInProcess = false
                     Downloader.installApk(
-                        context = context,
-                        apkFilePath = Path.path(context)
+                        context = context, apkFilePath = Path.path(context)
                     )
                 }
             } else isUpdateInProcess = false
@@ -114,24 +127,23 @@ fun MainScreen(
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())
     }
+    var cardsWithDateState = rememberLazyListState()
 
+    fun changeDateAndFrequency(daysAfterTodayDate: Long) {
+        localDate = viewModel.todayDate.plusDays(daysAfterTodayDate)
+        weekOfYear = localDate.getFrequencyByLocalDate()
+    }
     LaunchedEffect(key1 = null) {
         viewModel.updateLocalDatabase { newLessons, problem ->
             lessons = newLessons
             networkState = problem
         }
     }
-    val cor = rememberCoroutineScope()
-    var localTime by remember {
-        mutableStateOf(LocalTime.now())
-    }
-    var localDate by remember {
-        mutableStateOf(LocalDate.now())
-    }
+
 
     val pagerState = rememberPagerState(
         pageCount = {
-            7
+            pageNumber
         }, initialPage = localDate.dayOfWeek.value - 1
     )
     LaunchedEffect(key1 = null) {
@@ -169,7 +181,7 @@ fun MainScreen(
                 )
 
                 Text(
-                    text = stringResource(id = viewModel.weekOfYear.resourceName),
+                    text = stringResource(id = weekOfYear.resourceName),
                     fontSize = FontSize.big22,
                     color = ScheduleTheme.colors.oppositeTheme
                 )
@@ -178,7 +190,6 @@ fun MainScreen(
                     text = "|",
                     fontSize = FontSize.big22,
                 )
-
                 TextForThisTheme(
                     text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
                     fontSize = FontSize.big22,
@@ -197,33 +208,33 @@ fun MainScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Row(
+            LazyRow(
+                state = cardsWithDateState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(3.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                for (index in 0..viewModel.daysOfWeek.lastIndex) {
-                    val day = viewModel.daysOfWeek[index]
+                items(count = pageNumber) { index ->
+                    val day = viewModel.todayDate.plusDays(index.toLong())
                     Card(modifier = Modifier
                         .padding(horizontal = 3.dp)
                         .clickable {
                             cor.launch(Dispatchers.Main) {
                                 pagerState.animateScrollToPage(index)
-                                localDate =
-                                    viewModel.todayDate.plusDays((day.value - viewModel.todayDate.dayOfWeek.value).toLong())
+                                changeDateAndFrequency(daysAfterTodayDate = index.toLong())
                             }
                         }
                         .alpha(
-                            if (day != viewModel.todayDate.dayOfWeek && day != viewModel.daysOfWeek[pagerState.currentPage]) 0.5f else 1f
+                            if (day != localDate && day != viewModel.todayDate) 0.5f else 1f
                         ), colors = CardDefaults.cardColors(
-                        containerColor = if (day == viewModel.todayDate.dayOfWeek) mainColor
+                        containerColor = if (day == viewModel.todayDate) mainColor
                         else ScheduleTheme.colors.buttonColor,
-                        contentColor = (if (day == viewModel.todayDate.dayOfWeek) mainColor
+                        contentColor = (if (day == viewModel.todayDate) mainColor
                         else ScheduleTheme.colors.buttonColor).suitableColor()
                     )) {
                         Text(
-                            text = viewModel.ruDaysOfWeek[index],
+                            text = day.getDateString(ruDaysOfWeek = viewModel.ruDaysOfWeek),
                             fontSize = FontSize.small17,
                             modifier = Modifier.padding(
                                 vertical = 5.dp, horizontal = 10.dp
@@ -241,27 +252,28 @@ fun MainScreen(
                 HorizontalPager(
                     state = pagerState, modifier = Modifier.weight(10f)
                 ) { page ->
-                    localDate =
-                        viewModel.todayDate.plusDays((pagerState.currentPage + 1 - viewModel.todayDate.dayOfWeek.value).toLong())
+                    if (!pagerState.isScrollInProgress) LaunchedEffect(key1 = null) {
+                        cardsWithDateState.animateScrollToItem(pagerState.currentPage)
+                    }
+                    changeDateAndFrequency(daysAfterTodayDate = pagerState.currentPage.toLong())
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                     ) {
-                        val lessonsOfThisDay = lessons
-                            .filter {
-                                it.dayOfWeek == viewModel.daysOfWeek[page] && (it.frequency == null || it.frequency == viewModel.weekOfYear) && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                        val lessonsOfThisDay = lessons.filter {
+                            it.dayOfWeek == viewModel.daysOfWeek[page % 7] && (it.frequency == null || it.frequency == viewModel.weekOfYear) && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                             }
                         val lessonsInOppositeNumAndDenDay = lessons.filter {
-                            it.dayOfWeek == viewModel.daysOfWeek[page] && it.frequency == viewModel.weekOfYear.getOpposite() && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == viewModel.daysOfWeek[page % 7] && it.frequency == viewModel.weekOfYear.getOpposite() && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                         }
                         if (lessonsOfThisDay.isNotEmpty()) {
                             viewModel.nowIsLesson = false
                             lessonsOfThisDay.forEach { lesson ->
-                                if (lesson.nowIsLesson(localTime) && viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek) {
+                                if (lesson.nowIsLesson(localTime) && viewModel.todayDate == localDate) {
                                     viewModel.nowIsLesson = true
                                     lesson.StringForSchedule(colorBack = mainColor)
-                                } else if (viewModel.daysOfWeek[page] == viewModel.todayDate.dayOfWeek && lessonsOfThisDay.any {
+                                } else if (viewModel.todayDate == localDate && lessonsOfThisDay.any {
                                         it.startTime > localTime
                                     } && lesson == lessonsOfThisDay.filter {
                                         it.startTime > localTime
@@ -274,11 +286,10 @@ fun MainScreen(
                                     }
                                 } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
                             }
-                        } else WeekDay(context = context, modifier = Modifier
-                            .let {
+                        } else WeekDay(context = context, modifier = Modifier.let {
                                 var modifier = Modifier.padding(vertical = 75.dp)
-                                if (lessonsInOppositeNumAndDenDay.isEmpty())
-                                    modifier = Modifier.weight(1f)
+                            if (lessonsInOppositeNumAndDenDay.isEmpty()) modifier =
+                                Modifier.weight(1f)
                                 modifier
                             })
 

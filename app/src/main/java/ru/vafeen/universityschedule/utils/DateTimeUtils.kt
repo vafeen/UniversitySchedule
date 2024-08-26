@@ -11,6 +11,11 @@ operator fun LocalTime.compareTo(localDateTime: LocalDateTime): Int {
 fun LocalDate.getDateString(): String = "${dayOfMonth}." + if (month.value < 10) "0${month.value}"
 else month.value
 
+fun LocalDate.getDateString(ruDaysOfWeek: List<String>): String =
+    "${dayOfWeek.ruDayOfWeek(ruDaysOfWeek = ruDaysOfWeek)}, ${dayOfMonth}." + if (month.value < 10) "0${month.value}"
+    else month.value
+
+
 
 fun LocalTime.getTimeStringAsHMS(): String =
     "${
