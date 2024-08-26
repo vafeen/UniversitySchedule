@@ -12,16 +12,16 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.service.GSheetsService
-import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.SharedPreferences
 import ru.vafeen.universityschedule.utils.createGSheetsService
+import ru.vafeen.universityschedule.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.util.Calendar
 import javax.inject.Inject
+
 
 class MainScreenViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
@@ -40,11 +40,9 @@ class MainScreenViewModel @Inject constructor(
                 it.getString(R.string.sunday)
             )
         }
-    val daysOfWeek = DayOfWeek.entries.toList()
-    val weekOfYear =
-        if (Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) % 2 == 0) Frequency.Denominator
-        else Frequency.Numerator
     val todayDate: LocalDate = LocalDate.now()
+    val daysOfWeek = DayOfWeek.entries.toList()
+    var weekOfYear = todayDate.getFrequencyByLocalDate()
     var nowIsLesson: Boolean = false
     var settings = sharedPreferences.getSettingsOrCreateIfNull()
     private var gSheetsService: GSheetsService? =
