@@ -12,18 +12,21 @@ Supported languages: English, Russian
 
 Supported themes: Dark, Light
 
-### Main screen:
+### Main screen
 
 - Shows you all of the classes for each day
 - Indicates what class is going on right now and what will be the next one
 - If you’ve chosen a subgroup in *settings*, it will show you only this subgroup's classes; otherwise — all classes
+- You can manually change the frequency and it will be displayed like that until you change it again. Auto - frequency calculation depends on the week number of the year.
 
 <p>
 <img src="readmemedia/nextlesson.png" alt="Icon" width="210">
 <img src="readmemedia/currentlesson.png" alt="Icon" width="210">
+<img src="readmemedia/manualychangingfrequency.png" alt="Icon" width="210">
+
 </p>
 
-### Settings screen:
+### Settings screen
 
 #### General
 
