@@ -145,6 +145,7 @@ fun MainScreen(
         weekOfYear = localDate.getFrequencyByLocalDate()
             .changeFrequencyIfDefinedInSettings(settings = viewModel.settings)
     }
+
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
         viewModel.settings =
             viewModel.settings
@@ -440,7 +441,11 @@ fun MainScreen(
                                     .background(ScheduleTheme.colors.buttonColor)
                             )
                             TextForThisTheme(
-                                text = stringResource(id = R.string.other_lessons_in_this_day),
+                                text = "${stringResource(id = R.string.other_lessons_in_this_day)} ${
+                                    stringResource(
+                                        id = thisWeekOfYear.getOpposite().resourceName
+                                    )
+                                }",
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 fontSize = FontSize.big22
                             )

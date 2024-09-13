@@ -18,7 +18,7 @@
     <string name="friday">ПТ</string>
     <string name="satudray">СБ</string>
     <string name="sunday">ВС</string>
-    <string name="other_lessons_in_this_day">Другие пары в этот день</string>
+    <string name="other_lessons_in_this_day">Пары в</string>
     <string name="its_no_google_sheets_link">Это не ссылка Google Sheets</string>
     <string name="interface_color">Цвет интерфейса</string>
     <string name="new_interface_color">Новый цвет интерфейса</string>

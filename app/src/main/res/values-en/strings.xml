@@ -19,7 +19,7 @@
     <string name="friday">Fri</string>
     <string name="satudray">Sat</string>
     <string name="sunday">Sun</string>
-    <string name="other_lessons_in_this_day">Other lessons in this day</string>
+    <string name="other_lessons_in_this_day">Lessons at</string>
     <string name="its_no_google_sheets_link">It\'s no Google Sheets link</string>
     <string name="interface_color">Interface color</string>
     <string name="new_interface_color">New color of interface</string>
