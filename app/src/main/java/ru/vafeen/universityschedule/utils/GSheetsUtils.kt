@@ -1,12 +1,11 @@
 package ru.vafeen.universityschedule.utils
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LinkOff
-import androidx.compose.material.icons.filled.Sync
-import androidx.compose.material.icons.filled.SystemSecurityUpdateGood
-import androidx.compose.material.icons.filled.WifiOff
+
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import retrofit2.Retrofit
+import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.network.service.GSheetsService
 
 fun createGSheetsService(link: String): GSheetsService? {
@@ -19,22 +18,23 @@ fun createGSheetsService(link: String): GSheetsService? {
     }
 }
 
-fun getIconByRequestStatus(networkState: GSheetsServiceRequestStatus): ImageVector =
+fun getIconByRequestStatus(networkState: GSheetsServiceRequestStatus): Int =
     when (networkState) {
         GSheetsServiceRequestStatus.Waiting -> {
-            Icons.Filled.Sync
+            R.drawable.sync
         }
 
         GSheetsServiceRequestStatus.Success -> {
-            Icons.Filled.SystemSecurityUpdateGood
+            R.drawable.updated
+
         }
 
         GSheetsServiceRequestStatus.NetworkError -> {
-            Icons.Filled.WifiOff
+            R.drawable.no_wifi
         }
 
         GSheetsServiceRequestStatus.NoLink -> {
-            Icons.Filled.LinkOff
+            R.drawable.no_link
         }
     }
 

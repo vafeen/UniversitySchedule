@@ -17,13 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.UnfoldLess
-import androidx.compose.material.icons.filled.UnfoldMore
-import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.TableView
-import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -140,7 +134,7 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = getIconByRequestStatus(networkState = networkState),
+                        painter = painterResource(id = getIconByRequestStatus(networkState = networkState)),
                         contentDescription = "data updating state",
                         tint = ScheduleTheme.colors.oppositeTheme
                     )
@@ -216,7 +210,7 @@ fun SettingsScreen(
                             text = stringResource(R.string.link_to_table),
                         )
                         Icon(
-                            imageVector = Icons.Filled.Link,
+                            painter = painterResource(id = R.drawable.link),
                             contentDescription = "edit link",
                             tint = ScheduleTheme.colors.oppositeTheme
                         )
@@ -241,7 +235,7 @@ fun SettingsScreen(
                                 text = stringResource(R.string.table),
                             )
                             Icon(
-                                imageVector = Icons.Outlined.TableView,
+                                painter = painterResource(id = R.drawable.table),
                                 contentDescription = "edit link",
                                 tint = ScheduleTheme.colors.oppositeTheme
                             )
@@ -267,7 +261,7 @@ fun SettingsScreen(
                         )
 
                         Icon(
-                            imageVector = Icons.Outlined.Palette,
+                            painter = painterResource(id = R.drawable.palette),
                             contentDescription = "read license",
                             tint = ScheduleTheme.colors.oppositeTheme
                         )
@@ -296,8 +290,10 @@ fun SettingsScreen(
                                     fontSize = FontSize.small17
                                 )
                                 Icon(
-                                    imageVector = if (subGroupIsChanging) Icons.Filled.UnfoldLess
-                                    else Icons.Filled.UnfoldMore,
+                                    painter = painterResource(
+                                        id = if (subGroupIsChanging) R.drawable.unfold_less
+                                        else R.drawable.unfold_more
+                                    ),
                                     contentDescription = "more",
                                     tint = ScheduleTheme.colors.oppositeTheme
                                 )
@@ -362,7 +358,7 @@ fun SettingsScreen(
                             text = stringResource(R.string.project_community)
                         )
                         Icon(
-                            imageVector = Icons.Outlined.Group,
+                            painter = painterResource(id = R.drawable.group),
                             contentDescription = "read license",
                             tint = ScheduleTheme.colors.oppositeTheme
                         )
@@ -388,7 +384,7 @@ fun SettingsScreen(
                             text = stringResource(R.string.code)
                         )
                         Icon(
-                            imageVector = Icons.Outlined.Terminal,
+                            painter = painterResource(id = R.drawable.terminal),
                             contentDescription = "view code",
                             tint = ScheduleTheme.colors.oppositeTheme
                         )
