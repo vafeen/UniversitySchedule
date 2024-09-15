@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -208,7 +209,7 @@ fun MainScreen(
         ), modifier = Modifier.fillMaxWidth(), title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -216,12 +217,7 @@ fun MainScreen(
                     contentDescription = "data updating state",
                     tint = ScheduleTheme.colors.oppositeTheme
                 )
-
-                TextForThisTheme(
-                    text = "|",
-                    fontSize = FontSize.big22,
-                )
-
+                Spacer(modifier = Modifier.width(15.dp))
                 Box {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -332,15 +328,6 @@ fun MainScreen(
                             })
                     }
                 }
-
-                TextForThisTheme(
-                    text = "|",
-                    fontSize = FontSize.big22,
-                )
-                TextForThisTheme(
-                    text = "${localDate.getDateString()} ${localTime.getTimeStringAsHMS()}",
-                    fontSize = FontSize.big22,
-                )
             }
         })
     }, bottomBar = {
