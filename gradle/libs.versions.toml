@@ -16,6 +16,7 @@ navigationCompose = "2.7.7"
 # ROOM
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
+junitJunit = "4.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 
 # color-picker
 alwan = { module = "com.raedapps:alwan", version.ref = "alwan" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
