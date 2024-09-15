@@ -25,6 +25,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -220,14 +222,21 @@ fun MainScreen(
                 )
 
                 Box {
-                    Row {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable {
+                            isFrequencyInChanging = true
+                        }) {
                         Text(
-                            modifier = Modifier.clickable {
-                                isFrequencyInChanging = true
-                            },
                             text = stringResource(id = weekOfYear.resourceName),
                             fontSize = FontSize.big22,
                             color = ScheduleTheme.colors.oppositeTheme
+                        )
+
+                        Icon(
+                            imageVector = if (isFrequencyInChanging)
+                                Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            contentDescription = "Fold or Undolf list with frequency"
                         )
                     }
                     DropdownMenu(
@@ -254,7 +263,8 @@ fun MainScreen(
                                     )
                                         Icon(
                                             imageVector = Icons.Default.Done,
-                                            contentDescription = "This is selected or not"
+                                            contentDescription = "This is selected or not",
+                                            tint = ScheduleTheme.colors.oppositeTheme
                                         )
                                 }
                             },
@@ -282,7 +292,8 @@ fun MainScreen(
                                     )
                                         Icon(
                                             imageVector = Icons.Default.Done,
-                                            contentDescription = "This is selected or not"
+                                            contentDescription = "This is selected or not",
+                                            tint = ScheduleTheme.colors.oppositeTheme
                                         )
                                 }
 
@@ -310,7 +321,8 @@ fun MainScreen(
                                     )
                                         Icon(
                                             imageVector = Icons.Default.Done,
-                                            contentDescription = "This is selected or not"
+                                            contentDescription = "This is selected or not",
+                                            tint = ScheduleTheme.colors.oppositeTheme
                                         )
                                 }
                             },
