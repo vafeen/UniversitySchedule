@@ -11,13 +11,12 @@ import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.service.GSheetsService
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
-import ru.vafeen.universityschedule.utils.SharedPreferences
+import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
-import javax.inject.Inject
 
-class SettingsScreenViewModel @Inject constructor(
+class SettingsScreenViewModel(
     private val databaseRepository: DatabaseRepository,
     val sharedPreferences: SharedPreferences,
 ) : ViewModel() {

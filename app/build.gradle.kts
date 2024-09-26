@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.org.jetbrains.kotlin.kapt)
-    id("com.google.dagger.hilt.android")
     alias(libs.plugins.compose.compiler)
 }
 
@@ -79,9 +78,6 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -93,4 +89,6 @@ dependencies {
     implementation(libs.alwan)
     //permission
     implementation(libs.accompanist.permissions)
+    //koin
+    implementation("io.insert-koin:koin-android:4.0.0")
 }

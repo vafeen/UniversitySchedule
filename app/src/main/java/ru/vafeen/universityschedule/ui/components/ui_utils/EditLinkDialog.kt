@@ -33,7 +33,7 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
-import ru.vafeen.universityschedule.utils.SharedPreferences
+import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
 import ru.vafeen.universityschedule.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.utils.pasteText

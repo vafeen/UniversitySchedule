@@ -5,14 +5,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.vafeen.universityschedule.database.DTConverters
 import ru.vafeen.universityschedule.database.entity.Reminder
-import javax.inject.Inject
 
 
-class Scheduler @Inject constructor(
-    @ApplicationContext private val context: Context,
+class Scheduler(
+    private val context: Context,
     private val dtConverters: DTConverters
 ) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
