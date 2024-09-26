@@ -86,7 +86,7 @@ import ru.vafeen.universityschedule.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     navController: NavController, viewModel: MainScreenViewModel
