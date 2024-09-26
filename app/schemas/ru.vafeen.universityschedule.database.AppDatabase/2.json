@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "0b256e8b8c264434576481a709c6ef0f",
+    "identityHash": "ce5c401cc04e0b76a5ec252c04490a27",
     "entities": [
       {
         "tableName": "Lesson",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `name` TEXT, `startTime` INTEGER NOT NULL, `endTime` INTEGER NOT NULL, `classroom` TEXT, `teacher` TEXT, `subGroup` TEXT, `frequency` TEXT, `UUIDOfReminder` BLOB)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `name` TEXT, `startTime` INTEGER NOT NULL, `endTime` INTEGER NOT NULL, `classroom` TEXT, `teacher` TEXT, `subGroup` TEXT, `frequency` TEXT, `idOfReminder` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -63,9 +63,9 @@
             "notNull": false
           },
           {
-            "fieldPath": "UUIDOfReminder",
-            "columnName": "UUIDOfReminder",
-            "affinity": "BLOB",
+            "fieldPath": "idOfReminder",
+            "columnName": "idOfReminder",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -80,7 +80,7 @@
       },
       {
         "tableName": "Reminder",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `UUID` BLOB NOT NULL, `title` TEXT NOT NULL, `text` TEXT NOT NULL, `dt` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idOfReminder` INTEGER NOT NULL, `title` TEXT NOT NULL, `text` TEXT NOT NULL, `dt` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -89,9 +89,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "UUID",
-            "columnName": "UUID",
-            "affinity": "BLOB",
+            "fieldPath": "idOfReminder",
+            "columnName": "idOfReminder",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -126,7 +126,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b256e8b8c264434576481a709c6ef0f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ce5c401cc04e0b76a5ec252c04490a27')"
     ]
   }
 }

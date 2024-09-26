@@ -45,3 +45,5 @@ fun LocalDate.getFrequencyByLocalDate(): Frequency {
     else resultFrequency
 }
 
+fun LocalTime.toLessonTime(): String = "${hour}:" + if (minute < 10) "0${minute}" else "$minute"
+
