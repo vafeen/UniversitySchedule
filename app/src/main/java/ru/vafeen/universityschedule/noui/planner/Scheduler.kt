@@ -5,10 +5,16 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import ru.vafeen.universityschedule.database.DTConverters
 import ru.vafeen.universityschedule.database.entity.Reminder
+import javax.inject.Inject
 
 
-class Scheduler(private val context: Context) {
+class Scheduler @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val dtConverters: DTConverters
+) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private val intent = Intent(context, AlarmReceiver::class.java)
 
@@ -20,10 +26,12 @@ class Scheduler(private val context: Context) {
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
-        // Установите время срабатывания будильника
-        val triggerTime = System.currentTimeMillis() + 60000 // Через 1 минуту
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            dtConverters.localDateTimeToLong(reminder.dt),
+            pendingIntent
+        )
     }
 
     fun planRepeatWork(reminder: Reminder) {
