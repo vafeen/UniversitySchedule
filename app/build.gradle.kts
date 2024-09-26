@@ -86,4 +86,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     // color-picker
     implementation(libs.alwan)
+    //permission
+    implementation(libs.accompanist.permissions)
 }
