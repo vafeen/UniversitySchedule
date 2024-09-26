@@ -21,6 +21,25 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
+                // Создание новой таблицы Reminder
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `Reminder` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `UUID` BLOB NOT NULL,
+                        `title` TEXT NOT NULL,
+                        `text` TEXT NOT NULL,
+                        `dt` INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+
+                db.execSQL(
+                    """
+                    ALTER TABLE `Lesson` ADD COLUMN `UUIDOfReminder` BLOB
+                    """.trimIndent()
+                )
+
                 db.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS `Reminder` (
