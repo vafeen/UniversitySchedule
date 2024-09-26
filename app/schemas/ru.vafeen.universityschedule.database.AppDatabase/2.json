@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "984d01625c01315322c450aed0e3d373",
+    "identityHash": "0b256e8b8c264434576481a709c6ef0f",
     "entities": [
       {
         "tableName": "Lesson",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `name` TEXT, `startTime` INTEGER NOT NULL, `endTime` INTEGER NOT NULL, `classroom` TEXT, `teacher` TEXT, `subGroup` TEXT, `frequency` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayOfWeek` TEXT, `name` TEXT, `startTime` INTEGER NOT NULL, `endTime` INTEGER NOT NULL, `classroom` TEXT, `teacher` TEXT, `subGroup` TEXT, `frequency` TEXT, `UUIDOfReminder` BLOB)",
         "fields": [
           {
             "fieldPath": "id",
@@ -60,6 +60,12 @@
             "fieldPath": "frequency",
             "columnName": "frequency",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "UUIDOfReminder",
+            "columnName": "UUIDOfReminder",
+            "affinity": "BLOB",
             "notNull": false
           }
         ],
@@ -120,7 +126,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '984d01625c01315322c450aed0e3d373')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b256e8b8c264434576481a709c6ef0f')"
     ]
   }
 }

@@ -29,7 +29,7 @@ data class Lesson(
     val teacher: String?,
     val subGroup: String?,
     val frequency: Frequency?,
-    val UUIDOfReminder: UUID?,
+    val UUIDOfReminder: UUID? = null,
 ) {
     override fun toString(): String {
         return "\n dayOfWeek=${dayOfWeek ?: "\"is null\""} name=${name ?: "\"is null\""} st=${startTime}-et=${endTime} classrom=${classroom ?: "\"is null\""} tchr=${teacher ?: "\"is null\""} sbgr=${subGroup ?: "\"is null\""} fr=${frequency ?: "\"is null\""}"
