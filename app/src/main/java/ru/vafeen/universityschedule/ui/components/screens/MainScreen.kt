@@ -3,7 +3,6 @@ package ru.vafeen.universityschedule.ui.components.screens
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -79,7 +78,6 @@ import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.utils.getMainColorForThisTheme
-import ru.vafeen.universityschedule.utils.getTimeStringAsHMS
 import ru.vafeen.universityschedule.utils.nowIsLesson
 import ru.vafeen.universityschedule.utils.save
 import ru.vafeen.universityschedule.utils.suitableColor
@@ -170,7 +168,10 @@ fun MainScreen(
             networkState = problem
         }
     }
+    val addOrRemoveReminderAndUpdateLocalDatabase: (Lesson) -> Unit = { lesson ->
+//        if(lesson.idOfReminder)
 
+    }
 
     val pagerState = rememberPagerState(
         pageCount = {
@@ -421,7 +422,10 @@ fun MainScreen(
                                     CardOfNextLesson(colorOfCard = mainColor) {
                                         lesson.StringForSchedule(
                                             colorBack = ScheduleTheme.colors.buttonColor,
-                                            padding = 0.dp
+                                            padding = 0.dp,
+                                            addReminderAndUpdateLessonInLocalDatabase = {
+
+                                            }
                                         )
                                     }
                                 } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)

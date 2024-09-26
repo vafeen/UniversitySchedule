@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import java.time.DayOfWeek
 import java.time.LocalTime
-import java.util.UUID
 
 /**
  * Entity of one Lesson
@@ -29,7 +28,7 @@ data class Lesson(
     val teacher: String?,
     val subGroup: String?,
     val frequency: Frequency?,
-    val UUIDOfReminder: UUID? = null,
+    val idOfReminder: Int? = null,
 ) {
     override fun toString(): String {
         return "\n dayOfWeek=${dayOfWeek ?: "\"is null\""} name=${name ?: "\"is null\""} st=${startTime}-et=${endTime} classrom=${classroom ?: "\"is null\""} tchr=${teacher ?: "\"is null\""} sbgr=${subGroup ?: "\"is null\""} fr=${frequency ?: "\"is null\""}"

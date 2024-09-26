@@ -1,5 +1,5 @@
 package ru.vafeen.universityschedule.utils
 
-import java.util.UUID
+import java.util.Random
 
-fun generateUUID(): UUID = UUID.randomUUID()
+fun generateUUID(): Int = Random().nextInt()

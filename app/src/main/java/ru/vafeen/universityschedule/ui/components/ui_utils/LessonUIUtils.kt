@@ -16,10 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -32,15 +28,17 @@ import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.ui.theme.FontSize
+import ru.vafeen.universityschedule.utils.getLessonTimeString
 import ru.vafeen.universityschedule.utils.suitableColor
-import java.time.LocalTime
 
 @Composable
 fun Lesson.StringForSchedule(
     colorBack: Color,
     lessonOfThisNumAndDenOrNot: Boolean = true,
     padding: Dp = 10.dp,
+    addReminderAndUpdateLessonInLocalDatabase: () -> Unit = {},
 ) {
+
 //    var reminderIsAdded by remember {
 //        mutableStateOf(UUIDOfReminder != null)
 //    }
@@ -73,7 +71,8 @@ fun Lesson.StringForSchedule(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = getLessonTimeString(), fontSize = FontSize.small17,
+                        text = getLessonTimeString(),
+                        fontSize = FontSize.small17,
                         color = colorBack.suitableColor()
                     )
                 }
@@ -93,71 +92,56 @@ fun Lesson.StringForSchedule(
                         )
                     }
                 }
-//                Row {
-//                    Switch(checked = reminderIsAdded, onCheckedChange = {
-//                        reminderIsAdded = if (!reminderIsAdded) {
-//
-//                            true
-//                        } else {
-//                            false
-//                        }
-//                    })
-//                }
+                Row {
+                    Switch(checked = idOfReminder != null, onCheckedChange = {
+                        addReminderAndUpdateLessonInLocalDatabase()
+                    })
+                }
             }
 
             if (name?.isNotEmpty() == true) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = name, color = colorBack.suitableColor(),
-                    fontSize = FontSize.big22
+                    text = name, color = colorBack.suitableColor(), fontSize = FontSize.big22
                 )
             }
 
-            if (teacher?.isNotEmpty() == true)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.person),
-                        contentDescription = "Icon teacher",
-                        tint = colorBack.suitableColor()
-                    )
-                    Spacer(modifier = Modifier.width(3.dp))
-                    Text(
-                        text = teacher.replace(oldValue = " ", newValue = "\n"),
-                        fontSize = FontSize.small17,
-                        color = colorBack.suitableColor(),
-                        maxLines = 3
-                    )
-                }
+            if (teacher?.isNotEmpty() == true) Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.person),
+                    contentDescription = "Icon teacher",
+                    tint = colorBack.suitableColor()
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = teacher.replace(oldValue = " ", newValue = "\n"),
+                    fontSize = FontSize.small17,
+                    color = colorBack.suitableColor(),
+                    maxLines = 3
+                )
+            }
 
-            if (subGroup?.isNotEmpty() == true)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.group),
-                        contentDescription = "Icon subgroup",
-                        tint = colorBack.suitableColor()
-                    )
-                    Spacer(modifier = Modifier.width(3.dp))
-                    Text(
-                        text = subGroup,
-                        fontSize = FontSize.small17,
-                        color = colorBack.suitableColor(),
-                        maxLines = 3
-                    )
-                }
+            if (subGroup?.isNotEmpty() == true) Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.group),
+                    contentDescription = "Icon subgroup",
+                    tint = colorBack.suitableColor()
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = subGroup,
+                    fontSize = FontSize.small17,
+                    color = colorBack.suitableColor(),
+                    maxLines = 3
+                )
+            }
         }
     }
 }
 
 
-fun LocalTime.toLessonTime(): String = "${hour}:" + if (minute < 10) "0${minute}" else "$minute"
-
-
-fun Lesson.getLessonTimeString(): String =
-    this.let { "${it.startTime.toLessonTime()} - ${it.endTime.toLessonTime()}" }

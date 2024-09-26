@@ -8,7 +8,7 @@ import java.util.UUID
 @Entity
 data class Reminder(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val UUID: UUID,
+    val idOfReminder: Int,
     val title: String,
     val text: String,
     val dt: LocalDateTime,
