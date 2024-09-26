@@ -41,9 +41,9 @@ fun Lesson.StringForSchedule(
     lessonOfThisNumAndDenOrNot: Boolean = true,
     padding: Dp = 10.dp,
 ) {
-    var reminderIsAdded by remember {
-        mutableStateOf(UUIDOfReminder != null)
-    }
+//    var reminderIsAdded by remember {
+//        mutableStateOf(UUIDOfReminder != null)
+//    }
     Card(
         modifier = Modifier
             .padding(padding)//.clickable {  }
@@ -93,16 +93,16 @@ fun Lesson.StringForSchedule(
                         )
                     }
                 }
-                Row {
-                    Switch(checked = reminderIsAdded, onCheckedChange = {
-                        reminderIsAdded = if (!reminderIsAdded) {
-
-                            true
-                        } else {
-                            false
-                        }
-                    })
-                }
+//                Row {
+//                    Switch(checked = reminderIsAdded, onCheckedChange = {
+//                        reminderIsAdded = if (!reminderIsAdded) {
+//
+//                            true
+//                        } else {
+//                            false
+//                        }
+//                    })
+//                }
             }
 
             if (name?.isNotEmpty() == true) {

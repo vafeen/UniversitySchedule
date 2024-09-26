@@ -7,9 +7,8 @@ import retrofit2.http.Url
 import ru.vafeen.universityschedule.network.parcelable.github_service.Release
 import ru.vafeen.universityschedule.network.service.DownloadService
 import ru.vafeen.universityschedule.network.service.GitHubDataService
-import javax.inject.Inject
 
-class NetworkRepository @Inject constructor(
+class NetworkRepository(
     private val gitHubDataService: GitHubDataService,
     private val downloadService: DownloadService,
 ) {

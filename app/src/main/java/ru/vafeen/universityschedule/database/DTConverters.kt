@@ -4,9 +4,8 @@ import androidx.room.TypeConverter
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import javax.inject.Inject
 
-class DTConverters @Inject constructor() {
+class DTConverters  {
     @TypeConverter
     fun localDateTimeToLong(dateTime: LocalDateTime): Long {
         return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond()
