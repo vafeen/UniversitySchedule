@@ -12,6 +12,7 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.service.GSheetsService
+import ru.vafeen.universityschedule.noui.planner.Scheduler
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.SharedPreferences
 import ru.vafeen.universityschedule.utils.changeFrequencyIfDefinedInSettings
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class MainScreenViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
     val sharedPreferences: SharedPreferences,
+    private val scheduler: Scheduler,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     val ruDaysOfWeek =
@@ -79,5 +81,9 @@ class MainScreenViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun scheduleNotificationAboutLesson() {
+
     }
 }
