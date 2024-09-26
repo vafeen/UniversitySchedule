@@ -20,6 +20,6 @@ class DatabaseDIModule {
     fun injectDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context = context, klass = AppDatabase::class.java, name = name
-        ).build()
+        ).addMigrations(AppDatabase.MIGRATION_1_2).build()
     }
 }
