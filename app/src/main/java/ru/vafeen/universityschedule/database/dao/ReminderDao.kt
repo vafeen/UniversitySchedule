@@ -12,4 +12,6 @@ interface ReminderDao : DataAccessObject<Reminder>, FlowGetAllImplementation<Rem
     @Query("select * from reminder")
     override fun getAllAsFlow(): Flow<List<Reminder>>
 
+    @Query("select * from reminder where idOfReminder=:idOfReminder limit 1")
+    fun getReminderByIdOfReminder(idOfReminder: Int): Reminder?
 }

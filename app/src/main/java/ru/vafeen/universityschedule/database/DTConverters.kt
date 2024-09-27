@@ -5,14 +5,15 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class DTConverters  {
-    @TypeConverter
-    fun localDateTimeToLong(dateTime: LocalDateTime): Long {
-        return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond()
-    }
+class DTConverters {
 
     @TypeConverter
-    fun longToLocalDateTime(timestamp: Long): LocalDateTime {
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.systemDefault())
-    }
+    fun localDateTimeToLongMilliSeconds(dateTime: LocalDateTime): Long =
+        dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+
+    @TypeConverter
+    fun longMilliSecondsToLocalDateTime(timestamp: Long): LocalDateTime =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault())
+
 }
