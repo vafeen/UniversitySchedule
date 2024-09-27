@@ -1,6 +1,8 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.app.Activity
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -58,6 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
+import ru.vafeen.universityschedule.database.entity.Reminder
 import ru.vafeen.universityschedule.network.downloader.Downloader
 import ru.vafeen.universityschedule.network.downloader.Progress
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
@@ -129,7 +132,7 @@ fun MainScreen(
                 if (it.contentLength == it.totalBytesRead) {
                     isUpdateInProcess = false
                     Downloader.installApk(
-                        context = context, apkFilePath = Path.path(context).toString()
+                        context = context, apkFilePath = Path.path(context)
                     )
                 }
             } else isUpdateInProcess = false
@@ -163,14 +166,14 @@ fun MainScreen(
         isFrequencyInChanging = false
     }
     LaunchedEffect(key1 = null) {
-        viewModel.updateLocalDatabase { newLessons, problem ->
-            lessons = newLessons
+        viewModel.updateLocalDatabase { problem ->
             networkState = problem
         }
     }
-    val addOrRemoveReminderAndUpdateLocalDatabase: (Lesson) -> Unit = { lesson ->
-//        if(lesson.idOfReminder)
-
+    LaunchedEffect(key1 = null) {
+        viewModel.databaseRepository.getAllAsFlowLessons().collect {
+            lessons = it
+        }
     }
 
     val pagerState = rememberPagerState(
@@ -423,12 +426,42 @@ fun MainScreen(
                                         lesson.StringForSchedule(
                                             colorBack = ScheduleTheme.colors.buttonColor,
                                             padding = 0.dp,
-                                            addReminderAndUpdateLessonInLocalDatabase = {
-
-                                            }
+                                            addReminderAndUpdateLessonInLocalDatabase = if (lesson.startTime.minusMinutes(
+                                                    viewModel.minutesBeforeLessonForNotification
+                                                ) > localTime
+                                            ) {
+                                                {
+                                                    cor.launch(Dispatchers.Main) {
+                                                        viewModel.addOrRemoveReminderAndUpdateLocalDatabase(
+                                                            lesson = lesson,
+                                                            ld = thisDate,
+                                                            lt = lesson.startTime.minusMinutes(
+                                                                viewModel.minutesBeforeLessonForNotification
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            } else null
                                         )
+
                                     }
-                                } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor)
+                                } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
+                                    addReminderAndUpdateLessonInLocalDatabase = if (lesson.startTime.minusMinutes(
+                                            viewModel.minutesBeforeLessonForNotification
+                                        ) > localTime && viewModel.todayDate == thisDate || viewModel.todayDate != thisDate
+                                    ) {
+                                        {
+                                            cor.launch(Dispatchers.Main) {
+                                                viewModel.addOrRemoveReminderAndUpdateLocalDatabase(
+                                                    lesson = lesson,
+                                                    ld = thisDate,
+                                                    lt = lesson.startTime.minusMinutes(
+                                                        viewModel.minutesBeforeLessonForNotification
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    } else null)
                             }
                         } else WeekDay(context = context, modifier = Modifier.let {
                             var modifier = Modifier.padding(vertical = 75.dp)
