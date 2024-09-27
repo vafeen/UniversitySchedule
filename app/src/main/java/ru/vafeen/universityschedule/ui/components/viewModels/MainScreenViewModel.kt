@@ -16,6 +16,7 @@ import ru.vafeen.universityschedule.noui.planner.Scheduler
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
 import ru.vafeen.universityschedule.utils.changeFrequencyIfDefinedInSettings
+import ru.vafeen.universityschedule.utils.cleverUpdatingLessons
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.generateID
 import ru.vafeen.universityschedule.utils.getFrequencyByLocalDate
@@ -57,7 +58,6 @@ class MainScreenViewModel(
 
     fun updateLocalDatabase(updateUICallback: (GSheetsServiceRequestStatus) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val lastLessons = databaseRepository.getAllAsFlowLessons().first()
             withContext(Dispatchers.Main) {
                 updateUICallback(
                     if (settings.link?.isNotEmpty() == true) GSheetsServiceRequestStatus.Waiting
@@ -68,10 +68,7 @@ class MainScreenViewModel(
                 try {
                     gSheetsService?.getLessonsListFromGSheetsTable()
                         ?.let {
-                            databaseRepository.apply {
-                                deleteAllLessons(*lastLessons.toTypedArray())
-                                insertAllLessons(*it.toTypedArray())
-                            }
+                            cleverUpdatingLessons(newLessons = it)
                             withContext(Dispatchers.Main) {
                                 updateUICallback(GSheetsServiceRequestStatus.Success)
                             }
@@ -108,7 +105,12 @@ class MainScreenViewModel(
         } else {
             val newLesson = lesson.copy(idOfReminder = null)
             databaseRepository.insertAllLessons(newLesson)
+            val reminder =
+                databaseRepository.getReminderByIdOfReminder(idOfReminder = lesson.idOfReminder)
+            reminder?.let {
+                scheduler.cancelWork(it)
+                databaseRepository.deleteAllReminders(it)
+            }
         }
-
     }
 }

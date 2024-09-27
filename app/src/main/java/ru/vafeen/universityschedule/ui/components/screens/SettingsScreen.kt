@@ -107,14 +107,17 @@ fun SettingsScreen(
         mutableIntStateOf(1)
     }
     LaunchedEffect(key1 = key) {
-        viewModel.updateLocalDatabase { newLessons, status ->
-            subgroupList = newLessons.filter {
+        viewModel.updateLocalDatabase { status ->
+            networkState = status
+        }
+    }
+    LaunchedEffect(key1 = null) {
+        viewModel.databaseRepository.getAllAsFlowLessons().collect { lessons ->
+            subgroupList = lessons.filter {
                 it.subGroup != null
             }.map {
                 it.subGroup.toString()
             }.distinct()
-
-            networkState = status
         }
     }
     BackHandler(onBack = gotoMainScreenCallBack)
