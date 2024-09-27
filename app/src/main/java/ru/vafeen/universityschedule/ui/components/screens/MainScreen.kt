@@ -154,13 +154,9 @@ fun MainScreen(
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
         viewModel.settings =
-            viewModel.settings
-                .copy(
-                    isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let {
-                        localDate.getFrequencyByLocalDate() == it
-                    }
-                )
-                .save(sharedPreferences = viewModel.sharedPreferences)
+            viewModel.settings.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let {
+                localDate.getFrequencyByLocalDate() == it
+            }).save(sharedPreferences = viewModel.sharedPreferences)
         weekOfYear = localDate.getFrequencyByLocalDate()
             .changeFrequencyIfDefinedInSettings(settings = viewModel.settings)
         isFrequencyInChanging = false
@@ -223,8 +219,7 @@ fun MainScreen(
                 )
                 Spacer(modifier = Modifier.width(15.dp))
                 Box {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                    Row(verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable {
                             isFrequencyInChanging = true
                         }) {
@@ -235,43 +230,34 @@ fun MainScreen(
                         )
 
                         Icon(
-                            imageVector = if (isFrequencyInChanging)
-                                Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            imageVector = if (isFrequencyInChanging) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                             contentDescription = "Fold or Undolf list with frequency"
                         )
                     }
-                    DropdownMenu(
-                        modifier = Modifier
-                            .background(ScheduleTheme.colors.singleTheme)
-                            .border(
-                                border = BorderStroke(
-                                    width = 2.dp,
-                                    color = ScheduleTheme.colors.oppositeTheme
-                                )
-                            ),
+                    DropdownMenu(modifier = Modifier
+                        .background(ScheduleTheme.colors.singleTheme)
+                        .border(
+                            border = BorderStroke(
+                                width = 2.dp, color = ScheduleTheme.colors.oppositeTheme
+                            )
+                        ),
                         expanded = isFrequencyInChanging,
                         onDismissRequest = { isFrequencyInChanging = false }) {
-                        DropdownMenuItem(
-                            text = {
-                                Row {
-                                    TextForThisTheme(
-                                        text = stringResource(id = Frequency.Numerator.resourceName),
-                                        fontSize = FontSize.medium19
-                                    )
-                                    if (
-                                        viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null &&
-                                        weekOfYear == Frequency.Numerator
-                                    )
-                                        Icon(
-                                            imageVector = Icons.Default.Done,
-                                            contentDescription = "This is selected or not",
-                                            tint = ScheduleTheme.colors.oppositeTheme
-                                        )
-                                }
-                            },
-                            onClick = {
-                                chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Numerator)
-                            })
+                        DropdownMenuItem(text = {
+                            Row {
+                                TextForThisTheme(
+                                    text = stringResource(id = Frequency.Numerator.resourceName),
+                                    fontSize = FontSize.medium19
+                                )
+                                if (viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "This is selected or not",
+                                    tint = ScheduleTheme.colors.oppositeTheme
+                                )
+                            }
+                        }, onClick = {
+                            chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Numerator)
+                        })
 
                         Spacer(
                             modifier = Modifier
@@ -280,28 +266,22 @@ fun MainScreen(
                                 .background(color = ScheduleTheme.colors.oppositeTheme),
                         )
 
-                        DropdownMenuItem(
-                            text = {
-                                Row {
-                                    TextForThisTheme(
-                                        text = stringResource(id = Frequency.Denominator.resourceName),
-                                        fontSize = FontSize.medium19
-                                    )
-                                    if (
-                                        viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null &&
-                                        weekOfYear == Frequency.Denominator
-                                    )
-                                        Icon(
-                                            imageVector = Icons.Default.Done,
-                                            contentDescription = "This is selected or not",
-                                            tint = ScheduleTheme.colors.oppositeTheme
-                                        )
-                                }
+                        DropdownMenuItem(text = {
+                            Row {
+                                TextForThisTheme(
+                                    text = stringResource(id = Frequency.Denominator.resourceName),
+                                    fontSize = FontSize.medium19
+                                )
+                                if (viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "This is selected or not",
+                                    tint = ScheduleTheme.colors.oppositeTheme
+                                )
+                            }
 
-                            },
-                            onClick = {
-                                chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Denominator)
-                            })
+                        }, onClick = {
+                            chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Denominator)
+                        })
 
                         Spacer(
                             modifier = Modifier
@@ -310,26 +290,21 @@ fun MainScreen(
                                 .background(color = ScheduleTheme.colors.oppositeTheme),
                         )
 
-                        DropdownMenuItem(
-                            text = {
-                                Row {
-                                    TextForThisTheme(
-                                        text = stringResource(id = R.string.auto),
-                                        fontSize = FontSize.medium19
-                                    )
-                                    if (
-                                        viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null
-                                    )
-                                        Icon(
-                                            imageVector = Icons.Default.Done,
-                                            contentDescription = "This is selected or not",
-                                            tint = ScheduleTheme.colors.oppositeTheme
-                                        )
-                                }
-                            },
-                            onClick = {
-                                chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = null)
-                            })
+                        DropdownMenuItem(text = {
+                            Row {
+                                TextForThisTheme(
+                                    text = stringResource(id = R.string.auto),
+                                    fontSize = FontSize.medium19
+                                )
+                                if (viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "This is selected or not",
+                                    tint = ScheduleTheme.colors.oppositeTheme
+                                )
+                            }
+                        }, onClick = {
+                            chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = null)
+                        })
                     }
                 }
             }
@@ -402,14 +377,10 @@ fun MainScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         val lessonsOfThisDay = lessons.filter {
-                            it.dayOfWeek == thisDate.dayOfWeek &&
-                                    (it.frequency == null || it.frequency == thisWeekOfYear) &&
-                                    (it.subGroup == viewModel.settings.subgroup || viewModel.settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == thisDate.dayOfWeek && (it.frequency == null || it.frequency == thisWeekOfYear) && (it.subGroup == viewModel.settings.subgroup || viewModel.settings.subgroup == null || it.subGroup == null)
                         }
                         val lessonsInOppositeNumAndDenDay = lessons.filter {
-                            it.dayOfWeek == thisDate.dayOfWeek &&
-                                    it.frequency == thisWeekOfYear.getOpposite() &&
-                                    (it.subGroup == viewModel.settings.subgroup || viewModel.settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == thisDate.dayOfWeek && it.frequency == thisWeekOfYear.getOpposite() && (it.subGroup == viewModel.settings.subgroup || viewModel.settings.subgroup == null || it.subGroup == null)
                         }
                         if (lessonsOfThisDay.isNotEmpty()) {
                             viewModel.nowIsLesson = false
@@ -423,15 +394,14 @@ fun MainScreen(
                                         it.startTime > localTime
                                     }[0] && !viewModel.nowIsLesson) {
                                     CardOfNextLesson(colorOfCard = mainColor) {
-                                        lesson.StringForSchedule(
-                                            colorBack = ScheduleTheme.colors.buttonColor,
+                                        lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
                                             padding = 0.dp,
                                             addReminderAndUpdateLessonInLocalDatabase = if (lesson.startTime.minusMinutes(
                                                     viewModel.minutesBeforeLessonForNotification
                                                 ) > localTime
                                             ) {
                                                 {
-                                                    cor.launch(Dispatchers.Main) {
+                                                    cor.launch(Dispatchers.IO) {
                                                         viewModel.addOrRemoveReminderAndUpdateLocalDatabase(
                                                             lesson = lesson,
                                                             ld = thisDate,
@@ -441,8 +411,7 @@ fun MainScreen(
                                                         )
                                                     }
                                                 }
-                                            } else null
-                                        )
+                                            } else null)
 
                                     }
                                 } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
@@ -451,7 +420,7 @@ fun MainScreen(
                                         ) > localTime && viewModel.todayDate == thisDate || viewModel.todayDate != thisDate
                                     ) {
                                         {
-                                            cor.launch(Dispatchers.Main) {
+                                            cor.launch(Dispatchers.IO) {
                                                 viewModel.addOrRemoveReminderAndUpdateLocalDatabase(
                                                     lesson = lesson,
                                                     ld = thisDate,
