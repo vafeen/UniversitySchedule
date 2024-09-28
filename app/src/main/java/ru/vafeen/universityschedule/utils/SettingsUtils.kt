@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.utils
 
 import androidx.compose.ui.graphics.Color
-import com.google.gson.Gson
 import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
 import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferencesValue
 import ru.vafeen.universityschedule.ui.components.Settings

@@ -1,8 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.app.Activity
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -60,7 +58,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
-import ru.vafeen.universityschedule.database.entity.Reminder
 import ru.vafeen.universityschedule.network.downloader.Downloader
 import ru.vafeen.universityschedule.network.downloader.Progress
 import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
@@ -396,9 +393,9 @@ fun MainScreen(
                                     CardOfNextLesson(colorOfCard = mainColor) {
                                         lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
                                             padding = 0.dp,
-                                            addReminderAndUpdateLessonInLocalDatabase = if (lesson.startTime.minusMinutes(
-                                                    viewModel.minutesBeforeLessonForNotification
-                                                ) > localTime
+                                            addReminderAndUpdateLessonInLocalDatabase =
+                                            if (true
+//                                                lesson.startTime.minusMinutes( viewModel.minutesBeforeLessonForNotification) > localTime
                                             ) {
                                                 {
                                                     cor.launch(Dispatchers.IO) {
@@ -415,11 +412,8 @@ fun MainScreen(
 
                                     }
                                 } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
-                                    addReminderAndUpdateLessonInLocalDatabase = if (lesson.startTime.minusMinutes(
-                                            viewModel.minutesBeforeLessonForNotification
-                                        ) > localTime && viewModel.todayDate == thisDate || viewModel.todayDate.plusDays(
-                                            7L
-                                        ) > thisDate && viewModel.todayDate != thisDate
+                                    addReminderAndUpdateLessonInLocalDatabase = if (true
+//                                        lesson.startTime.minusMinutes(viewModel.minutesBeforeLessonForNotification) > localTime && viewModel.todayDate == thisDate || viewModel.todayDate.plusDays(7L) > thisDate && viewModel.todayDate != thisDate
                                     ) {
                                         {
                                             cor.launch(Dispatchers.IO) {
