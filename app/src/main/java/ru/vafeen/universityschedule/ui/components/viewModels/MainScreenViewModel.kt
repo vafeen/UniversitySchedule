@@ -55,6 +55,7 @@ class MainScreenViewModel(
     private var gSheetsService: GSheetsService? =
         settings.link?.let { createGSheetsService(link = it) }
     val minutesBeforeLessonForNotification = 15L
+    val pageNumber = 365
 
     fun updateLocalDatabase(updateUICallback: (GSheetsServiceRequestStatus) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -92,7 +92,6 @@ import java.time.LocalTime
 fun MainScreen(
     navController: NavController, viewModel: MainScreenViewModel
 ) {
-    val pageNumber = 365
     val context = LocalContext.current
     val defaultColor = ScheduleTheme.colors.mainColor
     val progress = remember {
@@ -174,7 +173,7 @@ fun MainScreen(
 
     val pagerState = rememberPagerState(
         pageCount = {
-            pageNumber
+            viewModel.pageNumber
         }, initialPage = 0
     )
     BackHandler {
@@ -199,6 +198,7 @@ fun MainScreen(
             }
         }
     }
+
     Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
         TopAppBar(colors = TopAppBarColors(
             containerColor = ScheduleTheme.colors.singleTheme,
@@ -328,7 +328,7 @@ fun MainScreen(
                     .padding(3.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                items(count = pageNumber) { index ->
+                items(count = viewModel.pageNumber) { index ->
                     val day = viewModel.todayDate.plusDays(index.toLong())
                     Card(modifier = Modifier
                         .padding(horizontal = 3.dp)
