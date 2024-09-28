@@ -394,8 +394,8 @@ fun MainScreen(
                                         lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
                                             padding = 0.dp,
                                             addReminderAndUpdateLessonInLocalDatabase =
-                                            if (true
-//                                                lesson.startTime.minusMinutes( viewModel.minutesBeforeLessonForNotification) > localTime
+                                            if (lesson.startTime.minusMinutes(viewModel.minutesBeforeLessonForNotification)
+                                                > localTime
                                             ) {
                                                 {
                                                     cor.launch(Dispatchers.IO) {
@@ -412,8 +412,11 @@ fun MainScreen(
 
                                     }
                                 } else lesson.StringForSchedule(colorBack = ScheduleTheme.colors.buttonColor,
-                                    addReminderAndUpdateLessonInLocalDatabase = if (true
-//                                        lesson.startTime.minusMinutes(viewModel.minutesBeforeLessonForNotification) > localTime && viewModel.todayDate == thisDate || viewModel.todayDate.plusDays(7L) > thisDate && viewModel.todayDate != thisDate
+                                    addReminderAndUpdateLessonInLocalDatabase = if (
+                                        lesson.startTime.minusMinutes(viewModel.minutesBeforeLessonForNotification) > localTime &&
+                                        viewModel.todayDate == thisDate ||
+                                        viewModel.todayDate.plusDays(7L) > thisDate &&
+                                        viewModel.todayDate != thisDate
                                     ) {
                                         {
                                             cor.launch(Dispatchers.IO) {
