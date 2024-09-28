@@ -13,9 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.vafeen.universityschedule.noui.notifications.NotificationService
 import ru.vafeen.universityschedule.noui.permissions.RequestNotificationPermission
 import ru.vafeen.universityschedule.ui.components.screens.MainScreen
 import ru.vafeen.universityschedule.ui.components.screens.SettingsScreen

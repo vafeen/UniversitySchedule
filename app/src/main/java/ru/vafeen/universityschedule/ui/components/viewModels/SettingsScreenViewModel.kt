@@ -4,11 +4,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.database.DatabaseRepository
-import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.service.GSheetsService
 import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences

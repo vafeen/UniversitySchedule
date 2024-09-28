@@ -1,9 +1,5 @@
 package ru.vafeen.universityschedule.utils
 
-import androidx.compose.material.icons.Icons
-
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import retrofit2.Retrofit
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.network.service.GSheetsService
