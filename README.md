@@ -6,7 +6,9 @@ Simple scheduler application.
 
 Works by creating a connection between *Google Sheets* and the *App* itself.
 
-## Features 
+## Features
+
+Controlled notifications 15 minutes before lesson for a week in advance
 
 Supported languages: English, Russian
 
