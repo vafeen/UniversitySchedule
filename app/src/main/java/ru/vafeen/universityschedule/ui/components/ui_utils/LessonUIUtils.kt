@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.ui.theme.FontSize
+import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.getLessonTimeString
 import ru.vafeen.universityschedule.utils.suitableColor
 
@@ -105,7 +106,8 @@ fun Lesson.StringForSchedule(
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.message),
-                            contentDescription = "Message about lesson"
+                            contentDescription = "Message about lesson",
+                            tint = suitableColor
                         )
                         Checkbox(
                             checked = idOfReminder != null, onCheckedChange = {
@@ -114,7 +116,8 @@ fun Lesson.StringForSchedule(
                             },
                             colors = CheckboxDefaults.colors(
                                 checkedColor = suitableColor,
-                                checkmarkColor = colorBack
+                                checkmarkColor = colorBack,
+                                uncheckedColor = suitableColor
                             )
                         )
                     }
