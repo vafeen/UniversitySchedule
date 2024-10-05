@@ -28,8 +28,6 @@ import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
-    private val mainScreenViewModel: MainScreenViewModel by viewModel()
-    private val settingsScreenViewModel: SettingsScreenViewModel by viewModel()
 
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,12 +52,14 @@ class MainActivity : ComponentActivity() {
                         navController = navController, startDestination = Screen.Main.route
                     ) {
                         composable(Screen.Main.route) {
+                            val mainScreenViewModel: MainScreenViewModel by viewModel()
                             MainScreen(
                                 navController = navController,
                                 viewModel = mainScreenViewModel
                             )
                         }
                         composable(Screen.Settings.route) {
+                            val settingsScreenViewModel: SettingsScreenViewModel by viewModel()
                             SettingsScreen(
                                 navController = navController,
                                 viewModel = settingsScreenViewModel,

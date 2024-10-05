@@ -87,7 +87,7 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: MainScreenViewModel
+    navController: NavController, viewModel: MainScreenViewModel,
 ) {
     val context = LocalContext.current
     val defaultColor = ScheduleTheme.colors.mainColor
@@ -134,9 +134,6 @@ fun MainScreen(
             } else isUpdateInProcess = false
         }
     }
-    var networkState by remember {
-        mutableStateOf(GSheetsServiceRequestStatus.Waiting)
-    }
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())
     }
@@ -156,11 +153,6 @@ fun MainScreen(
         weekOfYear = localDate.getFrequencyByLocalDate()
             .changeFrequencyIfDefinedInSettings(settings = viewModel.settings)
         isFrequencyInChanging = false
-    }
-    LaunchedEffect(key1 = null) {
-        viewModel.updateLocalDatabase { problem ->
-            networkState = problem
-        }
     }
     LaunchedEffect(key1 = null) {
         viewModel.databaseRepository.getAllAsFlowLessons().collect {
@@ -209,12 +201,6 @@ fun MainScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(id = getIconByRequestStatus(networkState = networkState)),
-                    contentDescription = "data updating state",
-                    tint = ScheduleTheme.colors.oppositeTheme
-                )
-                Spacer(modifier = Modifier.width(15.dp))
                 Box {
                     Row(verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable {
