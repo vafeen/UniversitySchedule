@@ -13,8 +13,8 @@ import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.database.entity.Reminder
 import ru.vafeen.universityschedule.network.service.GSheetsService
 import ru.vafeen.universityschedule.noui.planner.Scheduler
-import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
+import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.utils.cleverUpdatingLessons
 import ru.vafeen.universityschedule.utils.createGSheetsService
@@ -32,7 +32,7 @@ class MainScreenViewModel(
     val databaseRepository: DatabaseRepository,
     val sharedPreferences: SharedPreferences,
     private val scheduler: Scheduler,
-    context: Context
+    context: Context,
 ) : ViewModel() {
     val ruDaysOfWeek =
         context.let {
@@ -48,46 +48,16 @@ class MainScreenViewModel(
         }
     var settings = sharedPreferences.getSettingsOrCreateIfNull()
     val todayDate: LocalDate = LocalDate.now()
-    val daysOfWeek = DayOfWeek.entries.toList()
     val weekOfYear = todayDate.getFrequencyByLocalDate()
         .changeFrequencyIfDefinedInSettings(settings = settings)
     var nowIsLesson: Boolean = false
-    private var gSheetsService: GSheetsService? =
-        settings.link?.let { createGSheetsService(link = it) }
     val minutesBeforeLessonForNotification = 15L
     val pageNumber = 365
-
-    fun updateLocalDatabase(updateUICallback: (GSheetsServiceRequestStatus) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-                updateUICallback(
-                    if (settings.link?.isNotEmpty() == true) GSheetsServiceRequestStatus.Waiting
-                    else GSheetsServiceRequestStatus.NoLink
-                )
-            }
-            if (settings.link?.isNotEmpty() == true)
-                try {
-                    gSheetsService?.getLessonsListFromGSheetsTable()
-                        ?.let {
-                            cleverUpdatingLessons(newLessons = it)
-                            withContext(Dispatchers.Main) {
-                                updateUICallback(GSheetsServiceRequestStatus.Success)
-                            }
-                        }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        updateUICallback(GSheetsServiceRequestStatus.NetworkError)
-                    }
-                }
-        }
-    }
-
     suspend fun addOrRemoveReminderAndUpdateLocalDatabase(
         lesson: Lesson,
         ld: LocalDate,
-        lt: LocalTime
+        lt: LocalTime,
     ) {
-
         if (lesson.idOfReminder == null) {
             val reminderIDs = databaseRepository.getAllRemindersAsFlow().first().map {
                 it.idOfReminder
