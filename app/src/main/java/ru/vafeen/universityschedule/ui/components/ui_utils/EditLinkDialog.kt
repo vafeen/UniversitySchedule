@@ -111,6 +111,7 @@ fun EditLinkDialog(
                             onClick = {
                                 settings = settings.copy(link = null)
                                 sharedPreferences.save(settings)
+                                onDismissRequest()
                             }
                         ) {
                             Icon(
@@ -130,6 +131,7 @@ fun EditLinkDialog(
                                         "${Link.PROTOCOL}$it" else it
                                 )
                                 sharedPreferences.save(settings)
+                                onDismissRequest()
                             }
                             else
                             Toast.makeText(

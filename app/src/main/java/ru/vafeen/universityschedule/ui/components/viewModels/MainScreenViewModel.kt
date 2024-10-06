@@ -55,14 +55,15 @@ class MainScreenViewModel(
         }
 
     val todayDate: LocalDate = LocalDate.now()
-    lateinit var weekOfYear: Frequency
+    var weekOfYear: Frequency = todayDate.getFrequencyByLocalDate()
+        .changeFrequencyIfDefinedInSettings(settings = settings.value)
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 weekOfYear = todayDate.getFrequencyByLocalDate()
-                    .changeFrequencyIfDefinedInSettings(settings = settings.value)
+                    .changeFrequencyIfDefinedInSettings(settings = it)
             }
         }
     }
