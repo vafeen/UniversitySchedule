@@ -8,7 +8,8 @@ data class Settings(
     val darkThemeColor: Color? = null,
     val subgroup: String? = null,
     val link: String? = null,
-    val isSelectedFrequencyCorrespondsToTheWeekNumbers: Boolean? = null
+    val isSelectedFrequencyCorrespondsToTheWeekNumbers: Boolean? = null,
+    val lastDemonstratedVersion: Int? = null,
 ) {
     fun toJsonString(): String = Gson().toJson(this)
 }
