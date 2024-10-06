@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.ui_utils
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +34,6 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.Link
-import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
 import ru.vafeen.universityschedule.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.utils.pasteText
@@ -43,7 +43,7 @@ import ru.vafeen.universityschedule.utils.save
 fun EditLinkDialog(
     context: Context,
     sharedPreferences: SharedPreferences,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     var settings by remember { mutableStateOf(sharedPreferences.getSettingsOrCreateIfNull()) }
     val iconsSize = 30.dp
@@ -109,9 +109,8 @@ fun EditLinkDialog(
                         }
                         IconButton(
                             onClick = {
-                                settings = settings.copy(link = null).save(
-                                    sharedPreferences = sharedPreferences
-                                )
+                                settings = settings.copy(link = null)
+                                sharedPreferences.save(settings)
                             }
                         ) {
                             Icon(
@@ -125,18 +124,19 @@ fun EditLinkDialog(
                     IconButton(onClick = {
                         context.pasteText()?.let {
                             val contains = it.contains("docs.google.com/spreadsheets/")
-                            if (contains)
+                            if (contains) {
                                 settings = settings.copy(
                                     link = if (!it.contains(Link.PROTOCOL))
                                         "${Link.PROTOCOL}$it" else it
-                                ).save(sharedPreferences = sharedPreferences)
+                                )
+                                sharedPreferences.save(settings)
+                            }
                             else
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.its_no_google_sheets_link),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.its_no_google_sheets_link),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }) {
                         Icon(

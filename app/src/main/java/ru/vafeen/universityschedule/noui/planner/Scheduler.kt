@@ -10,7 +10,7 @@ import ru.vafeen.universityschedule.database.entity.Reminder
 
 class Scheduler(
     private val context: Context,
-    private val dtConverters: DTConverters
+    private val dtConverters: DTConverters,
 ) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -38,7 +38,14 @@ class Scheduler(
     }
 
     fun cancelWork(reminder: Reminder) {
-
+        val intent = Intent(context, NotificationAboutLessonReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            reminder.idOfReminder,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager.cancel(pendingIntent)
     }
 
 }
