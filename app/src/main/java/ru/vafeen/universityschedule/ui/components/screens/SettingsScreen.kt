@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -81,9 +82,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     val dark = isSystemInDarkTheme()
     var subgroupList by remember { mutableStateOf(listOf<String>()) }
-    var settings by remember {
-        mutableStateOf(viewModel.sharedPreferences.getSettingsOrCreateIfNull())
-    }
+    val settings by viewModel.settings.collectAsState()
     var linkIsEditable by remember {
         mutableStateOf(false)
     }
@@ -164,8 +163,6 @@ fun SettingsScreen(
             if (linkIsEditable) EditLinkDialog(
                 context = context, sharedPreferences = viewModel.sharedPreferences
             ) {
-                settings = viewModel.sharedPreferences.getSettingsOrCreateIfNull()
-                viewModel.settings = settings
                 linkIsEditable = false
                 viewModel.gSheetsService = settings.link?.let { createGSheetsService(link = it) }
                 key = 3 - key
@@ -174,9 +171,12 @@ fun SettingsScreen(
                 firstColor = settings.getMainColorForThisTheme(isDark = dark)
                     ?: ScheduleTheme.colors.mainColor,
                 onDismissRequest = { colorIsEditable = false }) {
-                settings = (if (dark) settings.copy(
-                    darkThemeColor = it
-                ) else settings.copy(lightThemeColor = it)).save(sharedPreferences = viewModel.sharedPreferences)
+                viewModel.sharedPreferences.save(
+                    if (dark) settings.copy(
+                        darkThemeColor = it
+                    ) else settings.copy(lightThemeColor = it)
+                )
+
             }
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -319,10 +319,11 @@ fun SettingsScreen(
                                             },
                                             modifier = Modifier.padding(horizontal = 3.dp),
                                             onClick = {
-                                                settings =
-                                                    settings.copy(subgroup = if (settings.subgroup != subgroup) subgroup else null)
-                                                        .save(sharedPreferences = viewModel.sharedPreferences)
-
+                                                viewModel.sharedPreferences.save(
+                                                    settings.copy(
+                                                        subgroup = if (settings.subgroup != subgroup) subgroup else null
+                                                    )
+                                                )
                                             },
                                             label = { TextForThisTheme(text = subgroup) },
                                         )

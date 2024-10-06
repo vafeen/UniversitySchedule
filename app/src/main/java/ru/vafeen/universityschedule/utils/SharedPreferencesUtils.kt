@@ -1,8 +1,10 @@
 package ru.vafeen.universityschedule.utils
 
+import android.content.SharedPreferences
 import com.google.gson.Gson
-import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
 import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferencesValue
+import ru.vafeen.universityschedule.noui.shared_preferences.getFromSharedPreferences
+import ru.vafeen.universityschedule.noui.shared_preferences.saveInOrRemoveFromSharedPreferences
 import ru.vafeen.universityschedule.ui.components.Settings
 
 fun SharedPreferences.getSettingsOrCreateIfNull(): Settings {

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -39,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -71,13 +70,12 @@ import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
-import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.utils.Path
 import ru.vafeen.universityschedule.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.utils.getDateString
 import ru.vafeen.universityschedule.utils.getFrequencyByLocalDate
-import ru.vafeen.universityschedule.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.utils.getMainColorForThisTheme
+import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.utils.nowIsLesson
 import ru.vafeen.universityschedule.utils.save
 import ru.vafeen.universityschedule.utils.suitableColor
@@ -90,6 +88,7 @@ fun MainScreen(
     navController: NavController, viewModel: MainScreenViewModel,
 ) {
     val context = LocalContext.current
+    val settings by viewModel.settings.collectAsState()
     val defaultColor = ScheduleTheme.colors.mainColor
     val progress = remember {
         mutableStateOf(Progress(totalBytesRead = 0L, contentLength = 0L, done = false))
@@ -97,15 +96,13 @@ fun MainScreen(
     val dark = isSystemInDarkTheme()
     val mainColor by remember {
         mutableStateOf(
-            viewModel.settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
+            settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
         )
     }
     var isFrequencyInChanging by remember {
         mutableStateOf(false)
     }
-    var isUpdateInProcess by remember {
-        mutableStateOf(false)
-    }
+    val isUpdateInProcess by Downloader.isUpdateInProcessFlow.collectAsState(false)
     val cor = rememberCoroutineScope()
     var localTime by remember {
         mutableStateOf(LocalTime.now())
@@ -116,22 +113,18 @@ fun MainScreen(
     var weekOfYear by remember {
         mutableStateOf(viewModel.weekOfYear)
     }
-    LaunchedEffect(key1 = null) {
-        Downloader.isUpdateInProcessFlow.collect {
-            isUpdateInProcess = it
-        }
-    }
+
     LaunchedEffect(key1 = null) {
         Downloader.sizeFlow.collect {
             if (!it.failed) {
                 progress.value = it
                 if (it.contentLength == it.totalBytesRead) {
-                    isUpdateInProcess = false
+                    Downloader.isUpdateInProcessFlow.emit(false)
                     Downloader.installApk(
                         context = context, apkFilePath = Path.path(context)
                     )
                 }
-            } else isUpdateInProcess = false
+            } else Downloader.isUpdateInProcessFlow.emit(false)
         }
     }
     var lessons by remember {
@@ -142,16 +135,18 @@ fun MainScreen(
     fun changeDateAndFrequency(daysAfterTodayDate: Long) {
         localDate = viewModel.todayDate.plusDays(daysAfterTodayDate)
         weekOfYear = localDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = viewModel.settings)
+            .changeFrequencyIfDefinedInSettings(settings = settings)
     }
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
-        viewModel.settings =
-            viewModel.settings.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let {
-                localDate.getFrequencyByLocalDate() == it
-            }).save(sharedPreferences = viewModel.sharedPreferences)
+        viewModel.sharedPreferences.save(
+            settings.copy(
+                isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let {
+                    localDate.getFrequencyByLocalDate() == it
+                })
+        )
         weekOfYear = localDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = viewModel.settings)
+            .changeFrequencyIfDefinedInSettings(settings = settings)
         isFrequencyInChanging = false
     }
     LaunchedEffect(key1 = null) {
@@ -232,7 +227,7 @@ fun MainScreen(
                                     text = stringResource(id = Frequency.Numerator.resourceName),
                                     fontSize = FontSize.medium19
                                 )
-                                if (viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
+                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "This is selected or not",
                                     tint = ScheduleTheme.colors.oppositeTheme
@@ -255,7 +250,7 @@ fun MainScreen(
                                     text = stringResource(id = Frequency.Denominator.resourceName),
                                     fontSize = FontSize.medium19
                                 )
-                                if (viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
+                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "This is selected or not",
                                     tint = ScheduleTheme.colors.oppositeTheme
@@ -279,7 +274,7 @@ fun MainScreen(
                                     text = stringResource(id = R.string.auto),
                                     fontSize = FontSize.medium19
                                 )
-                                if (viewModel.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
+                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "This is selected or not",
                                     tint = ScheduleTheme.colors.oppositeTheme
@@ -349,7 +344,7 @@ fun MainScreen(
                 ) { page ->
                     val thisDate = viewModel.todayDate.plusDays(page.toLong())
                     val thisWeekOfYear = thisDate.getFrequencyByLocalDate()
-                        .changeFrequencyIfDefinedInSettings(settings = viewModel.settings)
+                        .changeFrequencyIfDefinedInSettings(settings = settings)
                     if (!pagerState.isScrollInProgress) LaunchedEffect(key1 = null) {
                         cardsWithDateState.animateScrollToItem(pagerState.currentPage)
                     }
@@ -360,10 +355,10 @@ fun MainScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         val lessonsOfThisDay = lessons.filter {
-                            it.dayOfWeek == thisDate.dayOfWeek && (it.frequency == null || it.frequency == thisWeekOfYear) && (it.subGroup == viewModel.settings.subgroup || viewModel.settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == thisDate.dayOfWeek && (it.frequency == null || it.frequency == thisWeekOfYear) && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                         }
                         val lessonsInOppositeNumAndDenDay = lessons.filter {
-                            it.dayOfWeek == thisDate.dayOfWeek && it.frequency == thisWeekOfYear.getOpposite() && (it.subGroup == viewModel.settings.subgroup || viewModel.settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == thisDate.dayOfWeek && it.frequency == thisWeekOfYear.getOpposite() && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                         }
                         if (lessonsOfThisDay.isNotEmpty()) {
                             viewModel.nowIsLesson = false

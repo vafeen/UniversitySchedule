@@ -1,28 +1,26 @@
 package ru.vafeen.universityschedule.ui.components.viewModels
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.database.entity.Reminder
-import ru.vafeen.universityschedule.network.service.GSheetsService
+import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.noui.planner.Scheduler
-import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
-import ru.vafeen.universityschedule.utils.GSheetsServiceRequestStatus
+import ru.vafeen.universityschedule.ui.components.Settings
 import ru.vafeen.universityschedule.utils.changeFrequencyIfDefinedInSettings
-import ru.vafeen.universityschedule.utils.cleverUpdatingLessons
-import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.generateID
 import ru.vafeen.universityschedule.utils.getFrequencyByLocalDate
-import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -46,10 +44,35 @@ class MainScreenViewModel(
                 it.getString(R.string.sunday)
             )
         }
-    var settings = sharedPreferences.getSettingsOrCreateIfNull()
+
+    private val _settings =
+        MutableStateFlow<Settings>(sharedPreferences.getSettingsOrCreateIfNull())
+    val settings = _settings.asStateFlow()
+    val spListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            Log.d("settings", "listener main")
+            _settings.value = sharedPreferences.getSettingsOrCreateIfNull()
+        }
+
     val todayDate: LocalDate = LocalDate.now()
-    val weekOfYear = todayDate.getFrequencyByLocalDate()
-        .changeFrequencyIfDefinedInSettings(settings = settings)
+    lateinit var weekOfYear: Frequency
+
+    init {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
+        viewModelScope.launch(Dispatchers.IO) {
+            settings.collect {
+                weekOfYear = todayDate.getFrequencyByLocalDate()
+                    .changeFrequencyIfDefinedInSettings(settings = settings.value)
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
+    }
+
+
     var nowIsLesson: Boolean = false
     val minutesBeforeLessonForNotification = 15L
     val pageNumber = 365
