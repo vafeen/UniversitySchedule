@@ -10,17 +10,10 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.noui.notifications.NotificationService
-import ru.vafeen.universityschedule.noui.shared_preferences.SharedPreferences
-import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
-import ru.vafeen.universityschedule.utils.save
 
 class ReminderRecoveryReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
-            val sharedPreferences: SharedPreferences by inject(
-                clazz = SharedPreferences::class.java
-            )
-            sharedPreferences.getSettingsOrCreateIfNull().copy(link = null).save(sharedPreferences)
             val databaseRepository: DatabaseRepository by inject(
                 clazz = DatabaseRepository::class.java
             )
