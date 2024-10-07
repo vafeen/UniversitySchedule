@@ -103,9 +103,9 @@ fun Lesson.ReminderDialog(
                     )
                 }
                 Checkbox(
-                    checked = idOfReminder != null, onCheckedChange = {
+                    checked = idOfReminderBeforeLesson != null, onCheckedChange = {
                         CoroutineScope(Dispatchers.IO).launch {
-                            if (idOfReminder == null) {
+                            if (idOfReminderBeforeLesson == null) {
                                 val idOfNewReminder =
                                     databaseRepository.getAllRemindersAsFlow().first().map {
                                         it.idOfReminder
@@ -158,9 +158,9 @@ fun Lesson.ReminderDialog(
                     )
                 }
                 Checkbox(
-                    checked = reminderAboutChecking != null, onCheckedChange = {
+                    checked = idOfReminderAfterBeginningLesson != null, onCheckedChange = {
                         CoroutineScope(Dispatchers.IO).launch {
-                            if (reminderAboutChecking == null) {
+                            if (idOfReminderAfterBeginningLesson == null) {
                                 val idOfNewReminder =
                                     databaseRepository.getAllRemindersAsFlow().first().map {
                                         it.idOfReminder
