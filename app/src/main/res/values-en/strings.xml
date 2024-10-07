@@ -34,4 +34,10 @@
     <string name="view_releases">Updating by click on QR below</string>
     <string name="updating">Updating . . .</string>
     <string name="auto">Auto</string>
+    <string name="notification_about_lesson_before_time">Notification about lesson</string>
+    <string name="notification_about_lesson_after_starting">Notification after the start\nof the lesson - check in</string>
+    <string name="reminder_about_lesson_before_time">Reminder about lesson</string>
+    <string name="reminder_about_lesson_after_starting">Reminder to check in for lesson</string>
+    <string name="reminder_text_lesson_before_time">%2$d minutes before lesson %1$s</string>
+    <string name="reminder_text_about_lesson_after_starting">You need to check in for %1$s</string>
 </resources>

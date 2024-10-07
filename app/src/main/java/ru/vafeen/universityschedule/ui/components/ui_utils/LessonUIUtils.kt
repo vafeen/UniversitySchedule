@@ -1,5 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.ui_utils
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,22 +31,22 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
+import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.theme.FontSize
-import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 import ru.vafeen.universityschedule.utils.getLessonTimeString
 import ru.vafeen.universityschedule.utils.suitableColor
+import java.time.LocalDate
 
 @Composable
 fun Lesson.StringForSchedule(
+    viewModel: MainScreenViewModel?,
+    dateOfThisLesson: LocalDate?,
     colorBack: Color,
     lessonOfThisNumAndDenOrNot: Boolean = true,
     padding: Dp = 10.dp,
-    addReminderAndUpdateLessonInLocalDatabase: (() -> Unit)? = null,
 ) {
     val suitableColor = colorBack.suitableColor()
-    var reminderIsAdded by remember {
-        mutableStateOf(false)
-    }
+    var notificationsIsEditing by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .padding(padding)//.clickable {  }
@@ -98,31 +97,41 @@ fun Lesson.StringForSchedule(
                         )
                     }
                 }
-                addReminderAndUpdateLessonInLocalDatabase?.let {
+                if (viewModel != null && dateOfThisLesson != null) {
+                    if (notificationsIsEditing)
+                        this@StringForSchedule.ReminderDialog(
+                            onDismissRequest = { notificationsIsEditing = false },
+                            viewModel = viewModel,
+                            thisDate = dateOfThisLesson
+                        )
                     Row(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                notificationsIsEditing = true
+                            },
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.message),
-                            contentDescription = "Message about lesson",
+                            painter = painterResource(id = if (idOfReminder != null && reminderAboutChecking != null) R.drawable.edit else R.drawable.add),
+                            contentDescription = "Edit notifications about this lesson",
                             tint = suitableColor
                         )
-                        Checkbox(
-                            checked = idOfReminder != null, onCheckedChange = {
-                                reminderIsAdded = !reminderIsAdded
-                                it()
-                            },
-                            colors = CheckboxDefaults.colors(
-                                checkedColor = suitableColor,
-                                checkmarkColor = colorBack,
-                                uncheckedColor = suitableColor
+                        if (idOfReminder != null)
+                            Icon(
+                                painter = painterResource(id = R.drawable.message),
+                                contentDescription = "Message about lesson",
+                                tint = suitableColor
                             )
-                        )
+                        if (reminderAboutChecking != null)
+                            Icon(
+                                painter = painterResource(id = R.drawable.notification_about_checking),
+                                contentDescription = "Message about checking on this lesson",
+                                tint = suitableColor
+                            )
                     }
                 }
-
             }
 
             if (name?.isNotEmpty() == true) {

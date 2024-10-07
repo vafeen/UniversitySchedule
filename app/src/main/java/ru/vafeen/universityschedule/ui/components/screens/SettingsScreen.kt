@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.R
@@ -56,7 +55,6 @@ import ru.vafeen.universityschedule.utils.Link
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.utils.getMainColorForThisTheme
-import ru.vafeen.universityschedule.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.utils.getVersionName
 import ru.vafeen.universityschedule.utils.openLink
 import ru.vafeen.universityschedule.utils.save
