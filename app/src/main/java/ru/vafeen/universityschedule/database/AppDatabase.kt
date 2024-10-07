@@ -14,7 +14,7 @@ import ru.vafeen.universityschedule.database.entity.Reminder
 @Database(
     exportSchema = true,
     entities = [Lesson::class, Reminder::class],
-    version = 2,
+    version = 3,
 )
 @TypeConverters(LessonTypeConverters::class, DTConverters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -39,6 +39,12 @@ abstract class AppDatabase : RoomDatabase() {
                     ALTER TABLE `Lesson` ADD COLUMN `idOfReminder` INTEGER
                     """.trimIndent()
                 )
+            }
+        }
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `Lesson` ADD COLUMN `idOfReminderAfterBeginningLesson` INTEGER")
+                db.execSQL("ALTER TABLE `Lesson` RENAME COLUMN `idOfReminder` TO `idOfReminderBeforeLesson`")
             }
         }
     }

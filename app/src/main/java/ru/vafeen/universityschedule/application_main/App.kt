@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-import ru.vafeen.reminder.noui.di.koinDatabaseDIModule
-import ru.vafeen.universityschedule.noui.di.koinNetworkDIModule
 import ru.vafeen.universityschedule.noui.di.koinDIModule
+import ru.vafeen.universityschedule.noui.di.koinDatabaseDIModule
+import ru.vafeen.universityschedule.noui.di.koinNetworkDIModule
 import ru.vafeen.universityschedule.noui.di.koinViewModelDIModule
 import ru.vafeen.universityschedule.noui.notifications.NotificationChannelInfo
 import ru.vafeen.universityschedule.utils.cleverUpdatingLessons
