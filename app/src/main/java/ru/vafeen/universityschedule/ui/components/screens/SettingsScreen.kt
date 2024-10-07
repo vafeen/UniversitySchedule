@@ -39,7 +39,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.ui.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.ui.components.ui_utils.ColorPickerDialog
@@ -77,8 +79,8 @@ import ru.vafeen.universityschedule.utils.save
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel: SettingsScreenViewModel,
 ) {
+    val viewModel: SettingsScreenViewModel = koinViewModel()
     val context = LocalContext.current
     val dark = isSystemInDarkTheme()
     var subgroupList by remember { mutableStateOf(listOf<String>()) }
