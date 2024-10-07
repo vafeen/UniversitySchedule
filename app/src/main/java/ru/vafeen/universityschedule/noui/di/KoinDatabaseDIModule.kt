@@ -1,4 +1,4 @@
-package ru.vafeen.reminder.noui.di
+package ru.vafeen.universityschedule.noui.di
 
 
 import androidx.room.Room
@@ -13,7 +13,7 @@ val koinDatabaseDIModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
             context = get(), klass = AppDatabase::class.java, name = DBInfo.NAME
-        ).addMigrations(AppDatabase.MIGRATION_1_2).build()
+        ).addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3).build()
     }
     singleOf(::DatabaseRepository)
 }
