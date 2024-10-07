@@ -6,7 +6,6 @@ import retrofit2.Response
 import retrofit2.http.Url
 import ru.vafeen.universityschedule.network.parcelable.github_service.Release
 import ru.vafeen.universityschedule.network.service.DownloadService
-import ru.vafeen.universityschedule.network.service.GSheetsService
 import ru.vafeen.universityschedule.network.service.GitHubDataService
 
 class NetworkRepository(

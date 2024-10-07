@@ -33,5 +33,10 @@
     <string name="view_releases">Обновление по клику на QR ниже</string>
     <string name="updating">Обновление . . .</string>
     <string name="auto">Авто</string>
-
+    <string name="notification_about_lesson_before_time">Уведомление о паре</string>
+    <string name="notification_about_lesson_after_starting">Уведомление после начала\n пары - отметиться</string>
+    <string name="reminder_about_lesson_before_time">Напоминание о паре</string>
+    <string name="reminder_about_lesson_after_starting">Напоминание отметиться на паре</string>
+    <string name="reminder_text_lesson_before_time">До пары %1$s %2$d минут</string>
+    <string name="reminder_text_about_lesson_after_starting">На паре %1$s нужно отметиться</string>
 </resources>
