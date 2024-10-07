@@ -42,6 +42,7 @@ class SettingsScreenViewModel(
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
+        Log.d("init", "settings screen viewModel init")
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 gSheetsService = it.link?.let { createGSheetsService(link = it) }

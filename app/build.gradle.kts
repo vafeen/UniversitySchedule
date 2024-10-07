@@ -90,5 +90,7 @@ dependencies {
     //permission
     implementation(libs.accompanist.permissions)
     //koin
-    implementation("io.insert-koin:koin-android:4.0.0")
+    implementation(libs.koin.android)
+    // koin for compose
+    implementation(libs.koin.androidx.compose)
 }

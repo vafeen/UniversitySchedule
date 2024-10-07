@@ -60,6 +60,7 @@ class MainScreenViewModel(
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
+        Log.d("init", "main screen viewModel init")
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 weekOfYear = todayDate.getFrequencyByLocalDate()

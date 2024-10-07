@@ -50,11 +50,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.network.downloader.Downloader
@@ -85,8 +87,9 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    navController: NavController, viewModel: MainScreenViewModel,
+    navController: NavController,
 ) {
+    val viewModel: MainScreenViewModel = koinViewModel()
     val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
     val defaultColor = ScheduleTheme.colors.mainColor
