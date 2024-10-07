@@ -34,7 +34,7 @@ class NotificationAboutLessonReceiver : BroadcastReceiver() {
                 databaseRepository.deleteAllReminders(it)
             }
             databaseRepository.getLessonByIdOfReminder(idOfReminder = idOfReminder)?.let {
-                databaseRepository.insertAllLessons(it.copy(idOfReminder = null))
+                databaseRepository.insertAllLessons(it.copy(idOfReminderBeforeLesson = null))
             }
         }
     }

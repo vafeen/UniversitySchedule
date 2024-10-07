@@ -114,17 +114,17 @@ fun Lesson.StringForSchedule(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(id = if (idOfReminder != null && reminderAboutChecking != null) R.drawable.edit else R.drawable.add),
+                            painter = painterResource(id = if (idOfReminderBeforeLesson != null && idOfReminderAfterBeginningLesson != null) R.drawable.edit else R.drawable.add),
                             contentDescription = "Edit notifications about this lesson",
                             tint = suitableColor
                         )
-                        if (idOfReminder != null)
+                        if (idOfReminderBeforeLesson != null)
                             Icon(
                                 painter = painterResource(id = R.drawable.message),
                                 contentDescription = "Message about lesson",
                                 tint = suitableColor
                             )
-                        if (reminderAboutChecking != null)
+                        if (idOfReminderAfterBeginningLesson != null)
                             Icon(
                                 painter = painterResource(id = R.drawable.notification_about_checking),
                                 contentDescription = "Message about checking on this lesson",

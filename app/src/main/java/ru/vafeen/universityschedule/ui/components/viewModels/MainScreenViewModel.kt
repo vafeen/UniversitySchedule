@@ -76,7 +76,7 @@ class MainScreenViewModel(
         lesson: Lesson,
         newReminder: Reminder,
     ) {
-        val newLesson = lesson.copy(idOfReminder = newReminder.idOfReminder)
+        val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
         databaseRepository.insertAllLessons(newLesson)
         databaseRepository.insertAllReminders(newReminder)
         scheduler.planOneTimeWork(reminder = newReminder)
@@ -85,10 +85,12 @@ class MainScreenViewModel(
     suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
         lesson: Lesson,
     ) {
-        val newLesson = lesson.copy(idOfReminder = null)
+        val newLesson = lesson.copy(idOfReminderBeforeLesson = null)
         databaseRepository.insertAllLessons(newLesson)
         val reminder =
-            databaseRepository.getReminderByIdOfReminder(idOfReminder = lesson.idOfReminder ?: -1)
+            databaseRepository.getReminderByIdOfReminder(
+                idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
+            )
         reminder?.let {
             scheduler.cancelWork(it)
             databaseRepository.deleteAllReminders(it)
@@ -99,7 +101,7 @@ class MainScreenViewModel(
         lesson: Lesson,
         newReminder: Reminder,
     ) {
-        val newLesson = lesson.copy(reminderAboutChecking = newReminder.idOfReminder)
+        val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder)
         databaseRepository.insertAllLessons(newLesson)
         databaseRepository.insertAllReminders(newReminder)
         scheduler.planOneTimeWork(reminder = newReminder)
@@ -108,10 +110,12 @@ class MainScreenViewModel(
     suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
         lesson: Lesson,
     ) {
-        val newLesson = lesson.copy(reminderAboutChecking = null)
+        val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = null)
         databaseRepository.insertAllLessons(newLesson)
         val reminder =
-            databaseRepository.getReminderByIdOfReminder(idOfReminder = lesson.idOfReminder ?: -1)
+            databaseRepository.getReminderByIdOfReminder(
+                idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
+            )
         reminder?.let {
             scheduler.cancelWork(it)
             databaseRepository.deleteAllReminders(it)
