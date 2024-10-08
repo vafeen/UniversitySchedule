@@ -28,8 +28,10 @@ class NotificationAboutLessonReceiver : BroadcastReceiver() {
             )
             reminder?.let {
                 notificationService.showNotification(
-                    title = it.title,
-                    text = it.text
+                    NotificationService.createNotificationAbout15MinutesBeforeLesson(
+                        title = it.title,
+                        text = it.text
+                    )
                 )
                 databaseRepository.deleteAllReminders(it)
             }

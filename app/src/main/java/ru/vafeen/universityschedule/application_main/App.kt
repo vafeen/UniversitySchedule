@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.application_main
 
 import android.app.Application
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
@@ -15,6 +14,7 @@ import ru.vafeen.universityschedule.noui.di.koinDatabaseDIModule
 import ru.vafeen.universityschedule.noui.di.koinNetworkDIModule
 import ru.vafeen.universityschedule.noui.di.koinViewModelDIModule
 import ru.vafeen.universityschedule.noui.notifications.NotificationChannelInfo
+import ru.vafeen.universityschedule.noui.notifications.createNotificationChannelKClass
 import ru.vafeen.universityschedule.utils.cleverUpdatingLessons
 import ru.vafeen.universityschedule.utils.createGSheetsService
 import ru.vafeen.universityschedule.utils.getLessonsListFromGSheetsTable
@@ -37,12 +37,17 @@ class App : Application() {
 
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val notificationChannel = NotificationChannel(
-            NotificationChannelInfo.NOTIFICATION_CHANNEL_ID,
-            NotificationChannelInfo.NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
+
+        notificationManager.createNotificationChannel(
+            NotificationChannelInfo.About15MinutesBeforeLesson.createNotificationChannelKClass()
         )
-        notificationManager.createNotificationChannel(notificationChannel)
+        notificationManager.createNotificationChannel(
+            NotificationChannelInfo.AfterStartingLesson.createNotificationChannelKClass()
+        )
+        notificationManager.createNotificationChannel(
+            NotificationChannelInfo.ReminderRecovery.createNotificationChannelKClass()
+        )
+
         val sharedPreferences: SharedPreferences by inject()
         val settings = sharedPreferences.getSettingsOrCreateIfNull()
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {

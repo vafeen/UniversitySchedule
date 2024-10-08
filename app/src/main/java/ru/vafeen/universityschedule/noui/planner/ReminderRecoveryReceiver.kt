@@ -30,8 +30,10 @@ class ReminderRecoveryReceiver : BroadcastReceiver() {
                 }
             }
             notificationService.showNotification(
-                "Восстановление будильников",
-                "Будильники восстановлены!"
+                NotificationService.createNotificationReminderRecovery(
+                    title = "Восстановление будильников",
+                    text = "Будильники восстановлены!"
+                )
             )
         }
     }
