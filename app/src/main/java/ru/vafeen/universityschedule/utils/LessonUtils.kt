@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.utils
 
 import android.content.Context
 import ru.vafeen.universityschedule.R
+import ru.vafeen.universityschedule.database.ReminderType
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.database.entity.Reminder
 import java.time.LocalDateTime
@@ -20,20 +21,20 @@ fun Lesson.createReminderBefore15MinutesOfLesson(
     dt: LocalDateTime,
     idOfNewReminder: Int,
     context: Context,
-): Reminder {
-    return Reminder(
-        idOfReminder = idOfNewReminder,
-        title = context.getString(R.string.reminder_about_lesson_before_time),
-        text = String.format(
-            context.getString(
-                R.string.reminder_text_lesson_before_time
-            ),
-            name,
-            NotificationAboutLessonsSettings.minutesBeforeLessonForNotification,
+): Reminder = Reminder(
+    idOfReminder = idOfNewReminder,
+    title = context.getString(R.string.reminder_about_lesson_before_time),
+    text = String.format(
+        context.getString(
+            R.string.reminder_text_lesson_before_time
         ),
-        dt = dt
-    )
-}
+        name,
+        NotificationAboutLessonsSettings.minutesBeforeLessonForNotification,
+    ),
+    dt = dt,
+    type = ReminderType.BEFORE_LESSON
+)
+
 
 fun Lesson.createReminderAfterStartingLessonForBeCheckedAtThisLesson(
     dt: LocalDateTime,
@@ -48,5 +49,6 @@ fun Lesson.createReminderAfterStartingLessonForBeCheckedAtThisLesson(
         ),
         name
     ),
-    dt = dt
+    dt = dt,
+    type = ReminderType.AFTER_BEGINNING_LESSON
 )

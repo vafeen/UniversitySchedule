@@ -13,7 +13,7 @@ import kotlin.random.Random
 
 
 class NotificationService(
-    val context: Context,
+    private val context: Context,
 ) {
     companion object {
         fun createNotificationAbout15MinutesBeforeLesson(
@@ -42,7 +42,7 @@ class NotificationService(
                 .build()
         }
 
-        fun createNotificationAfterStartingLessonForBeCheckedAtThisLesson(
+        fun createNotificationAfterBeginningLessonForBeCheckedAtThisLesson(
             title: String = "title",
             text: String = "Hello world!",
         ): Notification {

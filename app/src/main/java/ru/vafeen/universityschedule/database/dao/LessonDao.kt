@@ -16,6 +16,10 @@ interface LessonDao : DataAccessObject<Lesson>, FlowGetAllImplementation<Lesson>
     @Query("select * from lesson")
     override fun getAllAsFlow(): Flow<List<Lesson>>
 
-    @Query("select * from lesson where idOfReminderBeforeLesson=:idOfReminder limit 1")
-    fun getByIdOfReminder(idOfReminder: Int): Lesson?
+    @Query("select * from lesson where idOfReminderBeforeLesson=:idOfReminderBeforeLesson limit 1")
+    fun getByIdOfReminderBeforeLesson(idOfReminderBeforeLesson: Int): Lesson?
+
+    @Query("select * from lesson where  idOfReminderAfterBeginningLesson=:idOfReminderAfterBeginningLesson limit 1")
+    fun getByIdOfReminderAfterBeginningLesson(idOfReminderAfterBeginningLesson: Int): Lesson?
+
 }
