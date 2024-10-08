@@ -24,7 +24,8 @@
             android:name=".application_main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.UniversitySchedule">
+            android:theme="@style/Theme.UniversitySchedule"
+            tools:targetApi="tiramisu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
