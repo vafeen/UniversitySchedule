@@ -13,7 +13,11 @@ val koinDatabaseDIModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
             context = get(), klass = AppDatabase::class.java, name = DBInfo.NAME
-        ).addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3).build()
+        ).addMigrations(
+            AppDatabase.MIGRATION_1_2,
+            AppDatabase.MIGRATION_2_3,
+            AppDatabase.MIGRATION_3_4
+        ).build()
     }
     singleOf(::DatabaseRepository)
 }

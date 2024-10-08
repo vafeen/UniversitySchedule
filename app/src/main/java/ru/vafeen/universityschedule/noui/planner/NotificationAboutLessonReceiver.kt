@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.database.DatabaseRepository
+import ru.vafeen.universityschedule.database.ReminderType
 import ru.vafeen.universityschedule.noui.notifications.NotificationService
 
 class NotificationAboutLessonReceiver : BroadcastReceiver() {
@@ -28,16 +29,29 @@ class NotificationAboutLessonReceiver : BroadcastReceiver() {
             )
             reminder?.let {
                 notificationService.showNotification(
-                    NotificationService.createNotificationAbout15MinutesBeforeLesson(
-                        title = it.title,
-                        text = it.text
-                    )
+                    when (reminder.type) {
+                        ReminderType.BEFORE_LESSON -> {
+                            NotificationService.createNotificationAbout15MinutesBeforeLesson(
+                                title = it.title,
+                                text = it.text
+                            )
+                        }
+
+                        ReminderType.AFTER_BEGINNING_LESSON -> {
+                            NotificationService.createNotificationAfterBeginningLessonForBeCheckedAtThisLesson(
+                                title = it.title,
+                                text = it.text
+                            )
+                        }
+                    }
+
                 )
                 databaseRepository.deleteAllReminders(it)
             }
-            databaseRepository.getLessonByIdOfReminder(idOfReminder = idOfReminder)?.let {
-                databaseRepository.insertAllLessons(it.copy(idOfReminderBeforeLesson = null))
-            }
+            databaseRepository.getLessonByIdOfReminderAfterBeginningLesson(idOfReminder = idOfReminder)
+                ?.let {
+                    databaseRepository.insertAllLessons(it.copy(idOfReminderBeforeLesson = null))
+                }
         }
     }
 }

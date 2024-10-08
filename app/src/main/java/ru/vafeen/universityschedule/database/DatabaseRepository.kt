@@ -15,8 +15,11 @@ class DatabaseRepository(db: AppDatabase) {
     fun getReminderByIdOfReminder(idOfReminder: Int): Reminder? =
         reminderDao.getReminderByIdOfReminder(idOfReminder = idOfReminder)
 
-    fun getLessonByIdOfReminder(idOfReminder: Int): Lesson? =
-        lessonDao.getByIdOfReminder(idOfReminder = idOfReminder)
+    fun getByIdOfReminderBeforeLesson(idOfReminder: Int): Lesson? =
+        lessonDao.getByIdOfReminderBeforeLesson(idOfReminderBeforeLesson = idOfReminder)
+
+    fun getLessonByIdOfReminderAfterBeginningLesson(idOfReminder: Int): Lesson? =
+        lessonDao.getByIdOfReminderAfterBeginningLesson(idOfReminderAfterBeginningLesson = idOfReminder)
 
     /**
      * Inserting && Updating in database one or more lessons
