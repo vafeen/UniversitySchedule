@@ -59,7 +59,7 @@ fun Lesson.ReminderDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(ScheduleTheme.colors.singleTheme)
+                .background(ScheduleTheme.colors.buttonColor)
                 .padding(dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
