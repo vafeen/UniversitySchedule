@@ -14,7 +14,6 @@ class Scheduler(
 ) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-
     fun planOneTimeWork(reminder: Reminder) {
         val intent = Intent(context, NotificationAboutLessonReceiver::class.java)
         intent.apply {

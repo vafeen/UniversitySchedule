@@ -28,30 +28,40 @@ class NotificationAboutLessonReceiver : BroadcastReceiver() {
                 idOfReminder = idOfReminder
             )
             reminder?.let {
-                notificationService.showNotification(
-                    when (reminder.type) {
-                        ReminderType.BEFORE_LESSON -> {
+                when (reminder.type) {
+                    ReminderType.BEFORE_LESSON -> {
+                        notificationService.showNotification(
                             NotificationService.createNotificationAbout15MinutesBeforeLesson(
                                 title = it.title,
                                 text = it.text
                             )
-                        }
+                        )
+                        databaseRepository.getByIdOfReminderBeforeLesson(idOfReminder = idOfReminder)
+                            ?.let {
+                                databaseRepository.insertAllLessons(it.copy(idOfReminderBeforeLesson = null))
+                            }
 
-                        ReminderType.AFTER_BEGINNING_LESSON -> {
+                    }
+
+                    ReminderType.AFTER_BEGINNING_LESSON -> {
+                        notificationService.showNotification(
                             NotificationService.createNotificationAfterBeginningLessonForBeCheckedAtThisLesson(
                                 title = it.title,
                                 text = it.text
                             )
-                        }
+                        )
+                        databaseRepository.getLessonByIdOfReminderAfterBeginningLesson(idOfReminder = idOfReminder)
+                            ?.let {
+                                databaseRepository.insertAllLessons(
+                                    it.copy(
+                                        idOfReminderAfterBeginningLesson = null
+                                    )
+                                )
+                            }
                     }
-
-                )
+                }
                 databaseRepository.deleteAllReminders(it)
             }
-            databaseRepository.getLessonByIdOfReminderAfterBeginningLesson(idOfReminder = idOfReminder)
-                ?.let {
-                    databaseRepository.insertAllLessons(it.copy(idOfReminderBeforeLesson = null))
-                }
         }
     }
 }
