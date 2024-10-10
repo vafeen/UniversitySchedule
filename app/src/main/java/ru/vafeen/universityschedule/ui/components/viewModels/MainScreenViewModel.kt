@@ -114,7 +114,7 @@ class MainScreenViewModel(
         databaseRepository.insertAllLessons(newLesson)
         val reminder =
             databaseRepository.getReminderByIdOfReminder(
-                idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
+                idOfReminder = lesson.idOfReminderAfterBeginningLesson ?: -1
             )
         reminder?.let {
             scheduler.cancelWork(it)

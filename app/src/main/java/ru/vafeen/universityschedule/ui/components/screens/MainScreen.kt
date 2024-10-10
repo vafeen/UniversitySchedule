@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.app.Activity
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -154,6 +155,11 @@ fun MainScreen(
     LaunchedEffect(key1 = null) {
         viewModel.databaseRepository.getAllAsFlowLessons().collect {
             lessons = it
+        }
+    }
+    LaunchedEffect(null) {
+        viewModel.databaseRepository.getAllRemindersAsFlow().collect {
+            Log.d("reminders", it.joinToString(separator = "\n"))
         }
     }
 
@@ -358,10 +364,12 @@ fun MainScreen(
                     ) {
                         val lessonsOfThisDay = lessons.filter {
                             it.dayOfWeek == dateOfThisLesson.dayOfWeek && (it.frequency == null || it.frequency == weekOfYearOfThisDay) && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
-                        }
+                        }.sorted()
+
                         val lessonsInOppositeNumAndDenDay = lessons.filter {
                             it.dayOfWeek == dateOfThisLesson.dayOfWeek && it.frequency == weekOfYearOfThisDay.getOpposite() && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
-                        }
+                        }.sorted()
+
                         if (lessonsOfThisDay.isNotEmpty()) {
                             viewModel.nowIsLesson = false
                             lessonsOfThisDay.forEach { lesson ->

@@ -22,11 +22,11 @@ import ru.vafeen.universityschedule.ui.navigation.Screen
 import ru.vafeen.universityschedule.ui.theme.MainTheme
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
 
-
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

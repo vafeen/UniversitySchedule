@@ -14,5 +14,5 @@ data class Reminder(
     val dt: LocalDateTime,
     val type: ReminderType = ReminderType.AFTER_BEGINNING_LESSON,
 ) {
-    override fun toString(): String = "$id $title $text"
+    override fun toString(): String = "$id|$title|$text|$dt|"
 }
