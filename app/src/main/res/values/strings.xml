@@ -39,4 +39,6 @@
     <string name="reminder_about_lesson_after_starting">Напоминание отметиться на паре</string>
     <string name="reminder_text_lesson_before_time">До пары %1$s %2$d минут</string>
     <string name="reminder_text_about_lesson_after_starting">На паре %1$s нужно отметиться</string>
+    <string name="reminder_recovery">Восстановление будильников</string>
+    <string name="reminders_restored">Будильники восстановлены</string>
 </resources>
