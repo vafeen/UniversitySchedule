@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
+import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.noui.notifications.NotificationService
 
@@ -16,6 +17,9 @@ class ReminderRecoveryReceiver : BroadcastReceiver() {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             val databaseRepository: DatabaseRepository by inject(
                 clazz = DatabaseRepository::class.java
+            )
+            val context: Context by inject(
+                clazz = Context::class.java
             )
             val scheduler: Scheduler by inject(
                 clazz = Scheduler::class.java
@@ -31,8 +35,8 @@ class ReminderRecoveryReceiver : BroadcastReceiver() {
             }
             notificationService.showNotification(
                 NotificationService.createNotificationReminderRecovery(
-                    title = "Восстановление будильников",
-                    text = "Будильники восстановлены!"
+                    title = context.getString(R.string.reminder_recovery),
+                    text = context.getString(R.string.reminders_restored)
                 )
             )
         }
