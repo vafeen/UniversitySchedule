@@ -30,7 +30,7 @@ class ReminderRecoveryReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
                 for (reminder in databaseRepository.getAllRemindersAsFlow().first()) {
                     scheduler.cancelWork(reminder = reminder)
-                    scheduler.planOneTimeWork(reminder = reminder)
+                    scheduler.planRepeatWork(reminder = reminder)
                 }
             }
             notificationService.showNotification(

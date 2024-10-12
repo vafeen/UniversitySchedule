@@ -5,6 +5,8 @@ import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.ReminderType
 import ru.vafeen.universityschedule.database.entity.Lesson
 import ru.vafeen.universityschedule.database.entity.Reminder
+import ru.vafeen.universityschedule.noui.duration.RepeatDuration
+import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -32,7 +34,8 @@ fun Lesson.createReminderBefore15MinutesOfLesson(
         NotificationAboutLessonsSettings.minutesBeforeLessonForNotification,
     ),
     dt = dt,
-    type = ReminderType.BEFORE_LESSON
+    type = ReminderType.BEFORE_LESSON,
+    duration = if (frequency == Frequency.Every) RepeatDuration.EVERY_WEEK else RepeatDuration.EVERY_2_WEEKS
 )
 
 
@@ -50,5 +53,6 @@ fun Lesson.createReminderAfterStartingLessonForBeCheckedAtThisLesson(
         name
     ),
     dt = dt,
-    type = ReminderType.AFTER_BEGINNING_LESSON
+    type = ReminderType.AFTER_BEGINNING_LESSON,
+    duration = if (frequency == Frequency.Every) RepeatDuration.EVERY_WEEK else RepeatDuration.EVERY_2_WEEKS
 )
