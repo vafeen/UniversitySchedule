@@ -2,7 +2,6 @@ package ru.vafeen.universityschedule.ui.components.viewModels
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +43,6 @@ class MainScreenViewModel(
         MutableStateFlow<Settings>(sharedPreferences.getSettingsOrCreateIfNull())
     val settings = _settings.asStateFlow()
     val spListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-        Log.d("settings", "listener main")
         _settings.value = sharedPreferences.getSettingsOrCreateIfNull()
     }
 
@@ -54,7 +52,6 @@ class MainScreenViewModel(
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
-        Log.d("init", "main screen viewModel init")
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 weekOfYear = todayDate.getFrequencyByLocalDate()

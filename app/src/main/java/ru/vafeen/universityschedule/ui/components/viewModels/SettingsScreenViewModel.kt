@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.viewModels
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,7 +30,6 @@ class SettingsScreenViewModel(
     val settings = _settings.asStateFlow()
     val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            Log.d("settings", "listener settings")
             _settings.value = sharedPreferences.getSettingsOrCreateIfNull()
         }
     var gSheetsService: GSheetsService? = null
@@ -40,7 +38,6 @@ class SettingsScreenViewModel(
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
-        Log.d("init", "settings screen viewModel init")
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 gSheetsService = it.link?.let { createGSheetsService(link = it) }
