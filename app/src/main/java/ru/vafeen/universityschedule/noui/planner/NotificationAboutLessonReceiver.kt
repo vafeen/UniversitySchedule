@@ -36,11 +36,6 @@ class NotificationAboutLessonReceiver : BroadcastReceiver() {
                                 text = it.text
                             )
                         )
-                        databaseRepository.getByIdOfReminderBeforeLesson(idOfReminder = idOfReminder)
-                            ?.let {
-                                databaseRepository.insertAllLessons(it.copy(idOfReminderBeforeLesson = null))
-                            }
-
                     }
 
                     ReminderType.AFTER_BEGINNING_LESSON -> {
@@ -50,17 +45,8 @@ class NotificationAboutLessonReceiver : BroadcastReceiver() {
                                 text = it.text
                             )
                         )
-                        databaseRepository.getLessonByIdOfReminderAfterBeginningLesson(idOfReminder = idOfReminder)
-                            ?.let {
-                                databaseRepository.insertAllLessons(
-                                    it.copy(
-                                        idOfReminderAfterBeginningLesson = null
-                                    )
-                                )
-                            }
                     }
                 }
-                databaseRepository.deleteAllReminders(it)
             }
         }
     }
