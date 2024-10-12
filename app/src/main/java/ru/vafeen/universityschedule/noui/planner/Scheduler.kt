@@ -14,7 +14,7 @@ class Scheduler(
 ) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    fun planOneTimeWork(reminder: Reminder) {
+    fun planRepeatWork(reminder: Reminder) {
         val intent = Intent(context, NotificationAboutLessonReceiver::class.java)
         intent.apply {
             putExtra(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder)
@@ -25,15 +25,12 @@ class Scheduler(
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
-        alarmManager.setExact(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             dtConverters.localDateTimeToLongMilliSeconds(reminder.dt),
+            reminder.duration.duration.milliSeconds,
             pendingIntent
         )
-    }
-
-    fun planRepeatWork(reminder: Reminder) {
-
     }
 
     fun cancelWork(reminder: Reminder) {

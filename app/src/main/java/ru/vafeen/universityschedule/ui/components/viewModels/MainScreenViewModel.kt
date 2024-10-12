@@ -79,7 +79,7 @@ class MainScreenViewModel(
         val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
         databaseRepository.insertAllLessons(newLesson)
         databaseRepository.insertAllReminders(newReminder)
-        scheduler.planOneTimeWork(reminder = newReminder)
+        scheduler.planRepeatWork(reminder = newReminder)
     }
 
     suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
@@ -104,7 +104,7 @@ class MainScreenViewModel(
         val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder)
         databaseRepository.insertAllLessons(newLesson)
         databaseRepository.insertAllReminders(newReminder)
-        scheduler.planOneTimeWork(reminder = newReminder)
+        scheduler.planRepeatWork(reminder = newReminder)
     }
 
     suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
