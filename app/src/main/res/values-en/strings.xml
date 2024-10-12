@@ -42,4 +42,6 @@
     <string name="reminder_text_about_lesson_after_starting">You need to check in for %1$s</string>
     <string name="reminder_recovery">Reminder recovery</string>
     <string name="reminders_restored">Reminders have restored</string>
+    <string name="every_week">Every week</string>
+    <string name="every_2_weeks">Every 2 weeks</string>
 </resources>

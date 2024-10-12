@@ -29,6 +29,7 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.DatabaseRepository
 import ru.vafeen.universityschedule.database.entity.Lesson
+import ru.vafeen.universityschedule.noui.lesson_additions.Frequency
 import ru.vafeen.universityschedule.ui.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.ui.theme.FontSize
 import ru.vafeen.universityschedule.ui.theme.ScheduleTheme
@@ -83,6 +84,12 @@ fun Lesson.ReminderDialog(
                 )
             }
 
+            Spacer(modifier = Modifier.height(5.dp))
+            TextForThisTheme(
+                text = stringResource(id = if (frequency == Frequency.Every) R.string.every_week else R.string.every_2_weeks),
+                fontSize = FontSize.medium19
+            )
+            Spacer(modifier = Modifier.height(5.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween

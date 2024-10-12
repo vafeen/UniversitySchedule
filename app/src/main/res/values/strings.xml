@@ -41,4 +41,6 @@
     <string name="reminder_text_about_lesson_after_starting">На паре %1$s нужно отметиться</string>
     <string name="reminder_recovery">Восстановление будильников</string>
     <string name="reminders_restored">Будильники восстановлены</string>
+    <string name="every_week">Каждую неделю</string>
+    <string name="every_2_weeks">Каждые 2 недели</string>
 </resources>

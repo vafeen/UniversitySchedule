@@ -16,5 +16,4 @@ data class Reminder(
     val duration: RepeatDuration = RepeatDuration.EVERY_WEEK,
     val type: ReminderType = ReminderType.AFTER_BEGINNING_LESSON,
 ) {
-    override fun toString(): String = "$id|$title|$text|$dt|"
 }
