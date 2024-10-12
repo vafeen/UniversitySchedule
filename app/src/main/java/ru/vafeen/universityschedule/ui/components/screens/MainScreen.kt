@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.ui.components.screens
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -157,11 +156,11 @@ fun MainScreen(
             lessons = it
         }
     }
-    LaunchedEffect(null) {
-        viewModel.databaseRepository.getAllRemindersAsFlow().collect {
-            Log.d("reminders", it.joinToString(separator = "\n"))
-        }
-    }
+//    LaunchedEffect(null) {
+//        viewModel.databaseRepository.getAllRemindersAsFlow().collect {
+//            Log.d("reminders", it.joinToString(separator = "\n"))
+//        }
+//    }
 
     val pagerState = rememberPagerState(
         pageCount = {
