@@ -86,7 +86,7 @@ fun Lesson.ReminderDialog(
 
             Spacer(modifier = Modifier.height(5.dp))
             TextForThisTheme(
-                text = stringResource(id = if (frequency == Frequency.Every) R.string.every_week else R.string.every_2_weeks),
+                text = stringResource(id = if (frequency == Frequency.Every || frequency == null) R.string.every_week else R.string.every_2_weeks),
                 fontSize = FontSize.medium19
             )
             Spacer(modifier = Modifier.height(5.dp))
