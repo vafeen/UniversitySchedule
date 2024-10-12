@@ -14,7 +14,7 @@ import ru.vafeen.universityschedule.database.entity.Reminder
 @Database(
     exportSchema = true,
     entities = [Lesson::class, Reminder::class],
-    version = 4,
+    version = 5,
 )
 @TypeConverters(LessonTypeConverters::class, DTConverters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -49,7 +49,12 @@ abstract class AppDatabase : RoomDatabase() {
         }
         val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE reminder ADD COLUMN type TEXT NOT NULL DEFAULT 'AFTER_BEGINNING_LESSON'")
+                db.execSQL("ALTER TABLE  ADD COLUMN type TEXT NOT NULL DEFAULT 'AFTER_BEGINNING_LESSON'")
+            }
+        }
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE reminder ADD COLUMN duration TEXT NOT NULL DEFAULT 'EVERY_WEEK'")
             }
         }
     }
