@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import ru.vafeen.universityschedule.database.DTConverters
 import ru.vafeen.universityschedule.database.entity.Reminder
 
@@ -25,6 +26,7 @@ class Scheduler(
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
+        Log.d("reminder", reminder.toString())
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             dtConverters.localDateTimeToLongMilliSeconds(reminder.dt),

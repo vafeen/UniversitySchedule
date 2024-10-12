@@ -363,11 +363,15 @@ fun MainScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         val lessonsOfThisDay = lessons.filter {
-                            it.dayOfWeek == dateOfThisLesson.dayOfWeek && (it.frequency == null || it.frequency == weekOfYearOfThisDay) && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
+                                    (it.frequency == null || it.frequency == weekOfYearOfThisDay) &&
+                                    (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                         }.sorted()
 
                         val lessonsInOppositeNumAndDenDay = lessons.filter {
-                            it.dayOfWeek == dateOfThisLesson.dayOfWeek && it.frequency == weekOfYearOfThisDay.getOpposite() && (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                            it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
+                                    it.frequency == weekOfYearOfThisDay.getOpposite() &&
+                                    (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
                         }.sorted()
 
                         if (lessonsOfThisDay.isNotEmpty()) {
@@ -408,7 +412,6 @@ fun MainScreen(
                                             NotificationAboutLessonsSettings.minutesBeforeLessonForNotification
                                         ) > localTime &&
                                         viewModel.todayDate == dateOfThisLesson ||
-                                        viewModel.todayDate.plusDays(7L) > dateOfThisLesson &&
                                         viewModel.todayDate != dateOfThisLesson
                                     ) viewModel
                                     else null
