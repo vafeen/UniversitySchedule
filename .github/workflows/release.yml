@@ -1,0 +1,93 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# Setting explicit permissions for the workflow
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
+      - name: Install Android SDK tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zipalign
+
+      - name: Decode and set up keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > /tmp/keystore.jks
+
+      - name: Sign APK
+        run: |
+          jarsigner -verbose -keystore /tmp/keystore.jks \
+                    -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+                    -keypass ${{ secrets.KEY_PASSWORD }} \
+                    -signedjar app-release-signed.apk \
+                    app/build/outputs/apk/release/app-release.apk \
+                    ${{ secrets.KEY_ALIAS }}
+
+      - name: Align APK
+        run: |
+          zipalign -v 4 app-release-signed.apk app-release-aligned.apk
+
+      - name: Read release notes
+        id: get_release_notes
+        run: |
+          RELEASE_TITLE=$(head -n 1 release_notes.md | sed 's/^# //')  # Remove leading '#' if present
+          RELEASE_BODY=$(tail -n +2 release_notes.md)  # Preserve newlines
+          echo "RELEASE_TITLE=${RELEASE_TITLE}" >> $GITHUB_ENV  # No quotes
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV  # Start a multi-line variable
+          echo "${RELEASE_BODY}" >> $GITHUB_ENV  # Append the release body
+          echo "EOF" >> $GITHUB_ENV  # End the multi-line variable
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1.1.0
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ env.RELEASE_TITLE }}
+          body: ${{ env.RELEASE_BODY }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this token has the necessary permissions
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app-release-aligned.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this token has the necessary permissions
