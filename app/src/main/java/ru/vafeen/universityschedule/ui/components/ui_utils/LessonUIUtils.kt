@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.R
 import ru.vafeen.universityschedule.database.entity.Lesson
@@ -43,13 +42,11 @@ fun Lesson.StringForSchedule(
     dateOfThisLesson: LocalDate?,
     colorBack: Color,
     lessonOfThisNumAndDenOrNot: Boolean = true,
-    padding: Dp = 10.dp,
 ) {
     val suitableColor = colorBack.suitableColor()
     var notificationsIsEditing by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
-            .padding(padding)//.clickable {  }
             .fillMaxWidth()
             .alpha(
                 if (lessonOfThisNumAndDenOrNot) 1.0f
