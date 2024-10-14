@@ -31,7 +31,7 @@ fun Lesson.createReminderBefore15MinutesOfLesson(
             R.string.reminder_text_lesson_before_time
         ),
         name,
-        NotificationAboutLessonsSettings.minutesBeforeLessonForNotification,
+        NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION,
     ),
     dt = dt,
     type = ReminderType.BEFORE_LESSON,

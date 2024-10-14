@@ -15,5 +15,4 @@ data class Reminder(
     val dt: LocalDateTime,
     val duration: RepeatDuration = RepeatDuration.EVERY_WEEK,
     val type: ReminderType = ReminderType.AFTER_BEGINNING_LESSON,
-) {
-}
+)
