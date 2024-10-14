@@ -353,7 +353,10 @@ fun MainScreen(
                     val weekOfYearOfThisDay = dateOfThisLesson.getFrequencyByLocalDate()
                         .changeFrequencyIfDefinedInSettings(settings = settings)
                     if (!pagerState.isScrollInProgress) LaunchedEffect(key1 = null) {
-                        cardsWithDateState.animateScrollToItem(pagerState.currentPage)
+                        cardsWithDateState.animateScrollToItem(
+                            if (pagerState.currentPage > 0) pagerState.currentPage - 1
+                            else pagerState.currentPage
+                        )
                     }
                     changeDateAndFrequency(daysAfterTodayDate = pagerState.currentPage.toLong())
                     Column(
