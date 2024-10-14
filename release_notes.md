@@ -1,10 +1,5 @@
-v3.9
-New version 3.9!!
+v4.0
+New version 4.0!!
 
 What's new:
-
-- Optimized MainScreen layout
-
-What's fix:
-
-- Bug with package name
+- Improved stability
