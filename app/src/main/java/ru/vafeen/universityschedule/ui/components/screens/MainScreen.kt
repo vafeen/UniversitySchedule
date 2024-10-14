@@ -296,6 +296,7 @@ fun MainScreen(
         })
     }, bottomBar = {
         BottomBar(
+            enabled = !isUpdateInProcess,
             containerColor = mainColor, clickToScreen2 = {
                 if (!isUpdateInProcess) navController.navigate(Screen.Settings.route)
             }, selected1 = true

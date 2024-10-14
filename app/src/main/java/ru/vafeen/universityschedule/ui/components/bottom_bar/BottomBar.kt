@@ -19,6 +19,7 @@ import ru.vafeen.universityschedule.utils.suitableColor
 
 @Composable
 fun BottomBar(
+    enabled: Boolean = true,
     containerColor: Color,
     clickToScreen1: () -> Unit = {},
     clickToScreen2: () -> Unit = {},
@@ -39,7 +40,7 @@ fun BottomBar(
     ) {
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
-            selected = selected1,
+            selected = enabled && selected1,
             onClick = { clickToScreen1() },
             icon = {
                 Icon(
@@ -60,7 +61,7 @@ fun BottomBar(
                     contentDescription = "Icon2"
                 )
             },
-            enabled = !selected2,
+            enabled =enabled &&  !selected2,
             colors = colors
         )
     }
