@@ -5,7 +5,6 @@ on:
     tags:
       - 'v*'
 
-# Setting explicit permissions for the workflow
 permissions:
   contents: write
   issues: write
@@ -38,11 +37,6 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      - name: Install Android SDK tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y zipalign
-
       - name: Decode and set up keystore
         run: |
           echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > /tmp/keystore.jks
@@ -56,19 +50,15 @@ jobs:
                     app/build/outputs/apk/release/app-release.apk \
                     ${{ secrets.KEY_ALIAS }}
 
-      - name: Align APK
-        run: |
-          zipalign -v 4 app-release-signed.apk app-release-aligned.apk
-
       - name: Read release notes
         id: get_release_notes
         run: |
-          RELEASE_TITLE=$(head -n 1 release_notes.md | sed 's/^# //')  # Remove leading '#' if present
-          RELEASE_BODY=$(tail -n +2 release_notes.md)  # Preserve newlines
-          echo "RELEASE_TITLE=${RELEASE_TITLE}" >> $GITHUB_ENV  # No quotes
-          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV  # Start a multi-line variable
-          echo "${RELEASE_BODY}" >> $GITHUB_ENV  # Append the release body
-          echo "EOF" >> $GITHUB_ENV  # End the multi-line variable
+          RELEASE_TITLE=$(head -n 1 release_notes.md | sed 's/^# //')
+          RELEASE_BODY=$(tail -n +2 release_notes.md)
+          echo "RELEASE_TITLE=${RELEASE_TITLE}" >> $GITHUB_ENV
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          echo "${RELEASE_BODY}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Create GitHub Release
         id: create_release
@@ -80,14 +70,14 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this token has the necessary permissions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload APK to Release
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v1.0.2
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app-release-aligned.apk
+          asset_path: app-release-signed.apk
           asset_name: app-release.apk
           asset_content_type: application/vnd.android.package-archive
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this token has the necessary permissions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
