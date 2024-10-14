@@ -58,7 +58,7 @@ class App : Application() {
                         ?.let {
                             cleverUpdatingLessons(newLessons = it)
                         }
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                 }
             }
         }

@@ -123,7 +123,7 @@ fun Lesson.ReminderDialog(
                                         dt = LocalDateTime.of(
                                             thisDate,
                                             this@ReminderDialog.startTime.minusMinutes(
-                                                NotificationAboutLessonsSettings.minutesBeforeLessonForNotification
+                                                NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
                                             )
                                         ),
                                         context = context,

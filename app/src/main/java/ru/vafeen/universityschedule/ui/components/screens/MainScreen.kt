@@ -395,7 +395,7 @@ fun MainScreen(
                                         dateOfThisLesson = dateOfThisLesson,
                                         viewModel =
                                         if (lesson.startTime.minusMinutes(
-                                                NotificationAboutLessonsSettings.minutesBeforeLessonForNotification
+                                                NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
                                             )
                                             > localTime
                                         ) viewModel
@@ -408,7 +408,7 @@ fun MainScreen(
                                 dateOfThisLesson = dateOfThisLesson,
                                 viewModel = if (
                                     lesson.startTime.minusMinutes(
-                                        NotificationAboutLessonsSettings.minutesBeforeLessonForNotification
+                                        NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
                                     ) > localTime &&
                                     viewModel.todayDate == dateOfThisLesson ||
                                     viewModel.todayDate != dateOfThisLesson

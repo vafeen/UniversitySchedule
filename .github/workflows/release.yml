@@ -1,0 +1,85 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          gradle-${{ runner.os }}-
+
+    - name: Build APK
+      run: ./gradlew assembleRelease
+
+    - name: Decode and set up keystore
+      run: |
+        echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > /tmp/keystore.jks
+
+    - name: Sign APK using apksigner
+      run: |
+        ANDROID_SDK_PATH=$ANDROID_HOME/build-tools/35.0.0/apksigner
+        $ANDROID_SDK_PATH sign \
+          --ks /tmp/keystore.jks \
+          --ks-key-alias ${{ secrets.KEY_ALIAS }} \
+          --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+          --key-pass pass:${{ secrets.KEY_PASSWORD }} \
+          --out app-release-signed.apk \
+          app/build/outputs/apk/release/app-release.apk
+
+    - name: Read release notes
+      id: get_release_notes
+      run: |
+        RELEASE_TITLE=$(head -n 1 release_notes.md | sed 's/^# //')  # Remove leading '#' if present
+        RELEASE_BODY=$(tail -n +2 release_notes.md)  # Preserve newlines
+        echo "RELEASE_TITLE=${RELEASE_TITLE}" >> $GITHUB_ENV  # No quotes
+        echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV  # Start a multi-line variable
+        echo "${RELEASE_BODY}" >> $GITHUB_ENV  # Append the release body
+        echo "EOF" >> $GITHUB_ENV  # End the multi-line variable
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1.1.0
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ env.RELEASE_TITLE }}
+        body: ${{ env.RELEASE_BODY }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload APK to Release
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: app-release-signed.apk  # Используйте подписанный APK здесь.
+        asset_name: app-release.apk
+        asset_content_type: application/vnd.android.package-archive
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

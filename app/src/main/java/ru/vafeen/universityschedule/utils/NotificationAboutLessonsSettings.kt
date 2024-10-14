@@ -1,5 +1,5 @@
 package ru.vafeen.universityschedule.utils
 
 object NotificationAboutLessonsSettings {
-    const val minutesBeforeLessonForNotification = 15L
+    const val MINUTES_BEFORE_LESSON_FOR_NOTIFICATION = 15L
 }
