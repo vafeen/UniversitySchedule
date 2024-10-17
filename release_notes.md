@@ -1,8 +1,8 @@
-v4.1
-New version 4.1!!
+v5.0
+New version 5.0!!
 
 What's new:
 
 - Improved stability
-- Modify layout
-- Fix bug with changing screens during the update.
+- Improved performance
+- Moving to clean architecture (for dev)
