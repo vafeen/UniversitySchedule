@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "University schedule"
 include(":app")
- 
+include(":data")
+include(":domain")
+include(":presentation")
