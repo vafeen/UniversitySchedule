@@ -13,7 +13,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun RequestNotificationPermission() {
+internal fun RequestNotificationPermission() {
     val notificationPermissionState = rememberPermissionState(
         Manifest.permission.POST_NOTIFICATIONS
     )

@@ -4,7 +4,7 @@ import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.network.parcelable.googlesheets_service.ResponseWrapper
 import ru.vafeen.universityschedule.data.network.parcelable.googlesheets_service.Row
 
-fun Row.toLesson(): Lesson? = this.cells.map {
+internal fun Row.toLesson(): Lesson? = this.cells.map {
     it?.value
 }.let {
     try {
@@ -23,7 +23,7 @@ fun Row.toLesson(): Lesson? = this.cells.map {
     }
 }
 
-fun ResponseWrapper.toLessonsList(): List<Lesson> {
+internal fun ResponseWrapper.toLessonsList(): List<Lesson> {
     val result = mutableListOf<Lesson>()
     for (row in this.table.rows) {
         row.toLesson()?.let { result.add(element = it) }

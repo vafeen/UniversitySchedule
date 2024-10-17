@@ -23,3 +23,9 @@ fun SharedPreferences.getSettingsOrCreateIfNull(): Settings {
         newSettings
     }
 }
+
+fun SharedPreferences.save(
+    settings: Settings,
+) = saveInOrRemoveFromSharedPreferences {
+    putString(SharedPreferencesValue.Settings.key, settings.toJsonString())
+}

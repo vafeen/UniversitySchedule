@@ -34,17 +34,17 @@ import com.raedapps.alwan.ui.Alwan
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.theme.FontSize
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 
 @Composable
-fun ColorPickerDialog(
+internal fun ColorPickerDialog(
     context: Context,
     firstColor: Color,
     onDismissRequest: () -> Unit,
     onChangeColorCallback: (Color) -> Unit
 ) {
-    val defaultColor = ScheduleTheme.colors.mainColor
+    val defaultColor = Theme.colors.mainColor
 
     val colorState = rememberAlwanState(initialColor = firstColor)
     var newColor by remember {
@@ -57,9 +57,9 @@ fun ColorPickerDialog(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = ScheduleTheme.colors.singleTheme
+                containerColor = Theme.colors.singleTheme
             ),
-            border = BorderStroke(width = 2.dp, color = ScheduleTheme.colors.oppositeTheme)
+            border = BorderStroke(width = 2.dp, color = Theme.colors.oppositeTheme)
         ) {
             Column(
                 modifier = Modifier
@@ -70,7 +70,7 @@ fun ColorPickerDialog(
                     text = context.getString(R.string.new_interface_color),
                     fontSize = FontSize.big22,
                     modifier = Modifier.padding(10.dp),
-                    color = ScheduleTheme.colors.oppositeTheme
+                    color = Theme.colors.oppositeTheme
                 )
 
                 BottomBar(
@@ -114,7 +114,7 @@ fun ColorPickerDialog(
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = "delete this theme",
-                                tint = ScheduleTheme.colors.oppositeTheme
+                                tint = Theme.colors.oppositeTheme
                             )
                         }
                     ColorPickerDialogButton(

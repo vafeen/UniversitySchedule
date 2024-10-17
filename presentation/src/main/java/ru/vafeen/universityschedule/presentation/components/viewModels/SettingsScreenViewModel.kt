@@ -18,7 +18,7 @@ import ru.vafeen.universityschedule.data.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.domain.Settings
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 
-class SettingsScreenViewModel(
+internal class SettingsScreenViewModel(
     val databaseRepository: ru.vafeen.universityschedule.data.database.DatabaseRepository,
     val sharedPreferences: SharedPreferences,
 ) : ViewModel() {

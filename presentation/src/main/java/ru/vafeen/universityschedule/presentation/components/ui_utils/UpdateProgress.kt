@@ -14,10 +14,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 
 @Composable
-fun UpdateProgress(percentage: MutableState<ru.vafeen.universityschedule.data.network.downloader.Progress>) {
+internal fun UpdateProgress(percentage: MutableState<ru.vafeen.universityschedule.data.network.downloader.Progress>) {
     val value = percentage.value.let {
         100 * it.totalBytesRead / (it.contentLength.let { cl ->
             if (cl.toFloat() == 0f) 1 else cl
@@ -27,7 +27,7 @@ fun UpdateProgress(percentage: MutableState<ru.vafeen.universityschedule.data.ne
         modifier = Modifier
             .fillMaxWidth()
             .height(30.dp)
-            .background(ScheduleTheme.colors.buttonColor),
+            .background(Theme.colors.buttonColor),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TextForThisTheme(
@@ -36,8 +36,8 @@ fun UpdateProgress(percentage: MutableState<ru.vafeen.universityschedule.data.ne
             fontSize = FontSize.medium19
         )
         LinearProgressIndicator(
-            color = ScheduleTheme.colors.oppositeTheme,
-            trackColor = ScheduleTheme.colors.singleTheme,
+            color = Theme.colors.oppositeTheme,
+            trackColor = Theme.colors.singleTheme,
             progress = { value.toFloat() / 100 },
             modifier = Modifier.fillMaxWidth(),
         )

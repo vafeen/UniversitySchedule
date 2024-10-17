@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.http.Url
 import ru.vafeen.universityschedule.data.network.service.DownloadService
 
-class DownloadFileUseCase(private val downloadService: DownloadService) {
+internal class DownloadFileUseCase(private val downloadService: DownloadService) {
     operator fun invoke(@Url fileUrl: String): Call<ResponseBody>? = try {
         downloadService.downloadFile(fileUrl = fileUrl)
     } catch (_: Exception) {

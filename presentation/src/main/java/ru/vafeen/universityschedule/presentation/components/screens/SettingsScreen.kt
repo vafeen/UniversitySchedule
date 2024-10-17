@@ -55,7 +55,7 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThis
 import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
 
 /**
@@ -74,7 +74,7 @@ import ru.vafeen.universityschedule.presentation.utils.Link
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     navController: NavController,
 ) {
     val viewModel: SettingsScreenViewModel = koinViewModel()
@@ -120,14 +120,14 @@ fun SettingsScreen(
     }
     BackHandler(onBack = gotoMainScreenCallBack)
     Scaffold(
-        containerColor = ScheduleTheme.colors.singleTheme,
+        containerColor = Theme.colors.singleTheme,
         topBar = {
             TopAppBar(colors = TopAppBarColors(
-                containerColor = ScheduleTheme.colors.singleTheme,
-                scrolledContainerColor = ScheduleTheme.colors.singleTheme,
-                navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
-                titleContentColor = ScheduleTheme.colors.oppositeTheme,
-                actionIconContentColor = ScheduleTheme.colors.singleTheme
+                containerColor = Theme.colors.singleTheme,
+                scrolledContainerColor = Theme.colors.singleTheme,
+                navigationIconContentColor = Theme.colors.oppositeTheme,
+                titleContentColor = Theme.colors.oppositeTheme,
+                actionIconContentColor = Theme.colors.singleTheme
             ), modifier = Modifier.fillMaxWidth(), title = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -135,12 +135,13 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(id = getIconByRequestStatus(
-                            networkState = networkState
-                        )
+                        painter = painterResource(
+                            id = getIconByRequestStatus(
+                                networkState = networkState
+                            )
                         ),
                         contentDescription = "data updating state",
-                        tint = ScheduleTheme.colors.oppositeTheme
+                        tint = Theme.colors.oppositeTheme
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                     TextForThisTheme(
@@ -152,7 +153,7 @@ fun SettingsScreen(
         bottomBar = {
             BottomBar(
                 containerColor = settings.getMainColorForThisTheme(isDark = dark)
-                    ?: ScheduleTheme.colors.mainColor,
+                    ?: Theme.colors.mainColor,
                 clickToScreen1 = gotoMainScreenCallBack,
                 selected2 = true
             )
@@ -175,7 +176,7 @@ fun SettingsScreen(
             }
             if (colorIsEditable) ColorPickerDialog(context = context,
                 firstColor = settings.getMainColorForThisTheme(isDark = dark)
-                    ?: ScheduleTheme.colors.mainColor,
+                    ?: Theme.colors.mainColor,
                 onDismissRequest = { colorIsEditable = false }) {
                 viewModel.sharedPreferences.save(
                     if (dark) settings.copy(
@@ -193,7 +194,7 @@ fun SettingsScreen(
             ) {
 
                 val cardColors = CardDefaults.cardColors(
-                    containerColor = ScheduleTheme.colors.buttonColor,
+                    containerColor = Theme.colors.buttonColor,
                 )
 
                 // name of section
@@ -221,7 +222,7 @@ fun SettingsScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.link),
                             contentDescription = "edit link",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                            tint = Theme.colors.oppositeTheme
                         )
                     }
                 }
@@ -246,7 +247,7 @@ fun SettingsScreen(
                             Icon(
                                 painter = painterResource(id = R.drawable.table),
                                 contentDescription = "edit link",
-                                tint = ScheduleTheme.colors.oppositeTheme
+                                tint = Theme.colors.oppositeTheme
                             )
                         }
                     }
@@ -272,7 +273,7 @@ fun SettingsScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.palette),
                             contentDescription = "read license",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                            tint = Theme.colors.oppositeTheme
                         )
                     }
                 }
@@ -304,7 +305,7 @@ fun SettingsScreen(
                                         else R.drawable.unfold_more
                                     ),
                                     contentDescription = "more",
-                                    tint = ScheduleTheme.colors.oppositeTheme
+                                    tint = Theme.colors.oppositeTheme
                                 )
                             }
                             if (subGroupIsChanging) {
@@ -320,7 +321,7 @@ fun SettingsScreen(
                                                 if (subgroup == settings.subgroup) Icon(
                                                     imageVector = Icons.Default.Done,
                                                     contentDescription = "this is user subgroup",
-                                                    tint = ScheduleTheme.colors.oppositeTheme
+                                                    tint = Theme.colors.oppositeTheme
                                                 )
                                             },
                                             modifier = Modifier.padding(horizontal = 3.dp),
@@ -370,7 +371,7 @@ fun SettingsScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.group),
                             contentDescription = "read license",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                            tint = Theme.colors.oppositeTheme
                         )
                     }
                 }
@@ -396,7 +397,7 @@ fun SettingsScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.terminal),
                             contentDescription = "view code",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                            tint = Theme.colors.oppositeTheme
                         )
                     }
                 }
@@ -411,7 +412,7 @@ fun SettingsScreen(
                     .padding(bottom = 20.dp)
                     .align(Alignment.End),
                 fontSize = FontSize.small17,
-                text = "${stringResource(R.string.version)} ${getVersionName(context = LocalContext.current)}"
+                text = "${stringResource(R.string.version)} ${LocalContext.current.getVersionName()}"
             )
         }
     }

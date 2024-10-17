@@ -11,7 +11,7 @@ import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 
 @Composable
-fun WeekDay(context: Context, modifier: Modifier = Modifier) {
+internal fun WeekDay(context: Context, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth(),

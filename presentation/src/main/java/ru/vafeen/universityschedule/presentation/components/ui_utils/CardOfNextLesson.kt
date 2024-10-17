@@ -16,7 +16,7 @@ import ru.vafeen.universityschedule.presentation.utils.suitableColor
 
 
 @Composable
-fun CardOfNextLesson(
+internal fun CardOfNextLesson(
     colorOfCard: Color,
     thisContent: @Composable (() -> Unit)
 ) {

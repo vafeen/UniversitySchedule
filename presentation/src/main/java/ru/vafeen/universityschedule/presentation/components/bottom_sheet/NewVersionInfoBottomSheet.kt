@@ -8,7 +8,7 @@ import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewVersionInfoBottomSheet(onDismissRequest: () -> Unit) {
+internal fun NewVersionInfoBottomSheet(onDismissRequest: () -> Unit) {
     val state =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
 

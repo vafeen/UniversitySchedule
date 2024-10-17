@@ -20,11 +20,11 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdate
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 
 
 class MainActivity : ComponentActivity() {
-    private val viewModelss: MainActivityViewModel by viewModel()
+    private val viewModel: MainActivityViewModel by viewModel()
 
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -34,17 +34,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             RequestNotificationPermission()
             MainTheme {
-                if (!viewModelss.updateIsShowed)
+                if (!viewModel.updateIsShowed)
                     CheckUpdateAndOpenBottomSheetIfNeed(
-                        networkRepository = viewModelss.networkRepository
+                        networkRepository = viewModel.networkRepository
                     ) {
-                        viewModelss.updateIsShowed = true
+                        viewModel.updateIsShowed = true
                     }
 
                 val navController = rememberNavController()
                 Column(
                     modifier = Modifier
-                        .background(ScheduleTheme.colors.singleTheme)
+                        .background(Theme.colors.singleTheme)
                 ) {
                     NavHost(
                         navController = navController, startDestination = Screen.Main.route

@@ -10,11 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 
 @Composable
-fun ColorPickerDialogButton(
+internal fun ColorPickerDialogButton(
     onClick: () -> Unit,
     color: Color,
     modifier: Modifier = Modifier,
@@ -33,6 +33,6 @@ fun ColorPickerDialogButton(
         modifier = modifier,
         onClick = onClick,
         content = content,
-        border = BorderStroke(1.dp, ScheduleTheme.colors.oppositeTheme)
+        border = BorderStroke(1.dp, Theme.colors.oppositeTheme)
     )
 }

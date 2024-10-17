@@ -9,7 +9,7 @@ import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.domain.network.usecase.DownloadFileUseCase
 import ru.vafeen.universityschedule.domain.network.usecase.GetLatestReleaseUseCase
 
-class NetworkRepositoryImpl(
+internal class NetworkRepositoryImpl(
     private val getLatestReleaseUseCase: GetLatestReleaseUseCase,
     private val downloadFileUseCase: DownloadFileUseCase,
 ) : NetworkRepository {

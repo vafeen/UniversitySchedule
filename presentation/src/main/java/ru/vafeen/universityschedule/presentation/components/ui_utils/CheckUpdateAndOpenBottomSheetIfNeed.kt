@@ -16,18 +16,18 @@ import ru.vafeen.universityschedule.presentation.components.bottom_sheet.Updater
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckUpdateAndOpenBottomSheetIfNeed(
+internal fun CheckUpdateAndOpenBottomSheetIfNeed(
     networkRepository: ru.vafeen.universityschedule.data.network.repository.NetworkRepository,
     onDismissRequest: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val versionName = getVersionName(context = context)
+    val versionName = context.getVersionName()
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isUpdateNeeded by remember {
         mutableStateOf(false)
     }
-    var release: ru.vafeen.universityschedule.data.network.parcelable.github_service.Release? by remember {
+    var release: Release? by remember {
         mutableStateOf(null)
     }
     LaunchedEffect(key1 = null) {

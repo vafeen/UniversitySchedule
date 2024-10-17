@@ -1,13 +1,12 @@
 package ru.vafeen.universityschedule.data.utils
 
 import android.content.Context
-
+import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.database.ReminderType
+import ru.vafeen.universityschedule.data.database.duration.RepeatDuration
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.database.entity.Reminder
-import ru.vafeen.universityschedule.data.database.duration.RepeatDuration
 import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
-import ru.vafeen.universityschedule.data.R
 import java.time.LocalDateTime
 import java.time.LocalTime
 

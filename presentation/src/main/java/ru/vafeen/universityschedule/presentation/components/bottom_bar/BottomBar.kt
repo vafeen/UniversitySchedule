@@ -18,7 +18,7 @@ import ru.vafeen.universityschedule.presentation.utils.suitableColor
 
 
 @Composable
-fun BottomBar(
+internal fun BottomBar(
     enabled: Boolean = true,
     containerColor: Color,
     clickToScreen1: () -> Unit = {},
