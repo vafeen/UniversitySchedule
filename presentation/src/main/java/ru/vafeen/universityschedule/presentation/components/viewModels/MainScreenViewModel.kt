@@ -21,7 +21,7 @@ import ru.vafeen.universityschedule.presentation.MainActivity
 import java.time.LocalDate
 
 
-class MainScreenViewModel(
+internal class MainScreenViewModel(
     val databaseRepository: ru.vafeen.universityschedule.data.database.DatabaseRepository,
     val sharedPreferences: SharedPreferences,
     private val scheduler: Scheduler,

@@ -6,10 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 
 @Composable
-fun DefaultDialog(
+internal fun DefaultDialog(
     onDismissRequest: () -> Unit,
     content: @Composable (ColumnScope.(Dp) -> Unit),
 ) {
@@ -17,7 +17,7 @@ fun DefaultDialog(
         Card(
             border = androidx.compose.foundation.BorderStroke(
                 width = 2.dp,
-                ScheduleTheme.colors.oppositeTheme
+                Theme.colors.oppositeTheme
             )
         ) { content(10.dp) }
     }

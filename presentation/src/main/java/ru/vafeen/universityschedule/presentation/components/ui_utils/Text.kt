@@ -3,12 +3,12 @@ package ru.vafeen.universityschedule.presentation.components.ui_utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 
-const val undefined ="undefined"
+const val undefined = "undefined"
 
 @Composable
-fun TextForThisTheme(
+internal fun TextForThisTheme(
     text: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -16,13 +16,13 @@ fun TextForThisTheme(
     androidx.compose.material3.Text(
         text = text,
         modifier = modifier,
-        color = ScheduleTheme.colors.oppositeTheme,
+        color = Theme.colors.oppositeTheme,
         fontSize = fontSize,
     )
 }
 
 @Composable
-fun TextForOppositeTheme(
+internal fun TextForOppositeTheme(
     text: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -30,7 +30,7 @@ fun TextForOppositeTheme(
     androidx.compose.material3.Text(
         text = text,
         modifier = modifier,
-        color = ScheduleTheme.colors.singleTheme,
+        color = Theme.colors.singleTheme,
         fontSize = fontSize,
     )
 }

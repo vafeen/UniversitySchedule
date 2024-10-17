@@ -36,7 +36,7 @@ import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 
 @Composable
-fun Lesson.StringForSchedule(
+internal fun Lesson.StringForSchedule(
     viewModel: ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel?,
     dateOfThisLesson: LocalDate?,
     colorBack: Color,

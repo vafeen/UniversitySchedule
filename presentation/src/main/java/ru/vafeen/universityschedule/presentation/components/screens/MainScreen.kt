@@ -64,6 +64,7 @@ import ru.vafeen.universityschedule.data.utils.NotificationAboutLessonsSettings
 import ru.vafeen.universityschedule.data.utils.getDateString
 import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.data.utils.nowIsLesson
+
 import ru.vafeen.universityschedule.domain.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
@@ -71,25 +72,28 @@ import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
+
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.ui_utils.WeekDay
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
-import ru.vafeen.universityschedule.presentation.utils.Path
+import ru.vafeen.universityschedule.presentation.theme.Theme
+import ru.vafeen.universityschedule.presentation.utils.pathToDownloadRelease
+
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
+internal fun MainScreen(
     navController: NavController,
 ) {
-    val viewModel: ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel = koinViewModel()
+    val viewModel: ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel =
+        koinViewModel()
     val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
-    val defaultColor = ScheduleTheme.colors.mainColor
+    val defaultColor = Theme.colors.mainColor
     val progress = remember {
         mutableStateOf(
             ru.vafeen.universityschedule.data.network.downloader.Progress(
@@ -127,7 +131,7 @@ fun MainScreen(
                 if (it.contentLength == it.totalBytesRead) {
                     Downloader.isUpdateInProcessFlow.emit(false)
                     Downloader.installApk(
-                        context = context, apkFilePath = Path.path(context).toString()
+                        context = context, apkFilePath = context.pathToDownloadRelease()
                     )
                 }
             } else Downloader.isUpdateInProcessFlow.emit(false)
@@ -194,13 +198,13 @@ fun MainScreen(
         }
     }
 
-    Scaffold(containerColor = ScheduleTheme.colors.singleTheme, topBar = {
+    Scaffold(containerColor = Theme.colors.singleTheme, topBar = {
         TopAppBar(colors = TopAppBarColors(
-            containerColor = ScheduleTheme.colors.singleTheme,
-            scrolledContainerColor = ScheduleTheme.colors.singleTheme,
-            navigationIconContentColor = ScheduleTheme.colors.oppositeTheme,
-            titleContentColor = ScheduleTheme.colors.oppositeTheme,
-            actionIconContentColor = ScheduleTheme.colors.singleTheme
+            containerColor = Theme.colors.singleTheme,
+            scrolledContainerColor = Theme.colors.singleTheme,
+            navigationIconContentColor = Theme.colors.oppositeTheme,
+            titleContentColor = Theme.colors.oppositeTheme,
+            actionIconContentColor = Theme.colors.singleTheme
         ), modifier = Modifier.fillMaxWidth(), title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -215,7 +219,7 @@ fun MainScreen(
                         Text(
                             text = stringResource(id = weekOfYear.resourceName),
                             fontSize = FontSize.big22,
-                            color = ScheduleTheme.colors.oppositeTheme
+                            color = Theme.colors.oppositeTheme
                         )
 
                         Icon(
@@ -224,10 +228,10 @@ fun MainScreen(
                         )
                     }
                     DropdownMenu(modifier = Modifier
-                        .background(ScheduleTheme.colors.singleTheme)
+                        .background(Theme.colors.singleTheme)
                         .border(
                             border = BorderStroke(
-                                width = 2.dp, color = ScheduleTheme.colors.oppositeTheme
+                                width = 2.dp, color = Theme.colors.oppositeTheme
                             )
                         ),
                         expanded = isFrequencyInChanging,
@@ -241,7 +245,7 @@ fun MainScreen(
                                 if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "This is selected or not",
-                                    tint = ScheduleTheme.colors.oppositeTheme
+                                    tint = Theme.colors.oppositeTheme
                                 )
                             }
                         }, onClick = {
@@ -252,7 +256,7 @@ fun MainScreen(
                             modifier = Modifier
                                 .height(2.dp)
                                 .padding(horizontal = 15.dp)
-                                .background(color = ScheduleTheme.colors.oppositeTheme),
+                                .background(color = Theme.colors.oppositeTheme),
                         )
 
                         DropdownMenuItem(text = {
@@ -264,7 +268,7 @@ fun MainScreen(
                                 if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "This is selected or not",
-                                    tint = ScheduleTheme.colors.oppositeTheme
+                                    tint = Theme.colors.oppositeTheme
                                 )
                             }
 
@@ -276,7 +280,7 @@ fun MainScreen(
                             modifier = Modifier
                                 .height(2.dp)
                                 .padding(horizontal = 15.dp)
-                                .background(color = ScheduleTheme.colors.oppositeTheme),
+                                .background(color = Theme.colors.oppositeTheme),
                         )
 
                         DropdownMenuItem(text = {
@@ -288,7 +292,7 @@ fun MainScreen(
                                 if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "This is selected or not",
-                                    tint = ScheduleTheme.colors.oppositeTheme
+                                    tint = Theme.colors.oppositeTheme
                                 )
                             }
                         }, onClick = {
@@ -330,9 +334,9 @@ fun MainScreen(
                             if (day != localDate && day != viewModel.todayDate) 0.5f else 1f
                         ), colors = CardDefaults.cardColors(
                         containerColor = if (day == viewModel.todayDate) mainColor
-                        else ScheduleTheme.colors.buttonColor,
+                        else Theme.colors.buttonColor,
                         contentColor = (if (day == viewModel.todayDate) mainColor
-                        else ScheduleTheme.colors.buttonColor).suitableColor()
+                        else Theme.colors.buttonColor).suitableColor()
                     )) {
                         Text(
                             text = day.getDateString(ruDaysOfWeek = viewModel.ruDaysOfWeek),
@@ -396,7 +400,7 @@ fun MainScreen(
                                 }[0] && !viewModel.nowIsLesson) {
                                 CardOfNextLesson(colorOfCard = mainColor) {
                                     lesson.StringForSchedule(
-                                        colorBack = ScheduleTheme.colors.buttonColor,
+                                        colorBack = Theme.colors.buttonColor,
                                         dateOfThisLesson = dateOfThisLesson,
                                         viewModel =
                                         if (lesson.startTime.minusMinutes(
@@ -409,7 +413,7 @@ fun MainScreen(
 
                                 }
                             } else lesson.StringForSchedule(
-                                colorBack = ScheduleTheme.colors.buttonColor,
+                                colorBack = Theme.colors.buttonColor,
                                 dateOfThisLesson = dateOfThisLesson,
                                 viewModel = if (
                                     lesson.startTime.minusMinutes(
@@ -440,7 +444,7 @@ fun MainScreen(
                         )
                         lessonsInOppositeNumAndDenDay.forEach { lesson ->
                             lesson.StringForSchedule(
-                                colorBack = ScheduleTheme.colors.buttonColor,
+                                colorBack = Theme.colors.buttonColor,
                                 lessonOfThisNumAndDenOrNot = false,
                                 dateOfThisLesson = null,
                                 viewModel = null

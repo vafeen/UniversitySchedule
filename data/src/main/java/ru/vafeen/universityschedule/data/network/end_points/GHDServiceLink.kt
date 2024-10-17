@@ -1,6 +1,6 @@
 package ru.vafeen.universityschedule.data.network.end_points
 
-object GHDServiceLink {
+internal object GHDServiceLink {
     const val BASE_LINK = "https://api.github.com/"
 
     object EndPoint {

@@ -28,7 +28,7 @@ fun LocalTime.getTimeStringAsHMS(): String =
         if (second < 10) "0$second" else "$second"
     }"
 
-fun LocalDate.getLastSeptemberOfThisAcademicYear(): LocalDate {
+internal fun LocalDate.getLastSeptemberOfThisAcademicYear(): LocalDate {
     return if (this >= LocalDate.of(year, Month.SEPTEMBER, 1))
         LocalDate.of(year, Month.SEPTEMBER, 1)
     else LocalDate.of(year - 1, Month.SEPTEMBER, 1)

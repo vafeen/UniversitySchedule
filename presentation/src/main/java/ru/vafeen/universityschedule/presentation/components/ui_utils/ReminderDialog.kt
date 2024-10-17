@@ -34,16 +34,17 @@ import ru.vafeen.universityschedule.data.utils.createReminderAfterStartingLesson
 import ru.vafeen.universityschedule.data.utils.createReminderBefore15MinutesOfLesson
 import ru.vafeen.universityschedule.data.utils.getLessonTimeString
 import ru.vafeen.universityschedule.domain.utils.generateID
+import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 
 import ru.vafeen.universityschedule.presentation.theme.FontSize
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
-fun Lesson.ReminderDialog(
+internal fun Lesson.ReminderDialog(
     onDismissRequest: () -> Unit,
-    viewModel: ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel,
+    viewModel: MainScreenViewModel,
     thisDate: LocalDate,
 ) {
     val context = LocalContext.current
@@ -51,21 +52,21 @@ fun Lesson.ReminderDialog(
         clazz = ru.vafeen.universityschedule.data.database.DatabaseRepository::class.java
     )
     val checkBoxColor = CheckboxDefaults.colors(
-        checkedColor = ScheduleTheme.colors.oppositeTheme,
-        checkmarkColor = ScheduleTheme.colors.singleTheme,
-        uncheckedColor = ScheduleTheme.colors.oppositeTheme
+        checkedColor = Theme.colors.oppositeTheme,
+        checkmarkColor = Theme.colors.singleTheme,
+        uncheckedColor = Theme.colors.oppositeTheme
     )
     DefaultDialog(onDismissRequest = onDismissRequest) { dp ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(ScheduleTheme.colors.buttonColor)
+                .background(Theme.colors.buttonColor)
                 .padding(dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             this@ReminderDialog.name?.let {
                 TextForThisTheme(
-                    text = this@ReminderDialog.name?: undefined,
+                    text = this@ReminderDialog.name ?: undefined,
                     fontSize = FontSize.medium19
                 )
                 Spacer(modifier = Modifier.height(5.dp))
@@ -74,7 +75,7 @@ fun Lesson.ReminderDialog(
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
                     contentDescription = "Icon schedule",
-                    tint = ScheduleTheme.colors.oppositeTheme
+                    tint = Theme.colors.oppositeTheme
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 TextForThisTheme(
@@ -100,7 +101,7 @@ fun Lesson.ReminderDialog(
                     Icon(
                         painter = painterResource(id = R.drawable.message),
                         contentDescription = "Message about lesson",
-                        tint = ScheduleTheme.colors.oppositeTheme
+                        tint = Theme.colors.oppositeTheme
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     TextForThisTheme(
@@ -154,7 +155,7 @@ fun Lesson.ReminderDialog(
                     Icon(
                         painter = painterResource(id = R.drawable.notification_about_checking),
                         contentDescription = "Message about checking on this lesson",
-                        tint = ScheduleTheme.colors.oppositeTheme
+                        tint = Theme.colors.oppositeTheme
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     TextForThisTheme(

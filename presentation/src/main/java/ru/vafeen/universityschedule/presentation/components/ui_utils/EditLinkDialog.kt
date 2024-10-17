@@ -36,11 +36,11 @@ import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.pasteText
 import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.theme.FontSize
-import ru.vafeen.universityschedule.presentation.theme.ScheduleTheme
+import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
 
 @Composable
-fun EditLinkDialog(
+internal fun EditLinkDialog(
     context: Context,
     sharedPreferences: SharedPreferences,
     onDismissRequest: () -> Unit,
@@ -52,9 +52,9 @@ fun EditLinkDialog(
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = ScheduleTheme.colors.singleTheme
+                containerColor = Theme.colors.singleTheme
             ),
-            border = BorderStroke(width = 2.dp, color = ScheduleTheme.colors.oppositeTheme)
+            border = BorderStroke(width = 2.dp, color = Theme.colors.oppositeTheme)
         ) {
             Column(
                 modifier = Modifier
@@ -70,7 +70,7 @@ fun EditLinkDialog(
                         modifier = Modifier.size(30.dp),
                         imageVector = Icons.Default.Close,
                         contentDescription = "close",
-                        tint = ScheduleTheme.colors.oppositeTheme
+                        tint = Theme.colors.oppositeTheme
                     )
                 }
 
@@ -104,7 +104,7 @@ fun EditLinkDialog(
                                 modifier = Modifier.size(iconsSize),
                                 painter = painterResource(id = R.drawable.copy),
                                 contentDescription = "copy",
-                                tint = ScheduleTheme.colors.oppositeTheme
+                                tint = Theme.colors.oppositeTheme
                             )
                         }
                         IconButton(
@@ -118,7 +118,7 @@ fun EditLinkDialog(
                                 modifier = Modifier.size(iconsSize),
                                 painter = painterResource(id = R.drawable.clear),
                                 contentDescription = "clear",
-                                tint = ScheduleTheme.colors.oppositeTheme
+                                tint = Theme.colors.oppositeTheme
                             )
                         }
                     }
@@ -145,7 +145,7 @@ fun EditLinkDialog(
                             modifier = Modifier.size(iconsSize),
                             painter = painterResource(id = R.drawable.paste),
                             contentDescription = "paste",
-                            tint = ScheduleTheme.colors.oppositeTheme
+                            tint = Theme.colors.oppositeTheme
                         )
                     }
                 }

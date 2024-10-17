@@ -30,12 +30,12 @@ import ru.vafeen.universityschedule.data.network.parcelable.github_service.Relea
 import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
-import ru.vafeen.universityschedule.presentation.utils.Path
+import ru.vafeen.universityschedule.presentation.utils.pathToDownloadRelease
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdaterBottomSheet(
+internal fun UpdaterBottomSheet(
     networkRepository: NetworkRepository,
     release: Release,
     state: SheetState,
@@ -79,7 +79,7 @@ fun UpdaterBottomSheet(
                         Downloader.downloadApk(
                             networkRepository = networkRepository,
                             url = "vafeen/UniversitySchedule/releases/download/${release.tag_name}/${release.assets[0].name}",
-                            filePath = Path.path(context).toString(),
+                            filePath = context.pathToDownloadRelease(),
                         )
                         CoroutineScope(Dispatchers.IO).launch {
                             Downloader.isUpdateInProcessFlow.emit(true)

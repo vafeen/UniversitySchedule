@@ -14,7 +14,7 @@ import ru.vafeen.universityschedule.domain.database.usecase.InsertAllRemindersUs
 import ru.vafeen.universityschedule.domain.database.usecase.UpdateAllLessonsUseCase
 import ru.vafeen.universityschedule.domain.database.usecase.UpdateAllRemindersUseCase
 
-class DatabaseRepositoryImpl(
+internal class DatabaseRepositoryImpl(
     private val getAllAsFlowLessonsUseCase: GetAllAsFlowLessonsUseCase,
     private val getAllAsFlowRemindersUseCase: GetAllAsFlowRemindersUseCase,
     private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase,

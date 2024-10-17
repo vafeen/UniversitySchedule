@@ -7,20 +7,20 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-data class ScheduleColors(
+internal data class Colors(
     val mainColor: Color,
     val singleTheme: Color,
     val oppositeTheme: Color,
     val buttonColor: Color,
 )
 
-val baseLightPalette = ScheduleColors(
+internal val baseLightPalette = Colors(
     mainColor = mainLightColor,
     singleTheme = Color.White,
     oppositeTheme = Color.Black,
     buttonColor = Color(0xFFEFEEEE)// Color(0xFFEFEFFF)
 )
-val baseDarkPalette = baseLightPalette.copy(
+internal val baseDarkPalette = baseLightPalette.copy(
     mainColor = mainDarkColor,
     singleTheme = Color.Black,
     oppositeTheme = Color.White,
@@ -28,7 +28,7 @@ val baseDarkPalette = baseLightPalette.copy(
 )
 
 @Composable
-fun MainTheme(
+internal fun MainTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -42,12 +42,12 @@ fun MainTheme(
     )
 }
 
-object ScheduleTheme {
-    val colors: ScheduleColors
+internal object Theme {
+    val colors: Colors
         @ReadOnlyComposable @Composable
         get() = LocalColors.current
 }
 
-val LocalColors = staticCompositionLocalOf<ScheduleColors> {
+internal val LocalColors = staticCompositionLocalOf<Colors> {
     error("Composition error")
 }
