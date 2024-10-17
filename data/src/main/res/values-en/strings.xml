@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">University schedule</string>
+    <string name="no_link">No link</string>
+    <string name="every">Every</string>
+    <string name="numerator">Numerator</string>
+    <string name="denominator">Denominator</string>
+    <string name="settings">Settings</string>
+    <string name="link_to_table">Link to table</string>
+    <string name="table">Table</string>
+    <string name="code">Code</string>
+    <string name="license">License</string>
+    <string name="next_lesson">next lesson</string>
+    <string name="version">version</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="satudray">Sat</string>
+    <string name="sunday">Sun</string>
+    <string name="other_lessons_in_this_day">Lessons at</string>
+    <string name="its_no_google_sheets_link">It\'s no Google Sheets link</string>
+    <string name="interface_color">Interface color</string>
+    <string name="new_interface_color">New color of interface</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="holiday">Day off</string>
+    <string name="subgroup">Subgroup</string>
+    <string name="project_community">Project community</string>
+    <string name="general">General</string>
+    <string name="contacts">Contacts</string>
+    <string name="update_need">The app is out of date, time to update!</string>
+    <string name="view_releases">Updating by click on QR below</string>
+    <string name="updating">Updating . . .</string>
+    <string name="auto">Auto</string>
+    <string name="notification_about_lesson_before_time">Notification about lesson</string>
+    <string name="notification_about_lesson_after_starting">Notification after the start\nof the lesson - check in</string>
+    <string name="reminder_about_lesson_before_time">Reminder about lesson</string>
+    <string name="reminder_about_lesson_after_starting">Reminder to check in for lesson</string>
+    <string name="reminder_text_lesson_before_time">%2$d minutes before lesson %1$s</string>
+    <string name="reminder_text_about_lesson_after_starting">You need to check in for %1$s</string>
+    <string name="reminder_recovery">Reminder recovery</string>
+    <string name="reminders_restored">Reminders have restored</string>
+    <string name="every_week">Every week</string>
+    <string name="every_2_weeks">Every 2 weeks</string>
+</resources>

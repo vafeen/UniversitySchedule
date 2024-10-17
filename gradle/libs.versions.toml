@@ -1,20 +1,25 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
-agp = "8.7.0"
+agp = "8.7.1"
 alwan = "1.0.1"
 koinAndroid = "4.0.0"
 koinAndroidxCompose = "4.0.0"
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.6"
-activityCompose = "1.9.2"
-composeBom = "2024.09.03"
+activityCompose = "1.9.3"
+composeBom = "2024.10.00"
 retrofit = "2.11.0"
-navigationCompose = "2.8.2"
+navigationCompose = "2.8.3"
 # ROOM
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
 junitJunit = "4.13.2"
+junit = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+uiAndroid = "1.7.4"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -46,10 +51,14 @@ junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 #koin for compose
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-# kapt
-org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 # compose compiler
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
