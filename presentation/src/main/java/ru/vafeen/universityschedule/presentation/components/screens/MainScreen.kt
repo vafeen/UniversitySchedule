@@ -345,7 +345,7 @@ internal fun MainScreen(
                         contentColor = (if (day == viewModel.todayDate) mainColor
                         else Theme.colors.buttonColor).suitableColor()
                     )) {
-                        TextForThisTheme(
+                        Text(
                             text = day.getDateStringWithWeekOfDay(context = context),
                             fontSize = FontSize.small17,
                             modifier = Modifier
