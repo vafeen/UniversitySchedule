@@ -1,6 +1,6 @@
-v5.2
-New version 5.2!!
+v5.3
+New version 5.3!!
 
 What's new:
 
-- Fix text color in cards with date  
+- Modify flickering UI when database is cleared after response
