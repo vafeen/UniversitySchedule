@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.database.entity.Reminder
 import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
@@ -27,18 +26,7 @@ internal class MainScreenViewModel(
     private val scheduler: Scheduler,
     context: Context,
 ) : ViewModel() {
-    val intent = Intent(context, MainActivity::class.java)
-    val ruDaysOfWeek = context.let {
-        listOf(
-            it.getString(R.string.monday),
-            it.getString(R.string.tuesday),
-            it.getString(R.string.wednesday),
-            it.getString(R.string.thursday),
-            it.getString(R.string.friday),
-            it.getString(R.string.satudray),
-            it.getString(R.string.sunday)
-        )
-    }
+    private val intent = Intent(context, MainActivity::class.java)
 
     private val _settings =
         MutableStateFlow<Settings>(sharedPreferences.getSettingsOrCreateIfNull())

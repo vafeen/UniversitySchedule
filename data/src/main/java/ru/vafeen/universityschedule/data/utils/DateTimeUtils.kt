@@ -1,11 +1,23 @@
 package ru.vafeen.universityschedule.data.utils
 
+import android.content.Context
+import ru.vafeen.universityschedule.data.R
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month
 import java.time.temporal.ChronoField
+
+private val daysOfWeek = listOf(
+    R.string.monday,
+    R.string.tuesday,
+    R.string.wednesday,
+    R.string.thursday,
+    R.string.friday,
+    R.string.satudray,
+    R.string.sunday
+)
 
 operator fun LocalTime.compareTo(localDateTime: LocalDateTime): Int {
     return this.compareTo(LocalTime.of(localDateTime.hour, localDateTime.minute))
@@ -14,8 +26,8 @@ operator fun LocalTime.compareTo(localDateTime: LocalDateTime): Int {
 fun LocalDate.getDateString(): String = "${dayOfMonth}." + if (month.value < 10) "0${month.value}"
 else month.value
 
-fun LocalDate.getDateString(ruDaysOfWeek: List<String>): String =
-    "${dayOfWeek.ruDayOfWeek(ruDaysOfWeek = ruDaysOfWeek)}, ${dayOfMonth}." + if (month.value < 10) "0${month.value}"
+fun LocalDate.getDateStringWithWeekOfDay(context: Context): String =
+    "${context.getString(daysOfWeek[dayOfWeek.value - 1])}, ${dayOfMonth}." + if (month.value < 10) "0${month.value}"
     else month.value
 
 
