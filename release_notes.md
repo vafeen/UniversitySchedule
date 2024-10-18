@@ -1,8 +1,6 @@
-v5.0
-New version 5.0!!
+v5.1
+New version 5.1!!
 
 What's new:
 
-- Improved stability
-- Improved performance
-- Moving to clean architecture (for dev)
+- Improved cards with date layout and behavior
