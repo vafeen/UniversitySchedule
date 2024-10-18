@@ -1,6 +1,6 @@
-v5.1
-New version 5.1!!
+v5.2
+New version 5.2!!
 
 What's new:
 
-- Improved cards with date layout and behavior
+- Fix text color in cards with date  
