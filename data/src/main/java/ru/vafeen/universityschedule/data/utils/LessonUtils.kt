@@ -10,6 +10,20 @@ import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
 import java.time.LocalDateTime
 import java.time.LocalTime
 
+fun List<Lesson>.containsLesson(lesson: Lesson): Lesson? = filter {
+    it.dayOfWeek == lesson.dayOfWeek &&
+            it.name == lesson.name &&
+            it.startTime == lesson.startTime &&
+            it.endTime == lesson.endTime &&
+            it.classroom == lesson.classroom &&
+            it.teacher == lesson.teacher &&
+            it.subGroup == lesson.subGroup &&
+            it.frequency == lesson.frequency
+}.let {
+    if (it.isEmpty()) null
+    else it[0]
+}
+
 fun Lesson.nowIsLesson(datetime: LocalTime): Boolean =
     (datetime.hour * 60 * 60 + datetime.minute * 60 + datetime.second) in
             (startTime.hour * 60 * 60 + startTime.minute * 60)..(endTime.hour * 60 * 60 + endTime.minute * 60)

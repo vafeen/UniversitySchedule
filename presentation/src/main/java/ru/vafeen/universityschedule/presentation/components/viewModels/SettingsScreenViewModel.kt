@@ -13,8 +13,8 @@ import kotlinx.coroutines.withContext
 import ru.vafeen.universityschedule.data.network.service.GSheetsService
 import ru.vafeen.universityschedule.data.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.data.utils.cleverUpdatingLessons
+import ru.vafeen.universityschedule.data.utils.createGSheetsService
 import ru.vafeen.universityschedule.data.utils.getLessonsListFromGSheetsTable
-
 import ru.vafeen.universityschedule.domain.Settings
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 
@@ -40,7 +40,7 @@ internal class SettingsScreenViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 gSheetsService = it.link?.let {
-                    ru.vafeen.universityschedule.data.utils.createGSheetsService(
+                    createGSheetsService(
                         link = it
                     )
                 }
