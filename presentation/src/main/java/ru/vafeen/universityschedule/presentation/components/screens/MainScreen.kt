@@ -49,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
@@ -324,7 +325,8 @@ internal fun MainScreen(
                 items(count = viewModel.pageNumber) { index ->
                     val day = viewModel.todayDate.plusDays(index.toLong())
                     Card(modifier = Modifier
-                        .padding(horizontal = 3.dp)
+                        .fillParentMaxWidth(1 / 3f)
+                        .padding(horizontal = 5.dp)
                         .clickable {
                             cor.launch(Dispatchers.Main) {
                                 pagerState.animateScrollToPage(index)
@@ -338,12 +340,15 @@ internal fun MainScreen(
                         contentColor = (if (day == viewModel.todayDate) mainColor
                         else Theme.colors.buttonColor).suitableColor()
                     )) {
-                        Text(
+                        TextForThisTheme(
                             text = day.getDateString(ruDaysOfWeek = viewModel.ruDaysOfWeek),
                             fontSize = FontSize.small17,
-                            modifier = Modifier.padding(
-                                vertical = 5.dp, horizontal = 10.dp
-                            )
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    vertical = 5.dp, horizontal = 10.dp
+                                ),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
