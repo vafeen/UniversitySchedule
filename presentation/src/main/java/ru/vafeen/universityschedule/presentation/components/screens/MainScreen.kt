@@ -62,10 +62,9 @@ import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
 import ru.vafeen.universityschedule.data.network.downloader.Downloader
 import ru.vafeen.universityschedule.data.utils.NotificationAboutLessonsSettings
-import ru.vafeen.universityschedule.data.utils.getDateString
+import ru.vafeen.universityschedule.data.utils.getDateStringWithWeekOfDay
 import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.data.utils.nowIsLesson
-
 import ru.vafeen.universityschedule.domain.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
@@ -73,14 +72,13 @@ import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
-
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.ui_utils.WeekDay
+import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.pathToDownloadRelease
-
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
@@ -90,7 +88,7 @@ import java.time.LocalTime
 internal fun MainScreen(
     navController: NavController,
 ) {
-    val viewModel: ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel =
+    val viewModel: MainScreenViewModel =
         koinViewModel()
     val context = LocalContext.current
     val settings by viewModel.settings.collectAsState()
@@ -348,7 +346,7 @@ internal fun MainScreen(
                         else Theme.colors.buttonColor).suitableColor()
                     )) {
                         TextForThisTheme(
-                            text = day.getDateString(ruDaysOfWeek = viewModel.ruDaysOfWeek),
+                            text = day.getDateStringWithWeekOfDay(context = context),
                             fontSize = FontSize.small17,
                             modifier = Modifier
                                 .fillMaxWidth()
