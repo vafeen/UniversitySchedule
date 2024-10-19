@@ -1,6 +1,11 @@
-v5.6
-New version 5.4!!
+v6.0
+New version 6.0!!
+
+What's new:
+
+- New modern UI!!!
+- Report a bug
 
 What's fix:
 
-- A big bug with crash due to migration
+- UI flickering bug
