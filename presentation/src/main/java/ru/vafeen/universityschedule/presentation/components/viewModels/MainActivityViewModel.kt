@@ -17,7 +17,7 @@ internal class MainActivityViewModel(
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             context.copyTextToClipBoard(
                 label = "Error",
-                text = "Contact us about this problem: ${Link.MAIL}\n\n Exception in ${thread.name} thread\n${throwable.stackTraceToString()}"
+                text = "Contact us about this problem: ${Link.EMAIL}\n\n Exception in ${thread.name} thread\n${throwable.stackTraceToString()}"
             )
             Log.e("GeneralException", "Exception in thread ${thread.name}", throwable)
             exitProcess(0)

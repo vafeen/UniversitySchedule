@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -31,30 +30,27 @@ import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.utils.getLessonTimeString
+import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 
 @Composable
 internal fun Lesson.StringForSchedule(
-    viewModel: ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel?,
+    viewModel: MainScreenViewModel?,
     dateOfThisLesson: LocalDate?,
-    colorBack: Color,
-    lessonOfThisNumAndDenOrNot: Boolean = true,
+    colorBack: Color
 ) {
 
     val suitableColor = colorBack.suitableColor()
     var notificationsIsEditing by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .alpha(
-                if (lessonOfThisNumAndDenOrNot) 1.0f
-                else 0.55f
-            ),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = colorBack
         ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
     ) {
         Column(
             modifier = Modifier
