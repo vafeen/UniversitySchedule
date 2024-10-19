@@ -25,7 +25,8 @@ fun cleverUpdatingLessons(newLessons: List<Lesson>) {
                     resultForDelete.add(lastLesson)
             }
         }
-        databaseRepository.deleteAllLessons(*lastLessons.toTypedArray())
+
         databaseRepository.insertAllLessons(*result.toTypedArray())
+        databaseRepository.deleteAllLessons(*resultForDelete.toTypedArray())
     }
 }
