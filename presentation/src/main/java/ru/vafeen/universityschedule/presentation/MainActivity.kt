@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.vafeen.universityschedule.data.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.presentation.components.permissions.RequestNotificationPermission
 import ru.vafeen.universityschedule.presentation.components.screens.MainScreen
 import ru.vafeen.universityschedule.presentation.components.screens.SettingsScreen
@@ -22,7 +23,7 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainActiv
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
-import ru.vafeen.universityschedule.presentation.utils.copyStackTraceToClipboardWithAddingContactUs
+import ru.vafeen.universityschedule.presentation.utils.Link
 import kotlin.system.exitProcess
 
 
@@ -35,7 +36,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-            copyStackTraceToClipboardWithAddingContactUs(thread = thread, throwable = throwable)
+            copyTextToClipBoard(
+                label = "Error",
+                text = "Contact us about this problem: ${Link.MAIL}\n\n Exception in ${thread.name} thread\n${throwable.stackTraceToString()}"
+            )
             Log.e("UncaughtException", "Uncaught exception in thread ${thread.name}", throwable)
             exitProcess(0)
         }

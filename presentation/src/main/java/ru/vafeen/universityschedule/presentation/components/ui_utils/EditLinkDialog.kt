@@ -95,6 +95,7 @@ internal fun EditLinkDialog(
                             onClick = {
                                 settings.link?.let {
                                     context.copyTextToClipBoard(
+                                        label = "link",
                                         text = it
                                     )
                                 }
