@@ -1,6 +1,6 @@
-v5.3
-New version 5.3!!
+v5.5
+New version 5.4!!
 
-What's new:
+What's fix:
 
-- Modify flickering UI when database is cleared after response
+- A big bug with crash due to migration
