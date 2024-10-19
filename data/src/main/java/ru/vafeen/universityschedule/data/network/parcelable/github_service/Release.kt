@@ -1,23 +1,25 @@
 package ru.vafeen.universityschedule.data.network.parcelable.github_service
 
+import com.google.gson.annotations.SerializedName
+
 data class Release(
     val url: String,
-    val assets_url: String,
-    val upload_url: String,
-    val html_url: String,
+    @SerializedName("assets_url") val assetsUrl: String,
+    @SerializedName("upload_url") val uploadUrl: String,
+    @SerializedName("html_url") val htmlUrl: String,
     val id: Long,
     val author: Author,
-    val node_id: String,
-    val tag_name: String,
-    val target_commitish: String,
+    @SerializedName("node_id") val nodeId: String,
+    @SerializedName("tag_name") val tagName: String,
+    @SerializedName("target_commitish") val targetCommitish: String,
     val name: String,
     val draft: Boolean,
-    val prerelease: Boolean,
-    val created_at: String,
-    val published_at: String,
-    val assets: List<ru.vafeen.universityschedule.data.network.parcelable.github_service.Asset>,
-    val tarball_url: String,
-    val zipball_url: String,
+    @SerializedName("prerelease") val preRelease: Boolean,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("published_at") val publishedAt: String,
+    val assets: List<Asset>,
+    @SerializedName("tarball_url") val tarballUrl: String,
+    @SerializedName("zipball_url") val zipballUrl: String,
     val body: String
 )
 

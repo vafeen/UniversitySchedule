@@ -78,7 +78,7 @@ internal fun UpdaterBottomSheet(
                     .clickable {
                         Downloader.downloadApk(
                             networkRepository = networkRepository,
-                            url = "vafeen/UniversitySchedule/releases/download/${release.tag_name}/${release.assets[0].name}",
+                            url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0].name}",
                             filePath = context.pathToDownloadRelease(),
                         )
                         CoroutineScope(Dispatchers.IO).launch {
