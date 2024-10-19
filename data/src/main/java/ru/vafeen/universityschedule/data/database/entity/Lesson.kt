@@ -20,14 +20,14 @@ import java.time.LocalTime
 @Entity
 data class Lesson(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val dayOfWeek: DayOfWeek?,
-    val name: String?,
+    val dayOfWeek: DayOfWeek? = null,
+    val name: String? = null,
     val startTime: LocalTime,
     val endTime: LocalTime,
-    val classroom: String?,
-    val teacher: String?,
-    val subGroup: String?,
-    val frequency: Frequency?,
+    val classroom: String? = null,
+    val teacher: String? = null,
+    val subGroup: String? = null,
+    val frequency: Frequency? = null,
     val idOfReminderBeforeLesson: Int? = null,
     val idOfReminderAfterBeginningLesson: Int? = null,
 ) : Comparable<Lesson> {
