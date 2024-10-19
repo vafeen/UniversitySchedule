@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
@@ -22,7 +23,8 @@ internal fun CardOfNextLesson(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = colorOfCard)
+        colors = CardDefaults.cardColors(containerColor = colorOfCard),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
         Text(
             text = stringResource(R.string.next_lesson),

@@ -44,4 +44,6 @@
     <string name="reminders_restored">Reminders have restored</string>
     <string name="every_week">Every week</string>
     <string name="every_2_weeks">Every 2 weeks</string>
+    <string name="no_apps_to_send">No apps to send</string>
+    <string name="report_a_bug">Report a bug</string>
 </resources>

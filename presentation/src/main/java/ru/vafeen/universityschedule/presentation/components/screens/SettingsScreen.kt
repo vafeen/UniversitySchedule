@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.presentation.components.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,8 +17,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -49,6 +46,7 @@ import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
+import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfSettings
 import ru.vafeen.universityschedule.presentation.components.ui_utils.ColorPickerDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.EditLinkDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
@@ -57,6 +55,8 @@ import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
+import ru.vafeen.universityschedule.presentation.utils.sendEmail
+import ru.vafeen.universityschedule.presentation.utils.suitableColor
 
 /**
  * Screen with settings for application:
@@ -190,12 +190,8 @@ internal fun SettingsScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 40.dp),
+                    .padding(horizontal = 20.dp),
             ) {
-
-                val cardColors = CardDefaults.cardColors(
-                    containerColor = Theme.colors.buttonColor,
-                )
 
                 // name of section
                 TextForThisTheme(
@@ -207,139 +203,89 @@ internal fun SettingsScreen(
                 )
 
                 // Edit link
-                Card(colors = cardColors) {
-                    Row(modifier = Modifier
-                        .clickable { linkIsEditable = true }
-                        .padding(horizontal = 10.dp)
-                        .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small17,
-                            text = stringResource(R.string.link_to_table),
-                        )
+                CardOfSettings(
+                    text = stringResource(R.string.link_to_table),
+                    icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.link),
                             contentDescription = "edit link",
-                            tint = Theme.colors.oppositeTheme
+                            tint = it.suitableColor()
                         )
-                    }
-                }
-                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+                    }, onClick = { linkIsEditable = true }
+                )
 
                 // View table
                 if (settings.link != null) {
-                    Card(colors = cardColors) {
-                        Row(modifier = Modifier
-                            .clickable {
-                                settings.link?.let { openLink(context = context, link = it) }
-                            }
-                            .padding(horizontal = 10.dp)
-                            .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween) {
-                            TextForThisTheme(
-                                modifier = Modifier.padding(10.dp),
-                                fontSize = FontSize.small17,
-                                text = stringResource(R.string.table),
-                            )
+                    CardOfSettings(
+                        text = stringResource(R.string.table),
+                        icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.table),
                                 contentDescription = "edit link",
-                                tint = Theme.colors.oppositeTheme
+                                tint = it.suitableColor()
                             )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+                        },
+                        onClick = { settings.link?.let { openLink(context = context, link = it) } }
+                    )
+
                 }
 
                 // Color
-                Card(colors = cardColors) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            colorIsEditable = true
-                        }
-                        .padding(horizontal = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small17,
-                            text = stringResource(R.string.interface_color)
-                        )
-
+                CardOfSettings(
+                    text = stringResource(R.string.interface_color),
+                    icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.palette),
-                            contentDescription = "read license",
-                            tint = Theme.colors.oppositeTheme
+                            contentDescription = "change color of interface",
+                            tint = it.suitableColor()
                         )
-                    }
-                }
-                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+                    }, onClick = { colorIsEditable = true }
+                )
+
 
                 // Subgroup
                 if (subgroupList.isNotEmpty()) {
-                    Card(colors = cardColors) {
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                subGroupIsChanging = !subGroupIsChanging
-                            }) {
-                            Row(
-                                modifier = Modifier
+                    CardOfSettings(
+                        text = stringResource(R.string.subgroup),
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.group),
+                                contentDescription = "subgroup",
+                                tint = it.suitableColor()
+                            )
+                        }, onClick = { subGroupIsChanging = !subGroupIsChanging },
+                        additionalContentIsVisible = subGroupIsChanging,
+                        additionalContent = {
+                            LazyRow(
+                                state = subGroupLazyRowState, modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                TextForThisTheme(
-                                    modifier = Modifier.padding(10.dp),
-                                    text = stringResource(R.string.subgroup),
-                                    fontSize = FontSize.small17
-                                )
-                                Icon(
-                                    painter = painterResource(
-                                        id = if (subGroupIsChanging) R.drawable.unfold_less
-                                        else R.drawable.unfold_more
-                                    ),
-                                    contentDescription = "more",
-                                    tint = Theme.colors.oppositeTheme
-                                )
-                            }
-                            if (subGroupIsChanging) {
-                                LazyRow(
-                                    state = subGroupLazyRowState, modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 10.dp)
+                                    .padding(horizontal = 10.dp)
 
-                                ) {
-                                    items(subgroupList) { subgroup ->
-                                        AssistChip(
-                                            leadingIcon = {
-                                                if (subgroup == settings.subgroup) Icon(
-                                                    imageVector = Icons.Default.Done,
-                                                    contentDescription = "this is user subgroup",
-                                                    tint = Theme.colors.oppositeTheme
+                            ) {
+                                items(subgroupList) { subgroup ->
+                                    AssistChip(
+                                        leadingIcon = {
+                                            if (subgroup == settings.subgroup) Icon(
+                                                imageVector = Icons.Default.Done,
+                                                contentDescription = "this is user subgroup",
+                                                tint = Theme.colors.oppositeTheme
+                                            )
+                                        },
+                                        modifier = Modifier.padding(horizontal = 3.dp),
+                                        onClick = {
+                                            viewModel.sharedPreferences.save(
+                                                settings.copy(
+                                                    subgroup = if (settings.subgroup != subgroup) subgroup else null
                                                 )
-                                            },
-                                            modifier = Modifier.padding(horizontal = 3.dp),
-                                            onClick = {
-                                                viewModel.sharedPreferences.save(
-                                                    settings.copy(
-                                                        subgroup = if (settings.subgroup != subgroup) subgroup else null
-                                                    )
-                                                )
-                                            },
-                                            label = { TextForThisTheme(text = subgroup) },
-                                        )
-                                    }
+                                            )
+                                        },
+                                        label = { TextForThisTheme(text = subgroup) },
+                                    )
                                 }
                             }
                         }
-                    }
-                    Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
+                    )
+
                 }
 
                 // name of section
@@ -351,58 +297,34 @@ internal fun SettingsScreen(
                     text = stringResource(R.string.contacts)
                 )
 
-                // VK Group
-                Card(colors = cardColors) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            openLink(
-                                context = context, link = Link.VK_GROUP
-                            )
-                        }
-                        .padding(horizontal = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small17,
-                            text = stringResource(R.string.project_community)
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.group),
-                            contentDescription = "read license",
-                            tint = Theme.colors.oppositeTheme
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(viewModel.spaceBetweenCards))
-
                 // CODE
-                Card(colors = cardColors) {
-                    Row(modifier = Modifier
-                        .clickable {
-                            openLink(
-                                context = context, link = Link.CODE
-                            )
-                        }
-                        .padding(horizontal = 10.dp)
-                        .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween) {
-                        TextForThisTheme(
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = FontSize.small17,
-                            text = stringResource(R.string.code)
-                        )
+                CardOfSettings(
+                    text = stringResource(R.string.code),
+                    icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.terminal),
                             contentDescription = "view code",
-                            tint = Theme.colors.oppositeTheme
+                            tint = it.suitableColor()
+                        )
+                    }, onClick = {
+                        openLink(
+                            context = context, link = Link.CODE
                         )
                     }
-                }
+                )
 
-
+                CardOfSettings(
+                    text = stringResource(R.string.report_a_bug),
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.bug_report),
+                            contentDescription = "view code",
+                            tint = it.suitableColor()
+                        )
+                    }, onClick = {
+                        context.sendEmail(email = Link.EMAIL)
+                    }
+                )
             }
 
             // version

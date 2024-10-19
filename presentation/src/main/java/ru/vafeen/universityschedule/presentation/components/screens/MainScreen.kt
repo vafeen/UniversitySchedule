@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.app.Activity
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -46,7 +47,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -141,11 +141,6 @@ internal fun MainScreen(
     }
     val cardsWithDateState = rememberLazyListState()
 
-    fun changeDateAndFrequency(daysAfterTodayDate: Long) {
-        localDate = viewModel.todayDate.plusDays(daysAfterTodayDate)
-        weekOfYear = localDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = settings)
-    }
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
         viewModel.sharedPreferences.save(
@@ -198,10 +193,17 @@ internal fun MainScreen(
     }
 
     LaunchedEffect(key1 = pagerState.currentPage) {
+        localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
+        Log.d("localDate", localDate.toString())
         cardsWithDateState.animateScrollToItem(
             if (pagerState.currentPage > 0) pagerState.currentPage - 1
             else pagerState.currentPage
         )
+    }
+    LaunchedEffect(key1 = localDate) {
+        weekOfYear = localDate.getFrequencyByLocalDate()
+            .changeFrequencyIfDefinedInSettings(settings = settings)
+        Log.d("localDate", "ldt state = $localDate")
     }
 
     Scaffold(containerColor = Theme.colors.singleTheme, topBar = {
@@ -324,50 +326,61 @@ internal fun MainScreen(
             LazyRow(
                 state = cardsWithDateState,
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 items(count = viewModel.pageNumber) { index ->
-                    val day = viewModel.todayDate.plusDays(index.toLong())
-                    Card(modifier = Modifier
-                        .fillParentMaxWidth(1 / 3f)
-                        .padding(horizontal = 5.dp)
-                        .clickable {
-                            cor.launch(Dispatchers.Main) {
-                                pagerState.animateScrollToPage(index)
-                            }
-                        }
-                        .alpha(
-                            if (day != localDate && day != viewModel.todayDate) 0.5f else 1f
-                        ), colors = CardDefaults.cardColors(
-                        containerColor = if (day == viewModel.todayDate) mainColor
-                        else Theme.colors.buttonColor,
-                        contentColor = (if (day == viewModel.todayDate) mainColor
-                        else Theme.colors.buttonColor).suitableColor()
-                    )) {
-                        Text(
-                            text = day.getDateStringWithWeekOfDay(context = context),
-                            fontSize = FontSize.small17,
+                    val day by remember { mutableStateOf(viewModel.todayDate.plusDays(index.toLong())) }
+                    Column {
+                        Card(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    vertical = 5.dp, horizontal = 10.dp
-                                ),
-                            textAlign = TextAlign.Center
-                        )
+                                .fillParentMaxWidth(1 / 3f)
+                                .padding(horizontal = 5.dp)
+                                .clickable {
+                                    cor.launch(Dispatchers.Main) {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (day == viewModel.todayDate) mainColor
+                                else Theme.colors.buttonColor,
+                                contentColor = (if (day == viewModel.todayDate) mainColor
+                                else Theme.colors.buttonColor).suitableColor()
+                            ), elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+                        ) {
+                            Text(
+                                text = day.getDateStringWithWeekOfDay(context = context),
+                                fontSize = FontSize.small17,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        vertical = 5.dp, horizontal = 10.dp
+                                    ),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        if (day == localDate)
+                            Card(
+                                modifier = Modifier
+                                    .fillParentMaxWidth(1 / 3f)
+                                    .padding(top = 2.dp)
+                                    .padding(horizontal = 18.dp)
+                                    .height(2.dp),
+                                colors = CardDefaults.cardColors(containerColor = Theme.colors.oppositeTheme)
+                            ) {}
                     }
                 }
             }
             HorizontalPager(
-                state = pagerState, modifier = Modifier
+                state = pagerState,
+                modifier = Modifier
                     .fillMaxWidth()
-                    .weight(10f)
-                    .padding(top = 10.dp)
+                    .weight(10f),
             ) { page ->
                 val dateOfThisLesson = viewModel.todayDate.plusDays(page.toLong())
                 val weekOfYearOfThisDay = dateOfThisLesson.getFrequencyByLocalDate()
                     .changeFrequencyIfDefinedInSettings(settings = settings)
-                changeDateAndFrequency(daysAfterTodayDate = pagerState.currentPage.toLong())
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -449,7 +462,6 @@ internal fun MainScreen(
                         lessonsInOppositeNumAndDenDay.forEach { lesson ->
                             lesson.StringForSchedule(
                                 colorBack = Theme.colors.buttonColor,
-                                lessonOfThisNumAndDenOrNot = false,
                                 dateOfThisLesson = null,
                                 viewModel = null
                             )

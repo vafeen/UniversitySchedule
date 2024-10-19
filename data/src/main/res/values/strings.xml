@@ -44,4 +44,6 @@
     <string name="reminders_restored">Будильники восстановлены</string>
     <string name="every_week">Каждую неделю</string>
     <string name="every_2_weeks">Каждые 2 недели</string>
+    <string name="no_apps_to_send">Нет приложений для отправки</string>
+    <string name="report_a_bug">Сообщить об ошибке</string>
 </resources>
