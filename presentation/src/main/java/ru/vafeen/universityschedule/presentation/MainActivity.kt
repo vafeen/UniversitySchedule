@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.presentation
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,7 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainActiv
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
+import ru.vafeen.universityschedule.presentation.utils.copyToClipboard
 
 
 class MainActivity : ComponentActivity() {
@@ -31,6 +33,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            copyToClipboard(throwable)
+
+            Log.e("UncaughtException", "Uncaught exception in thread ${thread.name}", throwable)
+        }
+
         setContent {
             RequestNotificationPermission()
             MainTheme {
