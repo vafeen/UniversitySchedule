@@ -8,7 +8,7 @@ import ru.vafeen.universityschedule.data.database.dao.parent.implementation.Flow
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 
 /**
- * DAO interface for @Entity [Lesson][ru.vafeen.universityschedule.database.entity.Lesson]
+ * DAO interface for @Entity [Lesson][ru.vafeen.universityschedule.data.database.entity.Lesson]
  */
 @Dao
 interface LessonDao : DataAccessObject<Lesson>, FlowGetAllImplementation<Lesson> {
