@@ -22,7 +22,8 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainActiv
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
-import ru.vafeen.universityschedule.presentation.utils.copyToClipboard
+import ru.vafeen.universityschedule.presentation.utils.copyStackTraceToClipboardWithAddingContactUs
+import kotlin.system.exitProcess
 
 
 class MainActivity : ComponentActivity() {
@@ -34,11 +35,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-            copyToClipboard(throwable)
-
+            copyStackTraceToClipboardWithAddingContactUs(thread = thread, throwable = throwable)
             Log.e("UncaughtException", "Uncaught exception in thread ${thread.name}", throwable)
+            exitProcess(0)
         }
-
         setContent {
             RequestNotificationPermission()
             MainTheme {
