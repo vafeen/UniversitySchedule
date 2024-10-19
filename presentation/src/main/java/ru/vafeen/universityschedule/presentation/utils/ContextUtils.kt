@@ -6,8 +6,11 @@ import android.content.Context
 
 fun Context.pathToDownloadRelease(): String = "${externalCacheDir?.absolutePath}/app-release.apk"
 
-fun Context.copyToClipboard(throwable: Throwable) {
+fun Context.copyStackTraceToClipboardWithAddingContactUs(thread: Thread, throwable: Throwable) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    val clip = ClipData.newPlainText("Error", throwable.stackTraceToString())
+    val clip = ClipData.newPlainText(
+        "Error",
+        "Contact us about this problem: ${Link.MAIL}\n Exception in ${thread.name} thread\n${throwable.stackTraceToString()}"
+    )
     clipboard.setPrimaryClip(clip)
 }
