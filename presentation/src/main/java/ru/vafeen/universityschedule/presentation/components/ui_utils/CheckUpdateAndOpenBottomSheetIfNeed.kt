@@ -9,7 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.network.parcelable.github_service.Release
+import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.UpdaterBottomSheet
 
@@ -17,9 +19,11 @@ import ru.vafeen.universityschedule.presentation.components.bottom_sheet.Updater
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CheckUpdateAndOpenBottomSheetIfNeed(
-    networkRepository: ru.vafeen.universityschedule.data.network.repository.NetworkRepository,
     onDismissRequest: (Boolean) -> Unit
 ) {
+    val networkRepository: NetworkRepository by inject(
+        clazz = NetworkRepository::class.java
+    )
     val context = LocalContext.current
     val versionName = context.getVersionName()
     val bottomSheetState =
@@ -41,7 +45,6 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
     if (isUpdateNeeded)
         release?.let { releaseParam ->
             UpdaterBottomSheet(
-                networkRepository = networkRepository,
                 release = releaseParam,
                 state = bottomSheetState,
             ) {

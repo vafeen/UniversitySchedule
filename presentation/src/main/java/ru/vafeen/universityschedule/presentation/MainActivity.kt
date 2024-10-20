@@ -36,9 +36,7 @@ class MainActivity : ComponentActivity() {
             RequestNotificationPermission()
             MainTheme {
                 if (!viewModel.updateIsShowed)
-                    CheckUpdateAndOpenBottomSheetIfNeed(
-                        networkRepository = viewModel.networkRepository
-                    ) {
+                    CheckUpdateAndOpenBottomSheetIfNeed {
                         viewModel.updateIsShowed = true
                     }
 
