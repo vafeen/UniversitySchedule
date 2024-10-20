@@ -10,3 +10,6 @@ fun Context.copyTextToClipBoard(label: String, text: String) {
     val clip = ClipData.newPlainText(label, text)
     if (text.isNotEmpty()) clipboard.setPrimaryClip(clip)
 }
+
+internal fun Context.pathToDownloadRelease(): String =
+    "${externalCacheDir?.absolutePath}/app-release.apk"

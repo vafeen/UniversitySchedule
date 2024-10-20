@@ -3,6 +3,7 @@ package ru.vafeen.universityschedule.presentation.components.viewModels
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -11,10 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.database.entity.Reminder
-import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
-import ru.vafeen.universityschedule.domain.Settings
+import ru.vafeen.universityschedule.data.network.downloader.Downloader
 import ru.vafeen.universityschedule.domain.planner.Scheduler
-import ru.vafeen.universityschedule.domain.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.presentation.MainActivity
 import java.time.LocalDate
@@ -24,31 +23,34 @@ internal class MainScreenViewModel(
     val databaseRepository: ru.vafeen.universityschedule.data.database.DatabaseRepository,
     val sharedPreferences: SharedPreferences,
     private val scheduler: Scheduler,
+    private val downloader: Downloader,
     context: Context,
 ) : ViewModel() {
     private val intent = Intent(context, MainActivity::class.java)
+    var nowIsLesson: Boolean = false
+    val pageNumber = 365
+    val todayDate: LocalDate = LocalDate.now()
 
-    private val _settings =
-        MutableStateFlow<Settings>(sharedPreferences.getSettingsOrCreateIfNull())
-    val settings = _settings.asStateFlow()
+    private val settingsInitial = sharedPreferences.getSettingsOrCreateIfNull()
+    private val _settingsFlow = MutableStateFlow(settingsInitial)
+    val settingsFlow = _settingsFlow.asStateFlow()
+
+
+    val isUpdateInProcessFlow = downloader.isUpdateInProcessFlow
+    val percentageFlow = downloader.percentageFlow
+
     private val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            _settings.value = sharedPreferences.getSettingsOrCreateIfNull()
+            Log.d("settings", "updated ")
+            viewModelScope.launch(Dispatchers.IO) {
+                val settings = sharedPreferences.getSettingsOrCreateIfNull()
+                _settingsFlow.emit(settings)
+            }
         }
 
-    val todayDate: LocalDate = LocalDate.now()
-    var weekOfYear: ru.vafeen.universityschedule.data.database.lesson_additions.Frequency =
-        todayDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = settings.value)
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
-        viewModelScope.launch(Dispatchers.IO) {
-            settings.collect {
-                weekOfYear = todayDate.getFrequencyByLocalDate()
-                    .changeFrequencyIfDefinedInSettings(settings = it)
-            }
-        }
     }
 
     override fun onCleared() {
@@ -56,10 +58,6 @@ internal class MainScreenViewModel(
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
     }
 
-
-    var nowIsLesson: Boolean = false
-
-    val pageNumber = 365
     suspend fun addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
         lesson: Lesson,
         newReminder: Reminder,

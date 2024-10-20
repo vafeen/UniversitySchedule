@@ -12,4 +12,7 @@ data class Settings(
     val lastDemonstratedVersion: Int? = null,
 ) {
     fun toJsonString(): String = Gson().toJson(this)
+    override fun toString(): String {
+        return "isSelectedFrequencyCorrespondsToTheWeekNumbers= $isSelectedFrequencyCorrespondsToTheWeekNumbers"
+    }
 }

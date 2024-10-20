@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -60,7 +59,6 @@ import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
-import ru.vafeen.universityschedule.data.network.downloader.Downloader
 import ru.vafeen.universityschedule.data.utils.NotificationAboutLessonsSettings
 import ru.vafeen.universityschedule.data.utils.getDateStringWithWeekOfDay
 import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
@@ -78,7 +76,6 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainScree
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
-import ru.vafeen.universityschedule.presentation.utils.pathToDownloadRelease
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
@@ -91,27 +88,18 @@ internal fun MainScreen(
     val viewModel: MainScreenViewModel =
         koinViewModel()
     val context = LocalContext.current
-    val settings by viewModel.settings.collectAsState()
+    val settings by viewModel.settingsFlow.collectAsState()
     val defaultColor = Theme.colors.mainColor
-    val progress = remember {
-        mutableStateOf(
-            ru.vafeen.universityschedule.data.network.downloader.Progress(
-                totalBytesRead = 0L,
-                contentLength = 0L,
-                done = false
-            )
-        )
-    }
     val dark = isSystemInDarkTheme()
     val mainColor by remember {
-        mutableStateOf(
-            settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
-        )
+        mutableStateOf(settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor)
     }
     var isFrequencyInChanging by remember {
         mutableStateOf(false)
     }
-    val isUpdateInProcess by Downloader.isUpdateInProcessFlow.collectAsState(false)
+    val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
+    val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
+
     val cor = rememberCoroutineScope()
     var localTime by remember {
         mutableStateOf(LocalTime.now())
@@ -120,49 +108,37 @@ internal fun MainScreen(
         mutableStateOf(LocalDate.now())
     }
     var weekOfYear by remember {
-        mutableStateOf(viewModel.weekOfYear)
+        mutableStateOf(
+            localDate.getFrequencyByLocalDate()
+                .changeFrequencyIfDefinedInSettings(settings = settings)
+        )
     }
 
-    LaunchedEffect(key1 = null) {
-        Downloader.sizeFlow.collect {
-            if (!it.failed) {
-                progress.value = it
-                if (it.contentLength == it.totalBytesRead) {
-                    Downloader.isUpdateInProcessFlow.emit(false)
-                    Downloader.installApk(
-                        context = context, apkFilePath = context.pathToDownloadRelease()
-                    )
-                }
-            } else Downloader.isUpdateInProcessFlow.emit(false)
-        }
-    }
     var lessons by remember {
         mutableStateOf(listOf<Lesson>())
     }
     val cardsWithDateState = rememberLazyListState()
 
+    fun changeWeekOfYearDependsOnLocalDateAndSettings() {
+        weekOfYear = localDate.getFrequencyByLocalDate()
+            .changeFrequencyIfDefinedInSettings(settings = settings)
+    }
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
         viewModel.sharedPreferences.save(
             settings.copy(
-                isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let {
-                    localDate.getFrequencyByLocalDate() == it
-                })
+                isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
         )
-        weekOfYear = localDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = settings)
         isFrequencyInChanging = false
+    }
+    LaunchedEffect(key1 = settings) {
+        changeWeekOfYearDependsOnLocalDateAndSettings()
     }
     LaunchedEffect(key1 = null) {
         viewModel.databaseRepository.getAllAsFlowLessons().collect {
             lessons = it
         }
     }
-//    LaunchedEffect(null) {
-//        viewModel.databaseRepository.getAllRemindersAsFlow().collect {
-//            Log.d("reminders", it.joinToString(separator = "\n"))
-//        }
-//    }
 
     val pagerState = rememberPagerState(
         pageCount = {
@@ -194,16 +170,13 @@ internal fun MainScreen(
 
     LaunchedEffect(key1 = pagerState.currentPage) {
         localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
-        Log.d("localDate", localDate.toString())
         cardsWithDateState.animateScrollToItem(
             if (pagerState.currentPage > 0) pagerState.currentPage - 1
             else pagerState.currentPage
         )
     }
     LaunchedEffect(key1 = localDate) {
-        weekOfYear = localDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = settings)
-        Log.d("localDate", "ldt state = $localDate")
+        changeWeekOfYearDependsOnLocalDateAndSettings()
     }
 
     Scaffold(containerColor = Theme.colors.singleTheme, topBar = {
@@ -469,7 +442,7 @@ internal fun MainScreen(
                     }
                 }
             }
-            if (isUpdateInProcess) UpdateProgress(percentage = progress)
+            if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
         }
     }
 }
