@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 
-internal fun Context.pathToDownloadRelease(): String =
-    "${externalCacheDir?.absolutePath}/app-release.apk"
 
 internal fun Context.sendEmail(email: String) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {

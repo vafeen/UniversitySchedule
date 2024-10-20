@@ -21,16 +21,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.network.downloader.Downloader
 import ru.vafeen.universityschedule.data.network.parcelable.github_service.Release
 import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
-import ru.vafeen.universityschedule.presentation.utils.pathToDownloadRelease
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +39,7 @@ internal fun UpdaterBottomSheet(
     onDismissRequest: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
+    val downloader: Downloader by inject(clazz = Downloader::class.java)
     ModalBottomSheet(
         sheetState = state,
         onDismissRequest = { onDismissRequest(false) },
@@ -76,14 +74,11 @@ internal fun UpdaterBottomSheet(
                 contentDescription = "qr",
                 modifier = Modifier
                     .clickable {
-                        Downloader.downloadApk(
+                        downloader.downloadApk(
+                            context = context,
                             networkRepository = networkRepository,
                             url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0].name}",
-                            filePath = context.pathToDownloadRelease(),
                         )
-                        CoroutineScope(Dispatchers.IO).launch {
-                            Downloader.isUpdateInProcessFlow.emit(true)
-                        }
                         onDismissRequest(true)
                     }
                     .size(150.dp)
