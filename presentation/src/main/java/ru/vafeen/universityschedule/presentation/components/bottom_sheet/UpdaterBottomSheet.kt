@@ -25,7 +25,6 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.network.downloader.Downloader
 import ru.vafeen.universityschedule.data.network.parcelable.github_service.Release
-import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
 
@@ -33,7 +32,6 @@ import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun UpdaterBottomSheet(
-    networkRepository: NetworkRepository,
     release: Release,
     state: SheetState,
     onDismissRequest: (Boolean) -> Unit
@@ -76,7 +74,6 @@ internal fun UpdaterBottomSheet(
                     .clickable {
                         downloader.downloadApk(
                             context = context,
-                            networkRepository = networkRepository,
                             url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0].name}",
                         )
                         onDismissRequest(true)

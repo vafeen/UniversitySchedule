@@ -19,7 +19,9 @@ import java.io.File
 import java.io.FileOutputStream
 
 
-class Downloader {
+class Downloader(
+    private val networkRepository: NetworkRepository
+) {
     private val _percentageFlow = MutableSharedFlow<Float>()
     val percentageFlow = _percentageFlow.asSharedFlow()
 
@@ -59,7 +61,6 @@ class Downloader {
 
     fun downloadApk(
         context: Context,
-        networkRepository: NetworkRepository,
         url: String
     ) {
         CoroutineScope(Dispatchers.IO).launch {
