@@ -110,14 +110,11 @@ internal fun SettingsScreen(
         }
     }
     LaunchedEffect(key1 = null) {
-        viewModel.databaseRepository.getAllAsFlowLessons().collect { lessons ->
-            subgroupList = lessons.filter {
-                it.subGroup != null
-            }.map {
-                it.subGroup.toString()
-            }.distinct()
+        viewModel.subgroupFlow.collect {
+            subgroupList = it
         }
     }
+
     BackHandler(onBack = gotoMainScreenCallBack)
     Scaffold(
         containerColor = Theme.colors.singleTheme,
@@ -163,9 +160,7 @@ internal fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if (linkIsEditable) EditLinkDialog(
-                context = context, sharedPreferences = viewModel.sharedPreferences
-            ) {
+            if (linkIsEditable) EditLinkDialog(context = context) {
                 linkIsEditable = false
                 viewModel.gSheetsService = settings.link?.let {
                     ru.vafeen.universityschedule.data.utils.createGSheetsService(

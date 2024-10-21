@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.data.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
@@ -42,9 +43,9 @@ import ru.vafeen.universityschedule.presentation.utils.Link
 @Composable
 internal fun EditLinkDialog(
     context: Context,
-    sharedPreferences: SharedPreferences,
     onDismissRequest: () -> Unit,
 ) {
+    val sharedPreferences: SharedPreferences by inject(clazz = SharedPreferences::class.java)
     var settings by remember { mutableStateOf(sharedPreferences.getSettingsOrCreateIfNull()) }
     val iconsSize = 30.dp
     Dialog(
@@ -133,13 +134,12 @@ internal fun EditLinkDialog(
                                 )
                                 sharedPreferences.save(settings)
                                 onDismissRequest()
-                            }
-                            else
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.its_no_google_sheets_link),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            } else
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.its_no_google_sheets_link),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                         }
                     }) {
                         Icon(
