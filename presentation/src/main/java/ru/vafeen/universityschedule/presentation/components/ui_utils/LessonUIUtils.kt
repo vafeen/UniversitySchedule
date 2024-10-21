@@ -98,40 +98,45 @@ internal fun Lesson.StringForSchedule(
                             thisDate = dateOfThisLesson
                         )
                     Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable {
-                                notificationsIsEditing = true
-                            },
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.weight(1f),
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        Icon(
-                            painter = painterResource(id = if (idOfReminderBeforeLesson != null && idOfReminderAfterBeginningLesson != null) R.drawable.edit else R.drawable.add),
-                            contentDescription = "Edit notifications about this lesson",
-                            tint = suitableColor
-                        )
-                        if (idOfReminderBeforeLesson != null)
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    notificationsIsEditing = true
+                                },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.message),
-                                contentDescription = "Message about lesson",
+                                painter = painterResource(id = if (idOfReminderBeforeLesson != null && idOfReminderAfterBeginningLesson != null) R.drawable.edit else R.drawable.add),
+                                contentDescription = "Edit notifications about this lesson",
                                 tint = suitableColor
                             )
-                        if (idOfReminderAfterBeginningLesson != null)
-                            Icon(
-                                painter = painterResource(id = R.drawable.notification_about_checking),
-                                contentDescription = "Message about checking on this lesson",
-                                tint = suitableColor
-                            )
+                            if (idOfReminderBeforeLesson != null)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.message),
+                                    contentDescription = "Message about lesson",
+                                    tint = suitableColor
+                                )
+                            if (idOfReminderAfterBeginningLesson != null)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.notification_about_checking),
+                                    contentDescription = "Message about checking on this lesson",
+                                    tint = suitableColor
+                                )
+                        }
                     }
                 }
             }
 
-            if (name?.isNotEmpty() == true) {
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    text = name ?: "", color = suitableColor, fontSize = FontSize.big22
-                )
+            name?.let {
+                if (it.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = it, color = suitableColor, fontSize = FontSize.big22
+                    )
+                }
             }
 
 
