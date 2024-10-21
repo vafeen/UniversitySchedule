@@ -98,17 +98,8 @@ internal fun SettingsScreen(
         mutableStateOf(false)
     }
     val subGroupLazyRowState = rememberLazyListState()
-    var networkState by remember {
-        mutableStateOf(GSheetsServiceRequestStatus.Waiting)
-    }
-    var key by remember {
-        mutableIntStateOf(1)
-    }
-    LaunchedEffect(key1 = key) {
-        viewModel.updateLocalDatabase { status ->
-            networkState = status
-        }
-    }
+    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
+
     LaunchedEffect(key1 = null) {
         viewModel.subgroupFlow.collect {
             subgroupList = it
@@ -162,12 +153,6 @@ internal fun SettingsScreen(
         ) {
             if (linkIsEditable) EditLinkDialog(context = context) {
                 linkIsEditable = false
-                viewModel.gSheetsService = settings.link?.let {
-                    ru.vafeen.universityschedule.data.utils.createGSheetsService(
-                        link = it
-                    )
-                }
-                key = 3 - key
             }
             if (colorIsEditable) ColorPickerDialog(context = context,
                 firstColor = settings.getMainColorForThisTheme(isDark = dark)
