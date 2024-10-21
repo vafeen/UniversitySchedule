@@ -68,8 +68,8 @@ import ru.vafeen.universityschedule.presentation.utils.suitableColor
  * - Subgroup
  *
  * Contacts:
- * - Project community
  * - Code
+ * - Report a bug
  *
  */
 @OptIn(ExperimentalMaterial3Api::class)
