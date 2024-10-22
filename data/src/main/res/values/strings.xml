@@ -46,4 +46,8 @@
     <string name="every_2_weeks">Каждые 2 недели</string>
     <string name="no_apps_to_send">Нет приложений для отправки</string>
     <string name="report_a_bug">Сообщить об ошибке</string>
+    <string name="interface_str">Интерфейс</string>
+    <string name="cats_on_ui">Котики на UI</string>
+    <string name="weekend_cat">Котик выходного дня</string>
+    <string name="cat_in_settings">Котик в настройках</string>
 </resources>

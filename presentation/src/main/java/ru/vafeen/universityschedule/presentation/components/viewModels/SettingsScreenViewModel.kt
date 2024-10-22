@@ -16,10 +16,11 @@ import ru.vafeen.universityschedule.data.utils.createGSheetsService
 import ru.vafeen.universityschedule.data.utils.getLessonsListFromGSheetsTable
 import ru.vafeen.universityschedule.domain.Settings
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
+import ru.vafeen.universityschedule.domain.utils.save
 
 internal class SettingsScreenViewModel(
     private val databaseRepository: DatabaseRepository,
-    val sharedPreferences: SharedPreferences,
+    private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     private val _settings =
         MutableStateFlow(sharedPreferences.getSettingsOrCreateIfNull())
@@ -31,8 +32,13 @@ internal class SettingsScreenViewModel(
             }
         }
 
+    fun saveSettingsToSharedPreferences(settings: Settings) {
+        sharedPreferences.save(settings = settings)
+    }
+
     private var gSheetsService: GSheetsService? = null
     private var lastLink: String? = null
+
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
         viewModelScope.launch(Dispatchers.IO) {
@@ -53,6 +59,7 @@ internal class SettingsScreenViewModel(
 
     private val _subgroupFlow = MutableStateFlow<List<String>>(listOf())
     val subgroupFlow = _subgroupFlow.asStateFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             databaseRepository.getAllAsFlowLessons().collect { lessons ->

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
@@ -31,21 +32,23 @@ fun CardOfSettings(
     icon: @Composable (Color) -> Unit,
     onClick: () -> Unit,
     additionalContentIsVisible: Boolean? = null,
-    additionalContent: @Composable (() -> Unit)? = null
+    additionalContent: @Composable ((padding: Dp) -> Unit)? = null
 ) {
     val color = generateRandomColor()
+    val contentPadding = 10.dp
     Card(
         modifier = Modifier.padding(vertical = 15.dp),
         colors = CardDefaults.cardColors(
             containerColor = Theme.colors.buttonColor,
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = contentPadding)
     ) {
-        Column(modifier = Modifier.clickable(onClick = onClick)) {
+        Column {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable(onClick = onClick)
+                    .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -72,7 +75,7 @@ fun CardOfSettings(
                 )
             }
             if (additionalContentIsVisible == true)
-                additionalContent?.let { it() }
+                additionalContent?.let { it(contentPadding) }
         }
     }
 }
