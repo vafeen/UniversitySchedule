@@ -30,6 +30,7 @@ Supported themes: Dark, Light
 
 ### Settings screen
 <img src="readmemedia/settingsscreen.png" alt="Icon" width="210">
+
 #### General
 
 - Link your schedule with Google Sheets
