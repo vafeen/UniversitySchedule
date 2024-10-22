@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.app.Activity
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -72,6 +73,8 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSc
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.ui_utils.WeekDay
+import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
+import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
@@ -345,6 +348,7 @@ internal fun MainScreen(
                     }
                 }
             }
+
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
@@ -354,92 +358,101 @@ internal fun MainScreen(
                 val dateOfThisLesson = viewModel.todayDate.plusDays(page.toLong())
                 val weekOfYearOfThisDay = dateOfThisLesson.getFrequencyByLocalDate()
                     .changeFrequencyIfDefinedInSettings(settings = settings)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 10.dp),
-                    verticalArrangement = Arrangement.spacedBy(space = 20.dp)
-                ) {
-                    val lessonsOfThisDay = lessons.filter {
-                        it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
-                                (it.frequency == null || it.frequency == weekOfYearOfThisDay) &&
-                                (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
-                    }.sorted()
+                val lessonsOfThisDay = lessons.filter {
+                    it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
+                            (it.frequency == null || it.frequency == weekOfYearOfThisDay) &&
+                            (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                }.sorted()
 
-                    val lessonsInOppositeNumAndDenDay = lessons.filter {
-                        it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
-                                it.frequency == weekOfYearOfThisDay.getOpposite() &&
-                                (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
-                    }.sorted()
+                val lessonsInOppositeNumAndDenDay = lessons.filter {
+                    it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
+                            it.frequency == weekOfYearOfThisDay.getOpposite() &&
+                            (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+                }.sorted()
+                Box {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 10.dp),
+                        verticalArrangement = Arrangement.spacedBy(space = 20.dp)
+                    ) {
 
-                    if (lessonsOfThisDay.isNotEmpty()) {
-                        viewModel.nowIsLesson = false
-                        lessonsOfThisDay.forEach { lesson ->
-                            if (lesson.nowIsLesson(localTime) && viewModel.todayDate == dateOfThisLesson) {
-                                viewModel.nowIsLesson = true
+
+                        if (lessonsOfThisDay.isNotEmpty()) {
+                            viewModel.nowIsLesson = false
+                            lessonsOfThisDay.forEach { lesson ->
+                                if (lesson.nowIsLesson(localTime) && viewModel.todayDate == dateOfThisLesson) {
+                                    viewModel.nowIsLesson = true
+                                    lesson.StringForSchedule(
+                                        colorBack = mainColor,
+                                        dateOfThisLesson = null,
+                                        viewModel = null
+                                    )
+                                } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any {
+                                        it.startTime > localTime
+                                    } && lesson == lessonsOfThisDay.filter {
+                                        it.startTime > localTime
+                                    }[0] && !viewModel.nowIsLesson) {
+                                    CardOfNextLesson(colorOfCard = mainColor) {
+                                        lesson.StringForSchedule(
+                                            colorBack = Theme.colors.buttonColor,
+                                            dateOfThisLesson = dateOfThisLesson,
+                                            viewModel =
+                                            if (lesson.startTime.minusMinutes(
+                                                    NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
+                                                )
+                                                > localTime
+                                            ) viewModel
+                                            else null
+                                        )
+
+                                    }
+                                } else lesson.StringForSchedule(
+                                    colorBack = Theme.colors.buttonColor,
+                                    dateOfThisLesson = dateOfThisLesson,
+                                    viewModel = if (
+                                        lesson.startTime.minusMinutes(
+                                            NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
+                                        ) > localTime &&
+                                        viewModel.todayDate == dateOfThisLesson ||
+                                        viewModel.todayDate != dateOfThisLesson
+                                    ) viewModel
+                                    else null
+                                )
+                            }
+                        } else WeekDay(context = context, modifier = Modifier.let {
+                            var modifier = Modifier.padding(vertical = 100.dp)
+                            if (lessonsInOppositeNumAndDenDay.isEmpty()) modifier =
+                                Modifier.weight(1f)
+                            modifier
+                        })
+
+                        if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
+                            TextForThisTheme(
+                                text = "${stringResource(id = R.string.other_lessons_in_this_day)} ${
+                                    stringResource(
+                                        id = weekOfYearOfThisDay.getOpposite().resourceName
+                                    )
+                                }",
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                fontSize = FontSize.big22
+                            )
+                            lessonsInOppositeNumAndDenDay.forEach { lesson ->
                                 lesson.StringForSchedule(
-                                    colorBack = mainColor,
+                                    colorBack = Theme.colors.buttonColor,
                                     dateOfThisLesson = null,
                                     viewModel = null
                                 )
-                            } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any {
-                                    it.startTime > localTime
-                                } && lesson == lessonsOfThisDay.filter {
-                                    it.startTime > localTime
-                                }[0] && !viewModel.nowIsLesson) {
-                                CardOfNextLesson(colorOfCard = mainColor) {
-                                    lesson.StringForSchedule(
-                                        colorBack = Theme.colors.buttonColor,
-                                        dateOfThisLesson = dateOfThisLesson,
-                                        viewModel =
-                                        if (lesson.startTime.minusMinutes(
-                                                NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
-                                            )
-                                            > localTime
-                                        ) viewModel
-                                        else null
-                                    )
-
-                                }
-                            } else lesson.StringForSchedule(
-                                colorBack = Theme.colors.buttonColor,
-                                dateOfThisLesson = dateOfThisLesson,
-                                viewModel = if (
-                                    lesson.startTime.minusMinutes(
-                                        NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
-                                    ) > localTime &&
-                                    viewModel.todayDate == dateOfThisLesson ||
-                                    viewModel.todayDate != dateOfThisLesson
-                                ) viewModel
-                                else null
-                            )
-                        }
-                    } else WeekDay(context = context, modifier = Modifier.let {
-                        var modifier = Modifier.padding(vertical = 75.dp)
-                        if (lessonsInOppositeNumAndDenDay.isEmpty()) modifier =
-                            Modifier.weight(1f)
-                        modifier
-                    })
-
-                    if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
-                        TextForThisTheme(
-                            text = "${stringResource(id = R.string.other_lessons_in_this_day)} ${
-                                stringResource(
-                                    id = weekOfYearOfThisDay.getOpposite().resourceName
-                                )
-                            }",
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            fontSize = FontSize.big22
-                        )
-                        lessonsInOppositeNumAndDenDay.forEach { lesson ->
-                            lesson.StringForSchedule(
-                                colorBack = Theme.colors.buttonColor,
-                                dateOfThisLesson = null,
-                                viewModel = null
-                            )
+                            }
                         }
                     }
+                    if (lessonsOfThisDay.isEmpty())
+                        GifPlayer(
+                            size = 150.dp,
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            imageUri = Uri.parse(AssetsInfo.DANCING_CAT)
+                        )
                 }
             }
             if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
