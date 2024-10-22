@@ -1,8 +1,11 @@
 package ru.vafeen.universityschedule.presentation.components.screens
 
+import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,9 +17,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -26,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,17 +45,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.utils.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.data.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.data.utils.openLink
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
-import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfSettings
 import ru.vafeen.universityschedule.presentation.components.ui_utils.ColorPickerDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.EditLinkDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
+import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
+import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
 import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
@@ -93,8 +99,15 @@ internal fun SettingsScreen(
         navController.popBackStack()
         navController.navigate(Screen.Main.route)
     }
-
+    val checkBoxColors = CheckboxDefaults.colors(
+        checkedColor = Theme.colors.oppositeTheme,
+        checkmarkColor = Theme.colors.singleTheme,
+        uncheckedColor = Theme.colors.oppositeTheme
+    )
     var subGroupIsChanging by remember {
+        mutableStateOf(false)
+    }
+    var catsOnUIIsChanging by remember {
         mutableStateOf(false)
     }
     val subGroupLazyRowState = rememberLazyListState()
@@ -158,30 +171,36 @@ internal fun SettingsScreen(
                 firstColor = settings.getMainColorForThisTheme(isDark = dark)
                     ?: Theme.colors.mainColor,
                 onDismissRequest = { colorIsEditable = false }) {
-                viewModel.sharedPreferences.save(
+                viewModel.saveSettingsToSharedPreferences(
                     if (dark) settings.copy(
                         darkThemeColor = it
                     ) else settings.copy(lightThemeColor = it)
                 )
-
             }
 
             Spacer(modifier = Modifier.height(30.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 20.dp)
+                    .verticalScroll(rememberScrollState()),
             ) {
-
-                // name of section
-                TextForThisTheme(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .align(Alignment.CenterHorizontally),
-                    fontSize = FontSize.big22,
-                    text = stringResource(R.string.general)
-                )
-
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    // name of section
+                    TextForThisTheme(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .align(Alignment.Center),
+                        fontSize = FontSize.big22,
+                        text = stringResource(R.string.general)
+                    )
+                    if (settings.catInSettings)
+                        GifPlayer(
+                            size = 80.dp,
+                            modifier = Modifier.align(Alignment.CenterEnd),
+                            imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
+                        )
+                }
                 // Edit link
                 CardOfSettings(
                     text = stringResource(R.string.link_to_table),
@@ -210,19 +229,6 @@ internal fun SettingsScreen(
 
                 }
 
-                // Color
-                CardOfSettings(
-                    text = stringResource(R.string.interface_color),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.palette),
-                            contentDescription = "change color of interface",
-                            tint = it.suitableColor()
-                        )
-                    }, onClick = { colorIsEditable = true }
-                )
-
-
                 // Subgroup
                 if (subgroupList.isNotEmpty()) {
                     CardOfSettings(
@@ -239,8 +245,7 @@ internal fun SettingsScreen(
                             LazyRow(
                                 state = subGroupLazyRowState, modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 10.dp)
-
+                                    .padding(horizontal = it)
                             ) {
                                 items(subgroupList) { subgroup ->
                                     AssistChip(
@@ -253,7 +258,7 @@ internal fun SettingsScreen(
                                         },
                                         modifier = Modifier.padding(horizontal = 3.dp),
                                         onClick = {
-                                            viewModel.sharedPreferences.save(
+                                            viewModel.saveSettingsToSharedPreferences(
                                                 settings.copy(
                                                     subgroup = if (settings.subgroup != subgroup) subgroup else null
                                                 )
@@ -267,6 +272,96 @@ internal fun SettingsScreen(
                     )
 
                 }
+
+                // name of section
+                TextForThisTheme(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = FontSize.big22,
+                    text = stringResource(R.string.interface_str)
+                )
+                // Color
+                CardOfSettings(
+                    text = stringResource(R.string.interface_color),
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.palette),
+                            contentDescription = "change color of interface",
+                            tint = it.suitableColor()
+                        )
+                    }, onClick = { colorIsEditable = true }
+                )
+                // cats in interface 
+                CardOfSettings(
+                    text = stringResource(R.string.cats_on_ui),
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.cat),
+                            contentDescription = "cats in interface",
+                            tint = it.suitableColor()
+                        )
+                    }, onClick = { catsOnUIIsChanging = !catsOnUIIsChanging },
+                    additionalContentIsVisible = catsOnUIIsChanging,
+                    additionalContent = {
+                        Column {
+                            val onCheckedChangeWeekendCat = {
+                                viewModel.saveSettingsToSharedPreferences(
+                                    settings = settings.copy(
+                                        weekendCat = !settings.weekendCat
+                                    )
+                                )
+                            }
+                            val onCheckedChangeCatInSettings = {
+                                viewModel.saveSettingsToSharedPreferences(
+                                    settings = settings.copy(
+                                        catInSettings = !settings.catInSettings
+                                    )
+                                )
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onCheckedChangeWeekendCat() }
+                                    .padding(horizontal = it),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextForThisTheme(
+                                    text = stringResource(R.string.weekend_cat),
+                                    fontSize = FontSize.medium19
+                                )
+                                Checkbox(
+                                    checked = settings.weekendCat,
+                                    onCheckedChange = {
+                                        onCheckedChangeWeekendCat()
+                                    }, colors = checkBoxColors
+                                )
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onCheckedChangeCatInSettings() }
+                                    .padding(horizontal = it),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextForThisTheme(
+                                    text = stringResource(R.string.cat_in_settings),
+                                    fontSize = FontSize.medium19
+                                )
+                                Checkbox(
+                                    checked = settings.catInSettings,
+                                    onCheckedChange = {
+                                        onCheckedChangeCatInSettings()
+                                    }, colors = checkBoxColors
+                                )
+                            }
+
+                        }
+                    }
+                )
+
 
                 // name of section
                 TextForThisTheme(
@@ -305,17 +400,16 @@ internal fun SettingsScreen(
                         context.sendEmail(email = Link.EMAIL)
                     }
                 )
+                // version
+                TextForThisTheme(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .padding(bottom = 20.dp)
+                        .align(Alignment.End),
+                    fontSize = FontSize.small17,
+                    text = "${stringResource(R.string.version)} ${LocalContext.current.getVersionName()}"
+                )
             }
-
-            // version
-            TextForThisTheme(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .padding(bottom = 20.dp)
-                    .align(Alignment.End),
-                fontSize = FontSize.small17,
-                text = "${stringResource(R.string.version)} ${LocalContext.current.getVersionName()}"
-            )
         }
     }
 }

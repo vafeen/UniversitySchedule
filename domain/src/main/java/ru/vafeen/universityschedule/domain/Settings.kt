@@ -10,6 +10,8 @@ data class Settings(
     val link: String? = null,
     val isSelectedFrequencyCorrespondsToTheWeekNumbers: Boolean? = null,
     val lastDemonstratedVersion: Int? = null,
+    val weekendCat: Boolean = false,
+    val catInSettings: Boolean = false,
 ) {
     fun toJsonString(): String = Gson().toJson(this)
     override fun toString(): String {

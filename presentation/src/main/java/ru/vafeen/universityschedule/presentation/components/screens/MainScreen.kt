@@ -447,7 +447,7 @@ internal fun MainScreen(
                             }
                         }
                     }
-                    if (lessonsOfThisDay.isEmpty())
+                    if (lessonsOfThisDay.isEmpty() && settings.weekendCat)
                         GifPlayer(
                             size = 150.dp,
                             modifier = Modifier.align(Alignment.BottomCenter),

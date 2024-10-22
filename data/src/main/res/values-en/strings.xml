@@ -46,4 +46,8 @@
     <string name="every_2_weeks">Every 2 weeks</string>
     <string name="no_apps_to_send">No apps to send</string>
     <string name="report_a_bug">Report a bug</string>
+    <string name="interface_str">Interface</string>
+    <string name="cats_on_ui">Cats on the UI</string>
+    <string name="weekend_cat">Weekend cat</string>
+    <string name="cat_in_settings">Cat in settings</string>
 </resources>
