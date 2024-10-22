@@ -61,4 +61,7 @@ dependencies {
     implementation(libs.accompanist.permissions)
 // koin for compose
     implementation(libs.koin.androidx.compose)
+    // glide
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
 }

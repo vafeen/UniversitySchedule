@@ -2,6 +2,8 @@
 accompanistPermissions = "0.31.1-alpha"
 agp = "8.7.1"
 alwan = "1.0.1"
+compiler = "4.14.2"
+glide = "4.14.2"
 koinAndroid = "4.0.0"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.0.21"
@@ -40,6 +42,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 # Retrofit
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 # compose navigation
