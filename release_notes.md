@@ -1,11 +1,7 @@
-v6.0
-New version 6.0!!
+v6.1
+New version 6.1!!
 
 What's new:
 
-- New modern UI!!!
-- Report a bug
-
-What's fix:
-
-- UI flickering bug
+- CATS on your screen!! You can enable it in settings!
+- New Settings screen 
