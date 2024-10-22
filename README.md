@@ -25,37 +25,25 @@ Supported themes: Dark, Light
 <img src="readmemedia/nextlesson.png" alt="Icon" width="210">
 <img src="readmemedia/currentlesson.png" alt="Icon" width="210">
 <img src="readmemedia/manualychangingfrequency.png" alt="Icon" width="210">
-
+<img src="readmemedia/dayoff.png" alt="Icon" width="210">
 </p>
 
 ### Settings screen
-
+<img src="readmemedia/settingsscreen.png" alt="Icon" width="210">
 #### General
 
 - Link your schedule with Google Sheets
 - Open your spreadsheet in browser or Google Sheets App
-- Change interface color by ColorPicker
 - Choose subgroup  
 
-#### Contacts
+#### Interface 
+- Change interface color by ColorPicker
+- Modify display of cats
 
-- Community in VK.com
-- Code on GitHub
+#### Contacts 
+- View code on Github
+- Report a bug via gmail
 
-<img src="readmemedia/settingsscreen.png" alt="Icon" width="210">
-
-#### Color picker
-
-- You can change the main color separately in Dark and Light themes.
-
-<img src="readmemedia/colorpicker.png" alt="Icon" width="210">
-
-#### Subgroup
-
-<p>
-    <img src="readmemedia/subgroup.png" alt="Icon" width="210">
-    <img src="readmemedia/chosensubgroup.png" alt="Icon" width="210">
-</p>
 
 
 ## Google Sheets integration
