@@ -2,7 +2,7 @@
 accompanistPermissions = "0.31.1-alpha"
 agp = "8.7.1"
 alwan = "1.0.1"
-compiler = "4.14.2"
+glideCompiler = "4.14.2"
 glide = "4.14.2"
 koinAndroid = "4.0.0"
 koinAndroidxCompose = "4.0.0"
@@ -42,8 +42,6 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 # Retrofit
-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 # compose navigation
@@ -55,6 +53,10 @@ junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 #koin for compose
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+# glide
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glideCompiler" }
+
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
