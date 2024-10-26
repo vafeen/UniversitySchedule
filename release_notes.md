@@ -1,7 +1,6 @@
-v6.1
-New version 6.1!!
+v6.1.1
+New version 6.1.1!!
 
-What's new:
+What's fix:
 
-- CATS on your screen!! You can enable it in settings!
-- New Settings screen 
+- Notifications about lesson and after beginning lesson
