@@ -15,7 +15,7 @@ import ru.vafeen.universityschedule.data.database.entity.Reminder
 import ru.vafeen.universityschedule.data.network.downloader.Downloader
 import ru.vafeen.universityschedule.domain.planner.Scheduler
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
-import ru.vafeen.universityschedule.presentation.MainActivity
+import ru.vafeen.universityschedule.presentation.NotificationAboutLessonReceiver
 import java.time.LocalDate
 
 
@@ -26,7 +26,7 @@ internal class MainScreenViewModel(
     private val downloader: Downloader,
     context: Context,
 ) : ViewModel() {
-    private val intent = Intent(context, MainActivity::class.java)
+    private val intentForNotification = Intent(context, NotificationAboutLessonReceiver::class.java)
     var nowIsLesson: Boolean = false
     val pageNumber = 365
     val todayDate: LocalDate = LocalDate.now()
@@ -65,7 +65,7 @@ internal class MainScreenViewModel(
         val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
         databaseRepository.insertAllLessons(newLesson)
         databaseRepository.insertAllReminders(newReminder)
-        scheduler.planRepeatWork(reminder = newReminder, intent = intent)
+        scheduler.planRepeatWork(reminder = newReminder, intent = intentForNotification)
     }
 
     suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
@@ -78,7 +78,7 @@ internal class MainScreenViewModel(
                 idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
             )
         reminder?.let {
-            scheduler.cancelWork(reminder = it, intent = intent)
+            scheduler.cancelWork(reminder = it, intent = intentForNotification)
             databaseRepository.deleteAllReminders(it)
         }
     }
@@ -90,7 +90,7 @@ internal class MainScreenViewModel(
         val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder)
         databaseRepository.insertAllLessons(newLesson)
         databaseRepository.insertAllReminders(newReminder)
-        scheduler.planRepeatWork(reminder = newReminder, intent = intent)
+        scheduler.planRepeatWork(reminder = newReminder, intent = intentForNotification)
     }
 
     suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
@@ -103,7 +103,7 @@ internal class MainScreenViewModel(
                 idOfReminder = lesson.idOfReminderAfterBeginningLesson ?: -1
             )
         reminder?.let {
-            scheduler.cancelWork(reminder = it, intent = intent)
+            scheduler.cancelWork(reminder = it, intent = intentForNotification)
             databaseRepository.deleteAllReminders(it)
         }
     }

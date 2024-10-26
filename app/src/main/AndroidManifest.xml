@@ -43,9 +43,6 @@
         </provider>
 
         <receiver
-            android:name=".presentation.NotificationAboutLessonReceiver"
-            android:exported="false" />
-        <receiver
             android:name=".presentation.ReminderRecoveryReceiver"
             android:enabled="true"
             android:exported="true">
@@ -53,6 +50,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".presentation.NotificationAboutLessonReceiver" />
     </application>
-
 </manifest>
