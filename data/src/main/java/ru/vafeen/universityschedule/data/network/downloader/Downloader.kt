@@ -25,7 +25,7 @@ class Downloader(
     private val _percentageFlow = MutableStateFlow<Float>(0f)
     val percentageFlow = _percentageFlow.asStateFlow()
 
-    private val _isUpdateInProcessFlow = MutableStateFlow<Boolean>(false)
+    private val _isUpdateInProcessFlow = MutableStateFlow(false)
     val isUpdateInProcessFlow = _isUpdateInProcessFlow.asStateFlow()
 
     private fun installApk(context: Context) {
