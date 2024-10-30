@@ -100,8 +100,8 @@ internal fun MainScreen(
     var isFrequencyInChanging by remember {
         mutableStateOf(false)
     }
-    val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState()
-    val downloadedPercentage by viewModel.percentageFlow.collectAsState()
+    val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
+    val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
 
     val cor = rememberCoroutineScope()
     var localTime by remember {
