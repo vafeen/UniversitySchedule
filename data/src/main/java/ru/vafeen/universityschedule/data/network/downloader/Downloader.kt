@@ -6,8 +6,8 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -22,11 +22,11 @@ import java.io.FileOutputStream
 class Downloader(
     private val networkRepository: NetworkRepository
 ) {
-    private val _percentageFlow = MutableSharedFlow<Float>()
-    val percentageFlow = _percentageFlow.asSharedFlow()
+    private val _percentageFlow = MutableStateFlow<Float>(0f)
+    val percentageFlow = _percentageFlow.asStateFlow()
 
-    private val _isUpdateInProcessFlow = MutableSharedFlow<Boolean>()
-    val isUpdateInProcessFlow = _isUpdateInProcessFlow.asSharedFlow()
+    private val _isUpdateInProcessFlow = MutableStateFlow<Boolean>(false)
+    val isUpdateInProcessFlow = _isUpdateInProcessFlow.asStateFlow()
 
     private fun installApk(context: Context) {
         val apkFilePath = context.pathToDownloadRelease()
