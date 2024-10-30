@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.vafeen.universityschedule.data.database.DatabaseRepository
 import ru.vafeen.universityschedule.data.database.entity.Lesson
 import ru.vafeen.universityschedule.data.database.entity.Reminder
 import ru.vafeen.universityschedule.data.network.downloader.Downloader
@@ -20,7 +21,7 @@ import java.time.LocalDate
 
 
 internal class MainScreenViewModel(
-    val databaseRepository: ru.vafeen.universityschedule.data.database.DatabaseRepository,
+    private  val databaseRepository: DatabaseRepository,
     val sharedPreferences: SharedPreferences,
     private val scheduler: Scheduler,
     private val downloader: Downloader,
@@ -30,6 +31,8 @@ internal class MainScreenViewModel(
     var nowIsLesson: Boolean = false
     val pageNumber = 365
     val todayDate: LocalDate = LocalDate.now()
+
+    val getAllAsFlowLessons = databaseRepository.getAllAsFlowLessons()
 
     private val settingsInitial = sharedPreferences.getSettingsOrCreateIfNull()
     private val _settingsFlow = MutableStateFlow(settingsInitial)
