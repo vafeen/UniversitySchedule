@@ -44,9 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.utils.getIconByRequestStatus
-import ru.vafeen.universityschedule.data.utils.openLink
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
@@ -61,8 +58,12 @@ import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
+import ru.vafeen.universityschedule.presentation.utils.getIconByRequestStatus
+import ru.vafeen.universityschedule.presentation.utils.openLink
 import ru.vafeen.universityschedule.presentation.utils.sendEmail
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
+import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.presentation.R as PR
 
 /**
  * Screen with settings for application:
@@ -146,7 +147,7 @@ internal fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                     TextForThisTheme(
-                        text = stringResource(R.string.settings), fontSize = FontSize.big22
+                        text = stringResource(PR.string.settings), fontSize = FontSize.big22
                     )
                 }
             })
@@ -192,7 +193,7 @@ internal fun SettingsScreen(
                             .padding(10.dp)
                             .align(Alignment.Center),
                         fontSize = FontSize.big22,
-                        text = stringResource(R.string.general)
+                        text = stringResource(PR.string.general)
                     )
                     if (settings.catInSettings)
                         GifPlayer(
@@ -203,10 +204,10 @@ internal fun SettingsScreen(
                 }
                 // Edit link
                 CardOfSettings(
-                    text = stringResource(R.string.link_to_table),
+                    text = stringResource(PR.string.link_to_table),
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.link),
+                            painter = painterResource(id = DR.drawable.link),
                             contentDescription = "edit link",
                             tint = it.suitableColor()
                         )
@@ -216,15 +217,15 @@ internal fun SettingsScreen(
                 // View table
                 if (settings.link != null) {
                     CardOfSettings(
-                        text = stringResource(R.string.table),
+                        text = stringResource(PR.string.table),
                         icon = {
                             Icon(
-                                painter = painterResource(id = R.drawable.table),
+                                painter = painterResource(id = DR.drawable.table),
                                 contentDescription = "edit link",
                                 tint = it.suitableColor()
                             )
                         },
-                        onClick = { settings.link?.let { openLink(context = context, link = it) } }
+                        onClick = { settings.link?.let { context.openLink(link = it) } }
                     )
 
                 }
@@ -232,10 +233,10 @@ internal fun SettingsScreen(
                 // Subgroup
                 if (subgroupList.isNotEmpty()) {
                     CardOfSettings(
-                        text = stringResource(R.string.subgroup),
+                        text = stringResource(PR.string.subgroup),
                         icon = {
                             Icon(
-                                painter = painterResource(id = R.drawable.group),
+                                painter = painterResource(id = DR.drawable.group),
                                 contentDescription = "subgroup",
                                 tint = it.suitableColor()
                             )
@@ -279,14 +280,14 @@ internal fun SettingsScreen(
                         .padding(10.dp)
                         .align(Alignment.CenterHorizontally),
                     fontSize = FontSize.big22,
-                    text = stringResource(R.string.interface_str)
+                    text = stringResource(PR.string.interface_str)
                 )
                 // Color
                 CardOfSettings(
-                    text = stringResource(R.string.interface_color),
+                    text = stringResource(PR.string.interface_color),
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.palette),
+                            painter = painterResource(id = DR.drawable.palette),
                             contentDescription = "change color of interface",
                             tint = it.suitableColor()
                         )
@@ -294,10 +295,10 @@ internal fun SettingsScreen(
                 )
                 // cats in interface 
                 CardOfSettings(
-                    text = stringResource(R.string.cats_on_ui),
+                    text = stringResource(PR.string.cats_on_ui),
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.cat),
+                            painter = painterResource(id = DR.drawable.cat),
                             contentDescription = "cats in interface",
                             tint = it.suitableColor()
                         )
@@ -328,7 +329,7 @@ internal fun SettingsScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 TextForThisTheme(
-                                    text = stringResource(R.string.weekend_cat),
+                                    text = stringResource(PR.string.weekend_cat),
                                     fontSize = FontSize.medium19
                                 )
                                 Checkbox(
@@ -347,7 +348,7 @@ internal fun SettingsScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 TextForThisTheme(
-                                    text = stringResource(R.string.cat_in_settings),
+                                    text = stringResource(PR.string.cat_in_settings),
                                     fontSize = FontSize.medium19
                                 )
                                 Checkbox(
@@ -369,30 +370,28 @@ internal fun SettingsScreen(
                         .padding(10.dp)
                         .align(Alignment.CenterHorizontally),
                     fontSize = FontSize.big22,
-                    text = stringResource(R.string.contacts)
+                    text = stringResource(PR.string.contacts)
                 )
 
                 // CODE
                 CardOfSettings(
-                    text = stringResource(R.string.code),
+                    text = stringResource(PR.string.code),
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.terminal),
+                            painter = painterResource(id = DR.drawable.terminal),
                             contentDescription = "view code",
                             tint = it.suitableColor()
                         )
                     }, onClick = {
-                        openLink(
-                            context = context, link = Link.CODE
-                        )
+                        context.openLink(link = Link.CODE)
                     }
                 )
 
                 CardOfSettings(
-                    text = stringResource(R.string.report_a_bug),
+                    text = stringResource(PR.string.report_a_bug),
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.bug_report),
+                            painter = painterResource(id = DR.drawable.bug_report),
                             contentDescription = "view code",
                             tint = it.suitableColor()
                         )
@@ -407,7 +406,7 @@ internal fun SettingsScreen(
                         .padding(bottom = 20.dp)
                         .align(Alignment.End),
                     fontSize = FontSize.small17,
-                    text = "${stringResource(R.string.version)} ${LocalContext.current.getVersionName()}"
+                    text = "${stringResource(PR.string.version)} ${LocalContext.current.getVersionName()}"
                 )
             }
         }

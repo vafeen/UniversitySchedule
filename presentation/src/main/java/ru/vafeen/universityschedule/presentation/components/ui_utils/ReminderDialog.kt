@@ -25,21 +25,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
-import ru.vafeen.universityschedule.data.utils.NotificationAboutLessonsSettings
-import ru.vafeen.universityschedule.data.utils.createReminderAfterStartingLessonForBeCheckedAtThisLesson
-import ru.vafeen.universityschedule.data.utils.createReminderBefore15MinutesOfLesson
-import ru.vafeen.universityschedule.data.utils.getLessonTimeString
+import ru.vafeen.universityschedule.domain.database.models.Lesson
+import ru.vafeen.universityschedule.domain.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.generateID
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
-
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
+import ru.vafeen.universityschedule.presentation.utils.NotificationAboutLessonsSettings
+import ru.vafeen.universityschedule.presentation.utils.createReminderAfterStartingLessonForBeCheckedAtThisLesson
+import ru.vafeen.universityschedule.presentation.utils.createReminderBefore15MinutesOfLesson
+import ru.vafeen.universityschedule.presentation.utils.getLessonTimeString
 import java.time.LocalDate
 import java.time.LocalDateTime
+import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.presentation.R as PR
 
 @Composable
 internal fun Lesson.ReminderDialog(
@@ -48,9 +47,11 @@ internal fun Lesson.ReminderDialog(
     thisDate: LocalDate,
 ) {
     val context = LocalContext.current
-    val databaseRepository: ru.vafeen.universityschedule.data.database.DatabaseRepository by inject(
-        clazz = ru.vafeen.universityschedule.data.database.DatabaseRepository::class.java
-    )
+
+    suspend fun generateID(): Int = viewModel.remindersFlow.first().map {
+        it.idOfReminder
+    }.generateID()
+
     val checkBoxColor = CheckboxDefaults.colors(
         checkedColor = Theme.colors.oppositeTheme,
         checkmarkColor = Theme.colors.singleTheme,
@@ -73,7 +74,7 @@ internal fun Lesson.ReminderDialog(
             }
             Row {
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
+                    imageVector = ImageVector.vectorResource(id = DR.drawable.schedule),
                     contentDescription = "Icon schedule",
                     tint = Theme.colors.oppositeTheme
                 )
@@ -86,7 +87,7 @@ internal fun Lesson.ReminderDialog(
 
             Spacer(modifier = Modifier.height(5.dp))
             TextForThisTheme(
-                text = stringResource(id = if (frequency == Frequency.Every || frequency == null) R.string.every_week else R.string.every_2_weeks),
+                text = stringResource(id = if (frequency == Frequency.Every || frequency == null) DR.string.every_week else DR.string.every_2_weeks),
                 fontSize = FontSize.medium19
             )
             Spacer(modifier = Modifier.height(5.dp))
@@ -99,13 +100,13 @@ internal fun Lesson.ReminderDialog(
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.message),
+                        painter = painterResource(id = DR.drawable.message),
                         contentDescription = "Message about lesson",
                         tint = Theme.colors.oppositeTheme
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     TextForThisTheme(
-                        text = stringResource(id = R.string.notification_about_lesson_before_time),
+                        text = stringResource(id = PR.string.notification_about_lesson_before_time),
                         fontSize = FontSize.medium19
                     )
                 }
@@ -113,10 +114,7 @@ internal fun Lesson.ReminderDialog(
                     checked = idOfReminderBeforeLesson != null, onCheckedChange = {
                         CoroutineScope(Dispatchers.IO).launch {
                             if (idOfReminderBeforeLesson == null) {
-                                val idOfNewReminder =
-                                    databaseRepository.getAllAsFlowReminders().first().map {
-                                        it.idOfReminder
-                                    }.generateID()
+                                val idOfNewReminder = generateID()
                                 val newReminder =
                                     this@ReminderDialog.createReminderBefore15MinutesOfLesson(
                                         idOfNewReminder = idOfNewReminder,
@@ -153,14 +151,14 @@ internal fun Lesson.ReminderDialog(
                 ) {
 
                     Icon(
-                        painter = painterResource(id = R.drawable.notification_about_checking),
+                        painter = painterResource(id = DR.drawable.notification_about_checking),
                         contentDescription = "Message about checking on this lesson",
                         tint = Theme.colors.oppositeTheme
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     TextForThisTheme(
                         text =
-                        stringResource(id = R.string.notification_about_lesson_after_starting),
+                        stringResource(id = PR.string.notification_about_lesson_after_starting),
                         fontSize = FontSize.medium19
                     )
                 }
@@ -168,10 +166,7 @@ internal fun Lesson.ReminderDialog(
                     checked = idOfReminderAfterBeginningLesson != null, onCheckedChange = {
                         CoroutineScope(Dispatchers.IO).launch {
                             if (idOfReminderAfterBeginningLesson == null) {
-                                val idOfNewReminder =
-                                    databaseRepository.getAllAsFlowReminders().first().map {
-                                        it.idOfReminder
-                                    }.generateID()
+                                val idOfNewReminder = generateID()
                                 val newReminder =
                                     this@ReminderDialog.createReminderAfterStartingLessonForBeCheckedAtThisLesson(
                                         idOfNewReminder = idOfNewReminder,

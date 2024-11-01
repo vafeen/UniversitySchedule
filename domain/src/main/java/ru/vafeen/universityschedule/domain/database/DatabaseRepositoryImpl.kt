@@ -1,66 +1,39 @@
 package ru.vafeen.universityschedule.domain.database
 
 import kotlinx.coroutines.flow.Flow
+import ru.vafeen.universityschedule.data.database.AppDatabase
 import ru.vafeen.universityschedule.data.database.DatabaseRepository
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.database.entity.Reminder
-import ru.vafeen.universityschedule.domain.database.usecase.DeleteAllLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.DeleteAllRemindersUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.GetAllAsFlowLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.GetAllAsFlowRemindersUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.GetReminderByIdOfReminderUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.InsertAllLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.InsertAllRemindersUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.UpdateAllLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.UpdateAllRemindersUseCase
+import ru.vafeen.universityschedule.data.database.entity.LessonEntity
+import ru.vafeen.universityschedule.data.database.entity.ReminderEntity
 
-internal class DatabaseRepositoryImpl(
-    private val getAllAsFlowLessonsUseCase: GetAllAsFlowLessonsUseCase,
-    private val getAllAsFlowRemindersUseCase: GetAllAsFlowRemindersUseCase,
-    private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase,
-    private val insertAllLessonsUseCase: InsertAllLessonsUseCase,
-    private val insertAllRemindersUseCase: InsertAllRemindersUseCase,
-    private val deleteAllLessonsUseCase: DeleteAllLessonsUseCase,
-    private val deleteAllRemindersUseCase: DeleteAllRemindersUseCase,
-    private val updateAllLessonsUseCase: UpdateAllLessonsUseCase,
-    private val updateAllRemindersUseCase: UpdateAllRemindersUseCase
-) : DatabaseRepository {
+internal class DatabaseRepositoryImpl(private val db: AppDatabase) : DatabaseRepository {
+    private val lessonDao = db.lessonDao()
+    private val reminderDao = db.reminderDao()
 
-    override fun getAllAsFlowLessons(): Flow<List<Lesson>> = getAllAsFlowLessonsUseCase()
-    override fun getAllAsFlowReminders(): Flow<List<Reminder>> = getAllAsFlowRemindersUseCase()
+    override fun getAsFlowLessons(): Flow<List<LessonEntity>> =
+        lessonDao.getAllAsFlow()
 
-    override fun getReminderByIdOfReminder(idOfReminder: Int): Reminder? =
-        getReminderByIdOfReminderUseCase(idOfReminder = idOfReminder)
+    override fun getAsFlowReminders(): Flow<List<ReminderEntity>> =
+        reminderDao.getAllAsFlow()
 
-    /**
-     * Inserting && Updating in database one or more lessons
-     * @param lesson [Set of entities to put in database]
-     */
-    override suspend fun insertAllLessons(vararg lesson: Lesson) =
-        insertAllLessonsUseCase(lesson = lesson)
+    override fun getReminderByIdOfReminder(idOfReminder: Int): ReminderEntity? =
+        reminderDao.getReminderByIdOfReminder(idOfReminder)
 
-    override suspend fun insertAllReminders(vararg reminder: Reminder) =
-        insertAllRemindersUseCase(reminder = reminder)
+    override suspend fun insertLessons(lessonEntities: Iterable<LessonEntity>) =
+        lessonDao.insert(lessonEntities)
 
-    /**
-     * Deleting from database one or more lessons
-     * @param lesson [Set of entities to remove from database]
-     */
-    override suspend fun deleteAllLessons(vararg lesson: Lesson) =
-        deleteAllLessonsUseCase(lesson = lesson)
+    override suspend fun insertReminders(reminderEntities: Iterable<ReminderEntity>) =
+        reminderDao.insert(reminderEntities)
 
-    override suspend fun deleteAllReminders(vararg reminder: Reminder) =
-        deleteAllRemindersUseCase(reminder = reminder)
+    override suspend fun deleteLessons(lessonEntities: Iterable<LessonEntity>) =
+        lessonDao.delete(lessonEntities)
 
+    override suspend fun deleteReminders(reminderEntities: Iterable<ReminderEntity>) =
+        reminderDao.delete(reminderEntities)
 
-    /**
-     * Updating in database one or more lessons
-     * @param lesson [Set of entities to update in database]
-     */
-    override suspend fun updateAllLessons(vararg lesson: Lesson) =
-        updateAllLessonsUseCase(lesson = lesson)
+    override suspend fun updateLessons(lessonEntities: Iterable<LessonEntity>) =
+        lessonDao.updateAll(lessonEntities)
 
-    override suspend fun updateAllReminders(vararg reminder: Reminder) =
-        updateAllRemindersUseCase(reminder = reminder)
-
+    override suspend fun updateReminders(reminderEntities: Iterable<ReminderEntity>) =
+        reminderDao.updateAll(reminderEntities)
 }

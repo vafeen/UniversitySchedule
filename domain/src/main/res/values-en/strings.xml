@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="every">Every</string>
+    <string name="numerator">Numerator</string>
+    <string name="denominator">Denominator</string>
+    <string name="every_week">Every week</string>
+    <string name="every_2_weeks">Every 2 weeks</string>
+</resources>

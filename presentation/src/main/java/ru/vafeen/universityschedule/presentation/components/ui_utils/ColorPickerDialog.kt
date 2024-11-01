@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.raedapps.alwan.rememberAlwanState
 import com.raedapps.alwan.ui.Alwan
-import ru.vafeen.universityschedule.data.R
+import ru.vafeen.universityschedule.presentation.R
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme

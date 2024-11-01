@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.R
+import ru.vafeen.universityschedule.domain.R
 import kotlin.random.Random
 
 

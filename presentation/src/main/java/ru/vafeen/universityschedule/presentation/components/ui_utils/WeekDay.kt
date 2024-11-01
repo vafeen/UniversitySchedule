@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.vafeen.universityschedule.data.R
+import ru.vafeen.universityschedule.presentation.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 
 @Composable

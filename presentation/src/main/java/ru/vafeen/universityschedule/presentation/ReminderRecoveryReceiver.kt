@@ -8,27 +8,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.database.DatabaseRepository
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
-import ru.vafeen.universityschedule.domain.planner.Scheduler
+import ru.vafeen.universityschedule.domain.planner.usecase.CancelJobUseCase
+import ru.vafeen.universityschedule.domain.planner.usecase.ScheduleRepeatingJobUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
 
 class ReminderRecoveryReceiver : BroadcastReceiver() {
+    private val getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase by inject(clazz = GetAsFlowRemindersUseCase::class.java)
+    private val scheduleRepeatingJobUseCase: ScheduleRepeatingJobUseCase by inject(clazz = ScheduleRepeatingJobUseCase::class.java)
+    private val cancelJobUseCase: CancelJobUseCase by inject(clazz = CancelJobUseCase::class.java)
+    private val notificationService: NotificationService by inject(
+        clazz = NotificationService::class.java
+    )
+
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
-            val databaseRepository: DatabaseRepository by inject(
-                clazz = DatabaseRepository::class.java
-            )
-            val scheduler: Scheduler by inject(
-                clazz = Scheduler::class.java
-            )
-            val notificationService: NotificationService by inject(
-                clazz = NotificationService::class.java
-            )
+
+
             CoroutineScope(Dispatchers.IO).launch {
-                for (reminder in databaseRepository.getAllAsFlowReminders().first()) {
-                    scheduler.cancelWork(reminder = reminder, intent = intent)
-                    scheduler.planRepeatWork(reminder = reminder, intent = intent)
+                for (reminder in getAsFlowRemindersUseCase().first()) {
+                    cancelJobUseCase(reminder = reminder, intent = intent)
+                    scheduleRepeatingJobUseCase(reminder = reminder, intent = intent)
                 }
             }
             notificationService.showNotification(
