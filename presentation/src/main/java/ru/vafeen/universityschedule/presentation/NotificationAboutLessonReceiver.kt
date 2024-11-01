@@ -7,25 +7,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.database.DatabaseRepository
-import ru.vafeen.universityschedule.data.database.ReminderType
+import ru.vafeen.universityschedule.domain.model_additions.ReminderType
+import ru.vafeen.universityschedule.domain.usecase.db.GetReminderByIdOfReminderUseCase
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.planner.SchedulerExtra
 
 class NotificationAboutLessonReceiver : BroadcastReceiver() {
+    private val notificationService: NotificationService by inject(
+        clazz = NotificationService::class.java
+    )
+    private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase by inject(clazz = GetReminderByIdOfReminderUseCase::class.java)
     override fun onReceive(context: Context, intent: Intent) {
-        val notificationService: NotificationService by inject(
-            clazz = NotificationService::class.java
-        )
-        val databaseRepository: DatabaseRepository by inject(
-            clazz = DatabaseRepository::class.java
-        )
+
+
         val idOfReminder = intent.getIntExtra(
             SchedulerExtra.ID_OF_REMINDER,
             -1
         )
         CoroutineScope(Dispatchers.IO).launch {
-            val reminder = databaseRepository.getReminderByIdOfReminder(
+            val reminder = getReminderByIdOfReminderUseCase(
                 idOfReminder = idOfReminder
             )
             reminder?.let {

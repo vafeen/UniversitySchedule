@@ -3,7 +3,7 @@ package ru.vafeen.universityschedule.data.database.converters
 import androidx.room.TypeConverter
 import java.time.LocalTime
 
-class LessonTypeConverters {
+internal class LessonTypeConverters {
     @TypeConverter
     fun localTimeToInt(value: LocalTime?): Int? {
         return value?.toSecondOfDay()

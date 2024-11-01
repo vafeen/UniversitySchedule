@@ -22,11 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.network.downloader.Downloader
-import ru.vafeen.universityschedule.data.network.parcelable.github_service.Release
+import ru.vafeen.universityschedule.domain.database.models.Release
+import ru.vafeen.universityschedule.domain.network.downloader.Downloader
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
+import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.presentation.R as PR
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,23 +59,23 @@ internal fun UpdaterBottomSheet(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = stringResource(id = R.string.update_need),
+                text = stringResource(id = PR.string.update_need),
                 fontSize = FontSize.huge27, color = Color.White
             )
             Spacer(modifier = Modifier.height(40.dp))
             Text(
-                text = stringResource(id = R.string.view_releases),
+                text = stringResource(id = PR.string.view_releases),
                 fontSize = FontSize.huge27, color = Color.White
             )
             Spacer(modifier = Modifier.height(40.dp))
             Image(
-                painter = painterResource(id = R.drawable.releases_win),
+                painter = painterResource(id = DR.drawable.releases_win),
                 contentDescription = "qr",
                 modifier = Modifier
                     .clickable {
                         downloader.downloadApk(
                             context = context,
-                            url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0].name}",
+                            url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0]}",
                         )
                         onDismissRequest(true)
                     }

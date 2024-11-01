@@ -3,14 +3,14 @@ package ru.vafeen.universityschedule.presentation.components.viewModels
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
-import ru.vafeen.universityschedule.data.utils.copyTextToClipBoard
+import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.presentation.utils.Link
+import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
 import kotlin.system.exitProcess
 
 
 internal class MainActivityViewModel(
-    val networkRepository: NetworkRepository,
+    val getLatestReleaseUseCase: GetLatestReleaseUseCase,
 ) : ViewModel() {
     var updateIsShowed = false
     fun registerGeneralExceptionCallback(context: Context) {

@@ -10,7 +10,7 @@ data class ResponseWrapper(
     @SerializedName("reqId") val reqId: String,
     @SerializedName("status") val status: String,
     @SerializedName("sig") val sig: String,
-    @SerializedName("table") val table: Table
+    @SerializedName("table") val tableDTO: TableDTO
 ) {
-    override fun toString(): String = table.toString()
+    override fun toString(): String = tableDTO.toString()
 }

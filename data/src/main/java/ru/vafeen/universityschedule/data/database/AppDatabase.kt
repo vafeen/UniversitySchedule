@@ -8,16 +8,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.vafeen.universityschedule.data.database.converters.LessonTypeConverters
 import ru.vafeen.universityschedule.data.database.dao.LessonDao
 import ru.vafeen.universityschedule.data.database.dao.ReminderDao
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.database.entity.Reminder
+import ru.vafeen.universityschedule.data.database.entity.LessonEntity
+import ru.vafeen.universityschedule.data.database.entity.ReminderEntity
 
 @Database(
     exportSchema = true,
-    entities = [Lesson::class, Reminder::class],
+    entities = [LessonEntity::class, ReminderEntity::class],
     version = 5,
 )
 @TypeConverters(LessonTypeConverters::class, DTConverters::class)
-abstract class AppDatabase : RoomDatabase() {
+ abstract class AppDatabase : RoomDatabase() {
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {

@@ -5,23 +5,19 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import ru.vafeen.universityschedule.data.database.DTConverters
-import ru.vafeen.universityschedule.data.database.entity.Reminder
+import ru.vafeen.universityschedule.domain.database.models.Reminder
 
 
-class Scheduler(
+internal class Scheduler(
     private val context: Context,
     private val dtConverters: DTConverters,
 ) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    fun planRepeatWork(
+    fun scheduleRepeatingJob(
         reminder: Reminder,
         intent: Intent
     ) {
-//        val intent = Intent(
-//            context,
-//            ru.vafeen.universityschedule.presentation.NotificationAboutLessonReceiver::class.java
-//        )
         intent.apply {
             putExtra(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder)
         }
@@ -39,14 +35,10 @@ class Scheduler(
         )
     }
 
-    fun cancelWork(
+    fun cancelJob(
         reminder: Reminder,
         intent: Intent
     ) {
-//        val intent = Intent(
-//            context,
-//            ru.vafeen.universityschedule.presentation.NotificationAboutLessonReceiver::class.java
-//        )
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             reminder.idOfReminder,

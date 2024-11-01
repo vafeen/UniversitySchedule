@@ -31,14 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
-import ru.vafeen.universityschedule.domain.utils.pasteText
 import ru.vafeen.universityschedule.domain.utils.save
+import ru.vafeen.universityschedule.presentation.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
+import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
+import ru.vafeen.universityschedule.presentation.utils.pasteText
+import ru.vafeen.universityschedule.domain.R as DR
 
 @Composable
 internal fun EditLinkDialog(
@@ -104,7 +105,7 @@ internal fun EditLinkDialog(
                         ) {
                             Icon(
                                 modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = R.drawable.copy),
+                                painter = painterResource(id = DR.drawable.copy),
                                 contentDescription = "copy",
                                 tint = Theme.colors.oppositeTheme
                             )
@@ -118,7 +119,7 @@ internal fun EditLinkDialog(
                         ) {
                             Icon(
                                 modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = R.drawable.clear),
+                                painter = painterResource(id = DR.drawable.clear),
                                 contentDescription = "clear",
                                 tint = Theme.colors.oppositeTheme
                             )
@@ -144,7 +145,7 @@ internal fun EditLinkDialog(
                     }) {
                         Icon(
                             modifier = Modifier.size(iconsSize),
-                            painter = painterResource(id = R.drawable.paste),
+                            painter = painterResource(id = DR.drawable.paste),
                             contentDescription = "paste",
                             tint = Theme.colors.oppositeTheme
                         )

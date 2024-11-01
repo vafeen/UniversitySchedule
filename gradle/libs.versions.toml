@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
-agp = "8.7.1"
+agp = "8.7.2"
 alwan = "1.0.1"
 glideCompiler = "4.14.2"
 glide = "4.14.2"

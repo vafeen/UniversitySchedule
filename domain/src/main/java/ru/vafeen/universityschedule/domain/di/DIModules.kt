@@ -5,65 +5,75 @@ import android.content.SharedPreferences
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ru.vafeen.universityschedule.data.database.DTConverters
 import ru.vafeen.universityschedule.data.database.DatabaseRepository
 import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
+import ru.vafeen.universityschedule.domain.converters.LessonConverter
+import ru.vafeen.universityschedule.domain.converters.ReleaseConverter
+import ru.vafeen.universityschedule.domain.converters.ReminderConverter
 import ru.vafeen.universityschedule.domain.database.DatabaseRepositoryImpl
-import ru.vafeen.universityschedule.domain.database.usecase.DeleteAllLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.DeleteAllRemindersUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.GetAllAsFlowLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.GetAllAsFlowRemindersUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.GetReminderByIdOfReminderUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.InsertAllLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.InsertAllRemindersUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.UpdateAllLessonsUseCase
-import ru.vafeen.universityschedule.domain.database.usecase.UpdateAllRemindersUseCase
 import ru.vafeen.universityschedule.domain.network.NetworkRepositoryImpl
-import ru.vafeen.universityschedule.domain.network.usecase.DownloadFileUseCase
-import ru.vafeen.universityschedule.domain.network.usecase.GetLatestReleaseUseCase
+import ru.vafeen.universityschedule.domain.network.downloader.Downloader
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.planner.Scheduler
+import ru.vafeen.universityschedule.domain.planner.usecase.CancelJobUseCase
+import ru.vafeen.universityschedule.domain.planner.usecase.ScheduleRepeatingJobUseCase
 import ru.vafeen.universityschedule.domain.shared_preferences.SharedPreferencesValue
+import ru.vafeen.universityschedule.domain.usecase.db.CleverUpdatingLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.DeleteLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetReminderByIdOfReminderUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.InsertLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.InsertRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.UpdateLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.UpdateRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.network.DownloadFileUseCase
+import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
+import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
+import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataUseCase
+
+val convertersDomainModule = module {
+    singleOf(::LessonConverter)
+    singleOf(::ReleaseConverter)
+    singleOf(::ReminderConverter)
+}
+
+val plannerDomainModule = module {
+    singleOf(::ScheduleRepeatingJobUseCase)
+    singleOf(::CancelJobUseCase)
+}
 
 val networkDomainModule = module {
     singleOf(::DownloadFileUseCase)
     singleOf(::GetLatestReleaseUseCase)
-    single<NetworkRepository> { NetworkRepositoryImpl(get(), get()) }
+    singleOf(::GetSheetDataUseCase)
+    single<NetworkRepository> { NetworkRepositoryImpl(get(), get(), get()) }
 }
 
 val databaseDomainModule = module {
-    singleOf(::DeleteAllLessonsUseCase)
-    singleOf(::DeleteAllRemindersUseCase)
-    singleOf(::GetAllAsFlowLessonsUseCase)
-    singleOf(::GetAllAsFlowRemindersUseCase)
+    singleOf(::DeleteLessonsUseCase)
+    singleOf(::DeleteRemindersUseCase)
+    singleOf(::GetAsFlowLessonsUseCase)
+    singleOf(::GetAsFlowRemindersUseCase)
     singleOf(::GetReminderByIdOfReminderUseCase)
-    singleOf(::InsertAllLessonsUseCase)
-    singleOf(::InsertAllRemindersUseCase)
-    singleOf(::UpdateAllLessonsUseCase)
-    singleOf(::UpdateAllRemindersUseCase)
-    single<ru.vafeen.universityschedule.data.database.DatabaseRepository> {
-        DatabaseRepositoryImpl(
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-            get(),
-        )
-    }
+    singleOf(::InsertLessonsUseCase)
+    singleOf(::InsertRemindersUseCase)
+    singleOf(::UpdateLessonsUseCase)
+    singleOf(::UpdateRemindersUseCase)
+    singleOf(::CleverUpdatingLessonsUseCase)
+    singleOf(::GetSheetDataAndUpdateDBUseCase)
+    single<DatabaseRepository> { DatabaseRepositoryImpl(get()) }
 }
 
 val koinServicesDIModule = module {
     singleOf(::NotificationService)
     singleOf(::Scheduler)
-    singleOf(::DTConverters)
     single<SharedPreferences> {
         androidContext().getSharedPreferences(
             SharedPreferencesValue.Name.key, Context.MODE_PRIVATE
         )
     }
+    singleOf(::Downloader)
 }
 

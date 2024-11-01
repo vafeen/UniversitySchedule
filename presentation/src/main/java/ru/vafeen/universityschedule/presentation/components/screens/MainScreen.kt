@@ -58,15 +58,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
-import ru.vafeen.universityschedule.data.utils.NotificationAboutLessonsSettings
-import ru.vafeen.universityschedule.data.utils.getDateStringWithWeekOfDay
-import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
-import ru.vafeen.universityschedule.data.utils.nowIsLesson
-import ru.vafeen.universityschedule.domain.utils.changeFrequencyIfDefinedInSettings
+import ru.vafeen.universityschedule.domain.model_additions.Frequency
+import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
+import ru.vafeen.universityschedule.presentation.R
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
@@ -79,6 +75,10 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainScree
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
+import ru.vafeen.universityschedule.presentation.utils.NotificationAboutLessonsSettings
+import ru.vafeen.universityschedule.presentation.utils.getDateStringWithWeekOfDay
+import ru.vafeen.universityschedule.presentation.utils.getFrequencyByLocalDate
+import ru.vafeen.universityschedule.presentation.utils.nowIsLesson
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
@@ -117,7 +117,7 @@ internal fun MainScreen(
         }
     }
 
-    val lessons by viewModel.getAllAsFlowLessons.collectAsState(listOf())
+    val lessons by viewModel.lessonsFlow.collectAsState(listOf())
     val cardsWithDateState = rememberLazyListState()
 
 

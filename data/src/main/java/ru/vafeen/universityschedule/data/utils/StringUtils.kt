@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.data.utils
 
 import com.google.gson.GsonBuilder
-import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
 import ru.vafeen.universityschedule.data.network.parcelable.googlesheets_service.ResponseWrapper
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -55,13 +54,8 @@ internal fun String.toTimeOfLessonAsLocalTime(): LocalTime {
     return LocalTime.of(list[0].toMyInt(), list[1].toMyInt())
 }
 
-internal fun String.toFrequency(): Frequency = when (this.normalizeCase()) {
-    "Числитель" -> Frequency.Numerator
-    "Знаменатель" -> Frequency.Denominator
-    else -> Frequency.Every
-}
 
-internal fun String.normalizeCase(): String = this.lowercase()
+fun String.normalizeCase(): String = this.lowercase()
     .replaceFirstChar { it.titlecase(Locale.ROOT) }
 
 internal fun String.getResponseFromJson(): ResponseWrapper =
@@ -72,3 +66,9 @@ internal fun String.dataToJsonString(): String = substringAfter("Query.setRespon
 }
 
 internal fun String?.makeNullIfNull(): String? = if (this?.contains("null") == true) null else this
+
+internal fun String.toFrequencyString(): String = when (this.normalizeCase()) {
+    "Числитель" -> "Numerator"
+    "Знаменатель" -> "Denominator"
+    else -> "Every"
+}

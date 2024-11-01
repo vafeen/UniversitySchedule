@@ -7,19 +7,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.vafeen.universityschedule.data.database.DatabaseRepository
-import ru.vafeen.universityschedule.data.network.service.GSheetsService
-import ru.vafeen.universityschedule.data.utils.GSheetsServiceRequestStatus
-import ru.vafeen.universityschedule.data.utils.cleverUpdatingLessons
-import ru.vafeen.universityschedule.data.utils.createGSheetsService
-import ru.vafeen.universityschedule.data.utils.getLessonsListFromGSheetsTable
+import ru.vafeen.universityschedule.domain.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.domain.Settings
+import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.save
 
 internal class SettingsScreenViewModel(
-    private val databaseRepository: DatabaseRepository,
+    private val getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
+    private val getSheetDataAndUpdateDBUseCase: GetSheetDataAndUpdateDBUseCase,
     private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
     private val _settings =
@@ -36,7 +35,6 @@ internal class SettingsScreenViewModel(
         sharedPreferences.save(settings = settings)
     }
 
-    private var gSheetsService: GSheetsService? = null
     private var lastLink: String? = null
 
     init {
@@ -46,11 +44,6 @@ internal class SettingsScreenViewModel(
                 val link = it.link
                 if (link != lastLink) {
                     lastLink = link
-                    gSheetsService = link?.let { linkNotNull ->
-                        createGSheetsService(
-                            link = linkNotNull
-                        )
-                    }
                     updateLocalDatabaseAndNotifyGSheetsServiceRequestStatusFlow()
                 }
             }
@@ -62,12 +55,12 @@ internal class SettingsScreenViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            databaseRepository.getAllAsFlowLessons().collect { lessons ->
-                _subgroupFlow.emit(lessons.filter {
-                    it.subGroup != null
-                }.map {
-                    it.subGroup.toString()
-                }.distinct())
+            getAsFlowLessonsUseCase().map {
+                it.mapNotNull { lessonEntity ->
+                    lessonEntity.subGroup
+                }
+            }.collect { subGroups ->
+                _subgroupFlow.emit(subGroups.distinct())
             }
         }
     }
@@ -78,18 +71,13 @@ internal class SettingsScreenViewModel(
 
     private fun updateLocalDatabaseAndNotifyGSheetsServiceRequestStatusFlow() {
         viewModelScope.launch(Dispatchers.IO) {
-            val settings = settings.first()
-            _gSheetsServiceRequestStatusFlow.emit(
-                if (settings.link?.isNotEmpty() == true) GSheetsServiceRequestStatus.Waiting
-                else GSheetsServiceRequestStatus.NoLink
-            )
-            if (settings.link?.isNotEmpty() == true) try {
-                gSheetsService?.getLessonsListFromGSheetsTable()?.let {
-                    cleverUpdatingLessons(newLessons = it)
-                    _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.Success)
+            val link = settings.first().link
+            if (link.isNullOrEmpty())
+                _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.NoLink)
+            else {
+                getSheetDataAndUpdateDBUseCase.invoke(link = link) {
+                    _gSheetsServiceRequestStatusFlow.emit(it)
                 }
-            } catch (e: Exception) {
-                _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.NetworkError)
             }
         }
     }

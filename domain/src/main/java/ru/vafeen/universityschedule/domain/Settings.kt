@@ -14,7 +14,4 @@ data class Settings(
     val catInSettings: Boolean = false,
 ) {
     fun toJsonString(): String = Gson().toJson(this)
-    override fun toString(): String {
-        return "isSelectedFrequencyCorrespondsToTheWeekNumbers= $isSelectedFrequencyCorrespondsToTheWeekNumbers"
-    }
 }

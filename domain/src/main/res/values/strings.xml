@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="every">Всегда</string>
+    <string name="numerator">Числитель</string>
+    <string name="denominator">Знаменатель</string>
+    <string name="every_week">Каждую неделю</string>
+    <string name="every_2_weeks">Каждые 2 недели</string>
+</resources>
