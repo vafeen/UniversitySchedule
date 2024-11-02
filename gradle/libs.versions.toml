@@ -7,10 +7,10 @@ glide = "4.14.2"
 koinAndroid = "4.0.0"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.0.21"
-coreKtx = "1.13.1"
-lifecycleRuntimeKtx = "2.8.6"
+coreKtx = "1.15.0"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.00"
+composeBom = "2024.10.01"
 retrofit = "2.11.0"
 navigationCompose = "2.8.3"
 # ROOM
@@ -21,7 +21,7 @@ junit = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
-uiAndroid = "1.7.4"
+uiAndroid = "1.7.5"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
