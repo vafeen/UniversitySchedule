@@ -39,7 +39,7 @@ import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.presentation.utils.pasteText
-import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.resources.R as DR
 
 @Composable
 internal fun EditLinkDialog(

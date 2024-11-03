@@ -1,7 +1,7 @@
 package ru.vafeen.universityschedule.presentation.utils
 
 import ru.vafeen.universityschedule.domain.GSheetsServiceRequestStatus
-import ru.vafeen.universityschedule.domain.R
+import ru.vafeen.universityschedule.resources.R
 
 
 internal fun getIconByRequestStatus(networkState: GSheetsServiceRequestStatus): Int =

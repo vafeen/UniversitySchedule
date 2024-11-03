@@ -33,7 +33,7 @@ import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.utils.getLessonTimeString
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
-import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.resources.R as DR
 
 @Composable
 internal fun Lesson.StringForSchedule(

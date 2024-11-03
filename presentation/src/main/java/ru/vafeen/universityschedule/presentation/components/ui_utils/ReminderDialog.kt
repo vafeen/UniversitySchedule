@@ -37,7 +37,7 @@ import ru.vafeen.universityschedule.presentation.utils.createReminderBefore15Min
 import ru.vafeen.universityschedule.presentation.utils.getLessonTimeString
 import java.time.LocalDate
 import java.time.LocalDateTime
-import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.resources.R as DR
 import ru.vafeen.universityschedule.presentation.R as PR
 
 @Composable
