@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp")
+    id("androidx.room")
 }
 
 android {
@@ -23,6 +25,10 @@ android {
             )
         }
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -33,13 +39,20 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    api(libs.androidx.core.ktx)
+    api(libs.androidx.appcompat)
+    implementation(libs.androidx.ui.graphics.android)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     //koin
     api(libs.koin.android)
+    // room
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.common)
+    api(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    //retrofit
+    api(libs.retrofit)
+    api(libs.converter.gson)
 }

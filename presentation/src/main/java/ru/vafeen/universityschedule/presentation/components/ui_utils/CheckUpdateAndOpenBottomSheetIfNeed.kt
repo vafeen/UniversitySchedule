@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import ru.vafeen.universityschedule.domain.database.models.Release
+import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.UpdaterBottomSheet
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
@@ -32,7 +32,7 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
         mutableStateOf(null)
     }
     LaunchedEffect(key1 = null) {
-        release = viewModel.getLatestReleaseUseCase.invoke()
+        release = viewModel.getLatestReleaseUseCase.use()
         if (release != null && versionName != null &&
             release?.tagName?.substringAfter("v") != versionName
         )

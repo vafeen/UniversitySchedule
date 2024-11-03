@@ -25,8 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import ru.vafeen.universityschedule.domain.database.models.Lesson
-import ru.vafeen.universityschedule.domain.model_additions.Frequency
+import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.generateID
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.theme.FontSize

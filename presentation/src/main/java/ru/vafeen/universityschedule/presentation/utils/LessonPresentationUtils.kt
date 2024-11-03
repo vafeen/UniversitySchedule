@@ -1,11 +1,11 @@
 package ru.vafeen.universityschedule.presentation.utils
 
 import android.content.Context
-import ru.vafeen.universityschedule.domain.database.models.Lesson
-import ru.vafeen.universityschedule.domain.database.models.Reminder
-import ru.vafeen.universityschedule.domain.model_additions.Frequency
-import ru.vafeen.universityschedule.domain.model_additions.ReminderType
-import ru.vafeen.universityschedule.domain.planner.duration.RepeatDuration
+import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.models.Reminder
+import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
+import ru.vafeen.universityschedule.domain.models.model_additions.ReminderType
+import ru.vafeen.universityschedule.domain.scheduler.duration.RepeatDuration
 import ru.vafeen.universityschedule.presentation.R
 import java.time.LocalDateTime
 import java.time.LocalTime

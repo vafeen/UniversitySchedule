@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import ru.vafeen.universityschedule.domain.database.models.Lesson
+import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.utils.getLessonTimeString

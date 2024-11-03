@@ -1,7 +1,7 @@
 package ru.vafeen.universityschedule.presentation.utils
 
 import android.content.Context
-import ru.vafeen.universityschedule.domain.model_additions.Frequency
+import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.presentation.R
 import java.time.DayOfWeek
 import java.time.LocalDate

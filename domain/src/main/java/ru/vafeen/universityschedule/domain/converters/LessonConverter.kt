@@ -2,38 +2,36 @@ package ru.vafeen.universityschedule.domain.converters
 
 import ru.vafeen.universityschedule.data.database.entity.LessonEntity
 import ru.vafeen.universityschedule.domain.converters.base.BaseConverter
-import ru.vafeen.universityschedule.domain.database.models.Lesson
-import ru.vafeen.universityschedule.domain.model_additions.Frequency
+import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 
-internal class LessonConverter : BaseConverter<LessonEntity, Lesson> {
-
-    override fun convertEntityDTO(e: LessonEntity): Lesson = Lesson(
-        id = e.id,
-        dayOfWeek = e.dayOfWeek,
-        name = e.name,
-        startTime = e.startTime,
-        endTime = e.endTime,
-        classroom = e.classroom,
-        teacher = e.teacher,
-        subGroup = e.subGroup,
-        frequency = e.frequency?.let { Frequency.valueOf(it) },
-        idOfReminderBeforeLesson = e.idOfReminderBeforeLesson,
-        idOfReminderAfterBeginningLesson = e.idOfReminderAfterBeginningLesson
+class LessonConverter : BaseConverter<LessonEntity, Lesson> {
+    override fun convertAB(a: LessonEntity): Lesson = Lesson(
+        id = a.id,
+        dayOfWeek = a.dayOfWeek,
+        name = a.name,
+        startTime = a.startTime,
+        endTime = a.endTime,
+        classroom = a.classroom,
+        teacher = a.teacher,
+        subGroup = a.subGroup,
+        frequency = a.frequency?.let { Frequency.valueOf(it) },
+        idOfReminderBeforeLesson = a.idOfReminderBeforeLesson,
+        idOfReminderAfterBeginningLesson = a.idOfReminderAfterBeginningLesson
     )
 
-
-    override fun convertDTOEntity(d: Lesson): LessonEntity = LessonEntity(
-        id = d.id,
-        dayOfWeek = d.dayOfWeek,
-        name = d.name,
-        startTime = d.startTime,
-        endTime = d.endTime,
-        classroom = d.classroom,
-        teacher = d.teacher,
-        subGroup = d.subGroup,
-        frequency = d.frequency?.toString(),
-        idOfReminderBeforeLesson = d.idOfReminderBeforeLesson,
-        idOfReminderAfterBeginningLesson = d.idOfReminderAfterBeginningLesson
+    override fun convertBA(b: Lesson): LessonEntity = LessonEntity(
+        id = b.id,
+        dayOfWeek = b.dayOfWeek,
+        name = b.name,
+        startTime = b.startTime,
+        endTime = b.endTime,
+        classroom = b.classroom,
+        teacher = b.teacher,
+        subGroup = b.subGroup,
+        frequency = b.frequency?.toString(),
+        idOfReminderBeforeLesson = b.idOfReminderBeforeLesson,
+        idOfReminderAfterBeginningLesson = b.idOfReminderAfterBeginningLesson
     )
 
 }
