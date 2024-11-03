@@ -2,13 +2,13 @@ package ru.vafeen.universityschedule.data.di
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import ru.vafeen.universityschedule.data.database.DatabaseRepositoryImpl
-import ru.vafeen.universityschedule.data.network.ApkDownloaderImpl
-import ru.vafeen.universityschedule.data.network.ApkInstallerImpl
-import ru.vafeen.universityschedule.data.network.NetworkRepositoryImpl
-import ru.vafeen.universityschedule.data.notifications.NotificationBuilderImpl
-import ru.vafeen.universityschedule.data.notifications.NotificationServiceImpl
-import ru.vafeen.universityschedule.data.scheduler.SchedulerImpl
+import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.ApkDownloaderImpl
+import ru.vafeen.universityschedule.data.impl.network.ApkInstallerImpl
+import ru.vafeen.universityschedule.data.impl.network.NetworkRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
+import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
+import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
 
 
 val networkModuleImpl = module {

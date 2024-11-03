@@ -1,18 +1,18 @@
 package ru.vafeen.universityschedule.domain.database
 
 import kotlinx.coroutines.flow.Flow
-import ru.vafeen.universityschedule.data.database.entity.LessonEntity
-import ru.vafeen.universityschedule.domain.database.entity.ReminderEntity
+import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.models.Reminder
 
 
 interface DatabaseRepository {
-    fun getAsFlowLessons(): Flow<List<LessonEntity>>
-    fun getAsFlowReminders(): Flow<List<ReminderEntity>>
-    fun getReminderByIdOfReminder(idOfReminder: Int): ReminderEntity?
-    suspend fun insertLessons(lessonEntities: Iterable<LessonEntity>)
-    suspend fun insertReminders(reminderEntities: Iterable<ReminderEntity>)
-    suspend fun deleteLessons(lessonEntities: Iterable<LessonEntity>)
-    suspend fun deleteReminders(reminderEntities: Iterable<ReminderEntity>)
-    suspend fun updateLessons(lessonEntities: Iterable<LessonEntity>)
-    suspend fun updateReminders(reminderEntities: Iterable<ReminderEntity>)
+    fun getAsFlowLessons(): Flow<List<Lesson>>
+    fun getAsFlowReminders(): Flow<List<Reminder>>
+    fun getReminderByIdOfReminder(idOfReminder: Int): Reminder?
+    suspend fun insertLessons(lessons: List<Lesson>)
+    suspend fun insertReminders(reminders: List<Reminder>)
+    suspend fun deleteLessons(lessons: List<Lesson>)
+    suspend fun deleteReminders(reminders: List<Reminder>)
+    suspend fun updateLessons(lessons: List<Lesson>)
+    suspend fun updateReminders(reminders: List<Reminder>)
 }
