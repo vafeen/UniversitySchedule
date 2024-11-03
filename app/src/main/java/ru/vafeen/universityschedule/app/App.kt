@@ -9,14 +9,18 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.di.koinDatabaseDIModule
-import ru.vafeen.universityschedule.data.di.koinNetworkDIModule
+import ru.vafeen.universityschedule.data.di.databaseModule
+import ru.vafeen.universityschedule.data.di.databaseModuleImpl
+import ru.vafeen.universityschedule.data.di.networkModule
+import ru.vafeen.universityschedule.data.di.networkModuleImpl
 import ru.vafeen.universityschedule.data.di.servicesModule
-import ru.vafeen.universityschedule.domain.di.convertersDomainModule
-import ru.vafeen.universityschedule.domain.di.databaseDomainModule
-import ru.vafeen.universityschedule.domain.di.koinServicesDIModule
-import ru.vafeen.universityschedule.domain.di.networkDomainModule
-import ru.vafeen.universityschedule.domain.di.plannerDomainModule
+import ru.vafeen.universityschedule.data.di.servicesModuleImpl
+import ru.vafeen.universityschedule.domain.di.converterModule
+import ru.vafeen.universityschedule.domain.di.databaseUseCaseModule
+import ru.vafeen.universityschedule.domain.di.networkServices
+import ru.vafeen.universityschedule.domain.di.networkUseCaseModule
+import ru.vafeen.universityschedule.domain.di.plannerUseCaseModule
+import ru.vafeen.universityschedule.domain.di.roomDatabaseModule
 import ru.vafeen.universityschedule.domain.notifications.NotificationChannelInfo
 import ru.vafeen.universityschedule.domain.notifications.createNotificationChannelKClass
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
@@ -31,15 +35,24 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             modules(
-                servicesModule,
-                koinDatabaseDIModule,
-                koinNetworkDIModule,
-                koinServicesDIModule,
+                // presentation
                 koinViewModelDIModule,
-                databaseDomainModule,
-                networkDomainModule,
-                plannerDomainModule,
-                convertersDomainModule
+                // domain
+                plannerUseCaseModule,
+                networkUseCaseModule,
+                databaseUseCaseModule,
+                converterModule,
+                roomDatabaseModule,
+                // data
+                networkModule,
+                databaseModule,
+                servicesModule,
+                networkModuleImpl,
+                databaseModuleImpl,
+                servicesModuleImpl,
+
+                // почему?
+                networkServices,
             )
         }
         val sharedPreferences: SharedPreferences by inject(clazz = SharedPreferences::class.java)
@@ -49,7 +62,7 @@ class App : Application() {
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
             settings.link?.let { link ->
                 try {
-                    getSheetDataAndUpdateDBUseCase.invoke(link)
+                    getSheetDataAndUpdateDBUseCase.use(link)
                 } catch (_: Exception) {
                 }
             }

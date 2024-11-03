@@ -58,8 +58,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import ru.vafeen.universityschedule.domain.model_additions.Frequency
-import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
+import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.R
@@ -76,6 +75,7 @@ import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.NotificationAboutLessonsSettings
+import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.presentation.utils.getDateStringWithWeekOfDay
 import ru.vafeen.universityschedule.presentation.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.presentation.utils.nowIsLesson

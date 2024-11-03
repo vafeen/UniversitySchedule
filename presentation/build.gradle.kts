@@ -35,8 +35,6 @@ android {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -52,15 +50,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-// compose navigation
+    // compose navigation
     implementation(libs.androidx.navigation.compose)
-// color-picker
+    // color-picker
     implementation(libs.alwan)
-// permission
+    // permission
     implementation(libs.accompanist.permissions)
-// koin for compose
+    // koin for compose
     implementation(libs.koin.androidx.compose)
     // glide
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
+    // viewModel
+    api(libs.androidx.lifecycle.viewmodel.compose)
 }

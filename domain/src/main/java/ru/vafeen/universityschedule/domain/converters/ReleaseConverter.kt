@@ -1,24 +1,20 @@
 package ru.vafeen.universityschedule.domain.converters
 
-import android.util.Log
-import ru.vafeen.universityschedule.data.network.parcelable.github_service.ReleaseDTO
 import ru.vafeen.universityschedule.domain.converters.base.BaseConverter
-import ru.vafeen.universityschedule.domain.database.models.Release
+import ru.vafeen.universityschedule.domain.models.Release
+import ru.vafeen.universityschedule.domain.network.parcelable.github_service.ReleaseDTO
 
-internal class ReleaseConverter : BaseConverter<ReleaseDTO, Release> {
-    override fun convertEntityDTO(e: ReleaseDTO): Release {
-        Log.e("release", "начали3")
-        Log.d("release", e.toString())
-        return Release(
-            tagName = e.tagName,
-            assets = e.assets.map {
-                it.url
-            }
-        )
-    }
+class ReleaseConverter : BaseConverter<ReleaseDTO, Release> {
 
-    override fun convertDTOEntity(d: Release): ReleaseDTO {
-        throw Exception("ru.vafeen.universityschedule.domain.converters.ReleaseConverter::convertDTOEntity body not yet implemented")
+    override fun convertAB(a: ReleaseDTO): Release = Release(
+        tagName = a.tagName,
+        assets = a.assets.map {
+            it.name
+        }
+    )
+
+    override fun convertBA(b: Release): ReleaseDTO {
+        throw Exception("ru.vafeen.universityschedule.domain.converters.ReleaseConverterImpl::convertBA body not yet implemented")
     }
 
 }

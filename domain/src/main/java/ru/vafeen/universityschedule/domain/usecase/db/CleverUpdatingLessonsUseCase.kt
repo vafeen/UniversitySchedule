@@ -7,19 +7,20 @@ import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.database.entity.LessonEntity
 import ru.vafeen.universityschedule.domain.converters.LessonConverter
-import ru.vafeen.universityschedule.domain.database.models.Lesson
+import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 import ru.vafeen.universityschedule.domain.utils.containsLesson
 
 class CleverUpdatingLessonsUseCase(
     private val getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
     private val insertLessonsUseCase: InsertLessonsUseCase,
     private val deleteLessonsUseCase: DeleteLessonsUseCase,
-) {
+) : UseCase {
     private val lessonConverter: LessonConverter by inject(clazz = LessonConverter::class.java)
-    operator fun invoke(newLessonEntities: List<LessonEntity>) {
+    fun use(newLessonEntities: List<LessonEntity>) {
         CoroutineScope(Dispatchers.IO).launch {
-            val newLessons = lessonConverter.convertEntityDTOList(newLessonEntities)
-            val lastLessons = getAsFlowLessonsUseCase().first()
+            val newLessons = lessonConverter.convertABList(newLessonEntities)
+            val lastLessons = getAsFlowLessonsUseCase.use().first()
             val result = mutableListOf<Lesson>()
             val resultForDelete = mutableListOf<Lesson>()
             for (newLesson in newLessons) {
@@ -32,8 +33,8 @@ class CleverUpdatingLessonsUseCase(
                 }
             }
 
-            insertLessonsUseCase.invoke(*result.toTypedArray())
-            deleteLessonsUseCase.invoke(*resultForDelete.toTypedArray())
+            insertLessonsUseCase.use(*result.toTypedArray())
+            deleteLessonsUseCase.use(*resultForDelete.toTypedArray())
         }
     }
 }

@@ -1,5 +1,6 @@
 package ru.vafeen.universityschedule.presentation.theme
 
+
 import androidx.compose.ui.graphics.Color
 
 val mainLightColor = Color(0xFF68BD45)

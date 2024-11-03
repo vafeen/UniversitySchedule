@@ -1,6 +1,6 @@
 package ru.vafeen.universityschedule.domain.utils
 
-import ru.vafeen.universityschedule.domain.database.models.Lesson
+import ru.vafeen.universityschedule.domain.models.Lesson
 
 internal fun Iterable<Lesson>.containsLesson(lesson: Lesson): Lesson? = filter {
     it.dayOfWeek == lesson.dayOfWeek &&

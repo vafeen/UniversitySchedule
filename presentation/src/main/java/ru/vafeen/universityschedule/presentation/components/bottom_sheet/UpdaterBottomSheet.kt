@@ -22,8 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.domain.database.models.Release
-import ru.vafeen.universityschedule.domain.network.downloader.Downloader
+import ru.vafeen.universityschedule.domain.models.Release
+import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
 import ru.vafeen.universityschedule.domain.R as DR
@@ -38,7 +38,7 @@ internal fun UpdaterBottomSheet(
     onDismissRequest: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val downloader: Downloader by inject(clazz = Downloader::class.java)
+    val apkDownloader: ApkDownloader by inject(clazz = ApkDownloader::class.java)
     ModalBottomSheet(
         sheetState = state,
         onDismissRequest = { onDismissRequest(false) },
@@ -73,7 +73,7 @@ internal fun UpdaterBottomSheet(
                 contentDescription = "qr",
                 modifier = Modifier
                     .clickable {
-                        downloader.downloadApk(
+                        apkDownloader.downloadApk(
                             context = context,
                             url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0]}",
                         )

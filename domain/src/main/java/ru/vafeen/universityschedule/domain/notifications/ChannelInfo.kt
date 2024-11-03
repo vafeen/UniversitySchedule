@@ -4,15 +4,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 
 interface ChannelInfo {
-    val NOTIFICATION_CHANNEL_ID: String
-    val NOTIFICATION_CHANNEL_NAME: String
-    val REQUEST_CODE: Int
+    val notificationChannelID: String
+    val notificationChannelName: String
+    val requestCode: Int
 
 }
 
 fun ChannelInfo.createNotificationChannelKClass(): NotificationChannel =
     NotificationChannel(
-        NOTIFICATION_CHANNEL_ID,
-        NOTIFICATION_CHANNEL_NAME,
+        notificationChannelID,
+        notificationChannelName,
         NotificationManager.IMPORTANCE_HIGH
     )
