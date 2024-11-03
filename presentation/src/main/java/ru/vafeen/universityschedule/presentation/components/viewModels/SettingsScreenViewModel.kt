@@ -35,8 +35,6 @@ internal class SettingsScreenViewModel(
         sharedPreferences.save(settings = settings)
     }
 
-    private var lastLink: String? = null
-
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
         viewModelScope.launch(Dispatchers.IO) {

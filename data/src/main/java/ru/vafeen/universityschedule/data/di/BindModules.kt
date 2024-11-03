@@ -6,18 +6,26 @@ import androidx.room.Room
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.database.DatabaseRepositoryImpl
-import ru.vafeen.universityschedule.data.network.ApkDownloaderImpl
-import ru.vafeen.universityschedule.data.network.ApkInstallerImpl
-import ru.vafeen.universityschedule.data.network.NetworkRepositoryImpl
-import ru.vafeen.universityschedule.data.notifications.NotificationBuilderImpl
-import ru.vafeen.universityschedule.data.notifications.NotificationServiceImpl
-import ru.vafeen.universityschedule.data.scheduler.SchedulerImpl
-import ru.vafeen.universityschedule.domain.database.AppDatabase
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import ru.vafeen.universityschedule.data.database.AppDatabase
+import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.ApkDownloaderImpl
+import ru.vafeen.universityschedule.data.impl.network.ApkInstallerImpl
+import ru.vafeen.universityschedule.data.impl.network.NetworkRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
+import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
+import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
 import ru.vafeen.universityschedule.domain.database.DatabaseRepository
-import ru.vafeen.universityschedule.domain.network.repository.NetworkRepository
+import ru.vafeen.universityschedule.domain.network.NetworkRepository
+import ru.vafeen.universityschedule.domain.network.end_points.DownloadServiceLink
+import ru.vafeen.universityschedule.domain.network.end_points.GitHubDataServiceLink
+import ru.vafeen.universityschedule.domain.network.end_points.GoogleSheetsServiceLink
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
+import ru.vafeen.universityschedule.domain.network.service.DownloadService
+import ru.vafeen.universityschedule.domain.network.service.GitHubDataService
+import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
@@ -28,6 +36,22 @@ val networkModule = module {
     single<NetworkRepository> {
         val networkRepositoryImpl: NetworkRepositoryImpl by inject(clazz = NetworkRepositoryImpl::class.java)
         networkRepositoryImpl
+    }
+    single<GitHubDataService> {
+        Retrofit.Builder()
+            .baseUrl(GitHubDataServiceLink.BASE_LINK)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build().create(GitHubDataService::class.java)
+    }
+    single<DownloadService> {
+        Retrofit.Builder()
+            .baseUrl(DownloadServiceLink.BASE_LINK)
+            .build().create(DownloadService::class.java)
+    }
+    single<GoogleSheetsService> {
+        Retrofit.Builder()
+            .baseUrl(GoogleSheetsServiceLink.BASE_URL)
+            .build().create(GoogleSheetsService::class.java)
     }
 }
 
@@ -74,5 +98,4 @@ val servicesModule = module {
         apkInstallerImpl
     }
 }
-
 

@@ -1,14 +1,10 @@
 package ru.vafeen.universityschedule.domain.usecase.db
 
-import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.domain.converters.LessonConverter
 import ru.vafeen.universityschedule.domain.database.DatabaseRepository
 import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
-class UpdateLessonsUseCase {
-    private val repository: DatabaseRepository by inject(clazz = DatabaseRepository::class.java)
-    private val lessonConverter: LessonConverter by inject(clazz = LessonConverter::class.java)
-
+class UpdateLessonsUseCase(private val repository: DatabaseRepository) : UseCase {
     suspend fun use(vararg lessons: Lesson) =
-        repository.updateLessons(lessonConverter.convertBAList(lessons.toList()))
+        repository.updateLessons(lessons.toList())
 }

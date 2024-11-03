@@ -29,9 +29,9 @@ import java.time.LocalDate
 
 internal class MainScreenViewModel(
     val sharedPreferences: SharedPreferences,
-    private val apkDownloader: ApkDownloader,
-    private val getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
-    private val getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase,
+    apkDownloader: ApkDownloader,
+    getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
+    getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase,
     private val insertLessonsUseCase: InsertLessonsUseCase,
     private val insertRemindersUseCase: InsertRemindersUseCase,
     private val deleteAllReminderUseCase: DeleteRemindersUseCase,
