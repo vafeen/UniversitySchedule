@@ -62,7 +62,7 @@ import ru.vafeen.universityschedule.presentation.utils.getIconByRequestStatus
 import ru.vafeen.universityschedule.presentation.utils.openLink
 import ru.vafeen.universityschedule.presentation.utils.sendEmail
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
-import ru.vafeen.universityschedule.domain.R as DR
+import ru.vafeen.universityschedule.resources.R as DR
 import ru.vafeen.universityschedule.presentation.R as PR
 
 /**

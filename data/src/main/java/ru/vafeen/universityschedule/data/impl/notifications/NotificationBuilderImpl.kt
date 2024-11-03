@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.domain.R
+import ru.vafeen.universityschedule.resources.R
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
 import ru.vafeen.universityschedule.domain.notifications.NotificationChannelInfo
 

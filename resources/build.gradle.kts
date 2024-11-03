@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    namespace = "ru.vafeen.universityschedule.domain"
-    compileSdk = 35
+    namespace = "ru.vafeen.universityschedule.resources"
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 26
@@ -24,25 +24,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
-    api(project(":resources"))
-    api(libs.androidx.core.ktx)
-    api(libs.androidx.appcompat)
-    implementation(libs.androidx.ui.graphics.android)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    //koin
-    api(libs.koin.android)
-    //retrofit
-    api(libs.retrofit)
-    api(libs.converter.gson)
 }

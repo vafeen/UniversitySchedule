@@ -1,6 +1,6 @@
 package ru.vafeen.universityschedule.domain.models.model_additions
 
-import ru.vafeen.universityschedule.domain.R
+import ru.vafeen.universityschedule.resources.R
 
 
 enum class Frequency(val resourceName: Int) {
