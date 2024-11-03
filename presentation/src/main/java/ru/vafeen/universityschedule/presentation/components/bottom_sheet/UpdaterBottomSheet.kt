@@ -27,7 +27,7 @@ import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
 import ru.vafeen.universityschedule.resources.R as DR
-import ru.vafeen.universityschedule.presentation.R as PR
+import ru.vafeen.universityschedule.resources.R as PR
 
 
 @OptIn(ExperimentalMaterial3Api::class)

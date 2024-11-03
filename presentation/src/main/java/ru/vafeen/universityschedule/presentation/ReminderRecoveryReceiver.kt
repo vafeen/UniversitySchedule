@@ -13,6 +13,7 @@ import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
+import ru.vafeen.universityschedule.resources.R
 
 class ReminderRecoveryReceiver : BroadcastReceiver() {
     private val getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase by inject(clazz = GetAsFlowRemindersUseCase::class.java)

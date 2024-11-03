@@ -38,7 +38,7 @@ import ru.vafeen.universityschedule.presentation.utils.getLessonTimeString
 import java.time.LocalDate
 import java.time.LocalDateTime
 import ru.vafeen.universityschedule.resources.R as DR
-import ru.vafeen.universityschedule.presentation.R as PR
+import ru.vafeen.universityschedule.resources.R as PR
 
 @Composable
 internal fun Lesson.ReminderDialog(
