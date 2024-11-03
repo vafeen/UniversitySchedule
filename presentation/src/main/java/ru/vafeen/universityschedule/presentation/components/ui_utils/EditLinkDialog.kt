@@ -33,13 +33,12 @@ import androidx.compose.ui.window.DialogProperties
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.save
-import ru.vafeen.universityschedule.presentation.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
 import ru.vafeen.universityschedule.presentation.utils.pasteText
-import ru.vafeen.universityschedule.resources.R as DR
+import ru.vafeen.universityschedule.resources.R
 
 @Composable
 internal fun EditLinkDialog(
@@ -105,7 +104,7 @@ internal fun EditLinkDialog(
                         ) {
                             Icon(
                                 modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = DR.drawable.copy),
+                                painter = painterResource(id = R.drawable.copy),
                                 contentDescription = "copy",
                                 tint = Theme.colors.oppositeTheme
                             )
@@ -119,7 +118,7 @@ internal fun EditLinkDialog(
                         ) {
                             Icon(
                                 modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = DR.drawable.clear),
+                                painter = painterResource(id = R.drawable.clear),
                                 contentDescription = "clear",
                                 tint = Theme.colors.oppositeTheme
                             )
@@ -145,7 +144,7 @@ internal fun EditLinkDialog(
                     }) {
                         Icon(
                             modifier = Modifier.size(iconsSize),
-                            painter = painterResource(id = DR.drawable.paste),
+                            painter = painterResource(id = R.drawable.paste),
                             contentDescription = "paste",
                             tint = Theme.colors.oppositeTheme
                         )

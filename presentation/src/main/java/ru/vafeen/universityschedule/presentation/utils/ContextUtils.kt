@@ -5,7 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import ru.vafeen.universityschedule.presentation.R
+import ru.vafeen.universityschedule.resources.R
 
 internal fun Context.sendEmail(email: String) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {

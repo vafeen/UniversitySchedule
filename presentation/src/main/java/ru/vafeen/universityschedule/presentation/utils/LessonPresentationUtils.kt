@@ -6,7 +6,7 @@ import ru.vafeen.universityschedule.domain.models.Reminder
 import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.models.model_additions.ReminderType
 import ru.vafeen.universityschedule.domain.scheduler.duration.RepeatDuration
-import ru.vafeen.universityschedule.presentation.R
+import ru.vafeen.universityschedule.resources.R
 import java.time.LocalDateTime
 import java.time.LocalTime
 
