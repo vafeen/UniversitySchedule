@@ -7,7 +7,7 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainScree
 import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
 
 
-val koinViewModelDIModule = module {
+internal val koinViewModelDIModule = module {
     viewModelOf(::MainActivityViewModel)
     viewModelOf(::MainScreenViewModel)
     viewModelOf(::SettingsScreenViewModel)

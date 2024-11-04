@@ -29,7 +29,7 @@ import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
 import ru.vafeen.universityschedule.domain.utils.SharedPreferencesValue
 
-val networkRepositoryModule = module {
+internal val networkRepositoryModule = module {
     single<DownloadFileRepository> {
         val downloadFileRepositoryImpl: DownloadFileRepositoryImpl by inject(clazz = DownloadFileRepositoryImpl::class.java)
         downloadFileRepositoryImpl
@@ -45,7 +45,7 @@ val networkRepositoryModule = module {
 }
 
 
-val databaseModule = module {
+internal val databaseModule = module {
     single<LessonRepository> {
         val lessonRepositoryImpl: LessonRepositoryImpl by inject(clazz = LessonRepositoryImpl::class.java)
         lessonRepositoryImpl
@@ -66,7 +66,7 @@ val databaseModule = module {
         ).build()
     }
 }
-val servicesModule = module {
+internal val servicesModule = module {
     single<NotificationService> {
         val notificationServiceImpl: NotificationServiceImpl by inject(clazz = NotificationServiceImpl::class.java)
         notificationServiceImpl

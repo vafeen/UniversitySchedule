@@ -22,12 +22,12 @@ import ru.vafeen.universityschedule.domain.network.service.GitHubDataService
 import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
 
 
-val networkRepositoryModuleImpl = module {
+internal val networkRepositoryModuleImpl = module {
     singleOf(::DownloadFileRepositoryImpl)
     singleOf(::SheetDataRepositoryImpl)
     singleOf(::ReleaseRepositoryImpl)
 }
-val networkServiceModuleImpl = module {
+internal val networkServiceModuleImpl = module {
     single<GitHubDataService> {
         Retrofit.Builder()
             .baseUrl(GitHubDataServiceLink.BASE_LINK)
@@ -45,12 +45,12 @@ val networkServiceModuleImpl = module {
             .build().create(GoogleSheetsService::class.java)
     }
 }
-val databaseModuleImpl = module {
+internal val databaseModuleImpl = module {
     singleOf(::LessonRepositoryImpl)
     singleOf(::ReminderRepositoryImpl)
 }
 
-val servicesModuleImpl = module {
+internal val servicesModuleImpl = module {
     singleOf(::NotificationServiceImpl)
     singleOf(::NotificationBuilderImpl)
     singleOf(::SchedulerImpl)
