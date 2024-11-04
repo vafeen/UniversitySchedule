@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.data.impl.network
+package ru.vafeen.universityschedule.data.impl.network.service
 
 import android.content.Context
 import android.util.Log
@@ -11,7 +11,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import ru.vafeen.universityschedule.domain.network.NetworkRepository
+import ru.vafeen.universityschedule.domain.network.repository.DownloadFileRepository
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
 import ru.vafeen.universityschedule.domain.utils.pathToDownloadRelease
@@ -19,7 +19,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 internal class ApkDownloaderImpl(
-    private val networkRepository: NetworkRepository,
+    private val downloadFileRepository: DownloadFileRepository,
     private val apkInstaller: ApkInstaller,
 ) : ApkDownloader {
     private val _percentageFlow = MutableSharedFlow<Float>()
@@ -40,7 +40,7 @@ internal class ApkDownloaderImpl(
         Log.d("download", "2")
         val apkFilePath = context.pathToDownloadRelease()
         // Создаем вызов для загрузки файла
-        val call = networkRepository.downloadFile(url)
+        val call = downloadFileRepository.downloadFile(url)
         Log.d("download", "3")
         // Выполняем асинхронный запрос
         call?.enqueue(object : Callback<ResponseBody> {

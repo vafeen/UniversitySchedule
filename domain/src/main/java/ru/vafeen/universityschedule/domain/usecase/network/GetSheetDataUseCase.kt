@@ -1,13 +1,13 @@
 package ru.vafeen.universityschedule.domain.usecase.network
 
 import ru.vafeen.universityschedule.domain.models.Lesson
-import ru.vafeen.universityschedule.domain.network.NetworkRepository
 import ru.vafeen.universityschedule.domain.network.end_points.GoogleSheetsServiceLink
+import ru.vafeen.universityschedule.domain.network.repository.GoogleSheetsRepository
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
-class GetSheetDataUseCase(private val networkRepository: NetworkRepository) : UseCase {
+class GetSheetDataUseCase(private val googleSheetsRepository: GoogleSheetsRepository) : UseCase {
     suspend fun use(link: String): List<Lesson>? =
-        networkRepository.getLessonsListFromGSheetsTable(
+        googleSheetsRepository.getLessonsListFromGSheetsTable(
             "${
                 link.substringBefore("/edit?")
                     .substringAfter(GoogleSheetsServiceLink.BASE_URL)

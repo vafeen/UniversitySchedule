@@ -12,8 +12,8 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.di.converterModule
 import ru.vafeen.universityschedule.data.di.databaseModule
 import ru.vafeen.universityschedule.data.di.databaseModuleImpl
-import ru.vafeen.universityschedule.data.di.networkModule
-import ru.vafeen.universityschedule.data.di.networkModuleImpl
+import ru.vafeen.universityschedule.data.di.networkRepositoryModuleImpl
+import ru.vafeen.universityschedule.data.di.networkServiceModuleImpl
 import ru.vafeen.universityschedule.data.di.servicesModule
 import ru.vafeen.universityschedule.data.di.servicesModuleImpl
 import ru.vafeen.universityschedule.domain.di.databaseUseCaseModule
@@ -41,10 +41,11 @@ class App : Application() {
                 databaseUseCaseModule,
                 // data
                 converterModule,
-                networkModule,
+                networkServiceModuleImpl,
                 databaseModule,
                 servicesModule,
-                networkModuleImpl,
+                networkUseCaseModule,
+                networkRepositoryModuleImpl,
                 databaseModuleImpl,
                 servicesModuleImpl,
             )

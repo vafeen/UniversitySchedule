@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.data.impl.network
+package ru.vafeen.universityschedule.data.impl.network.service
 
 import android.content.Context
 import android.content.Intent
