@@ -4,10 +4,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.database.LessonRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.database.ReminderRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
-import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
@@ -45,7 +46,8 @@ val networkServiceModuleImpl = module {
     }
 }
 val databaseModuleImpl = module {
-    singleOf(::DatabaseRepositoryImpl)
+    singleOf(::LessonRepositoryImpl)
+    singleOf(::ReminderRepositoryImpl)
 }
 
 val servicesModuleImpl = module {
