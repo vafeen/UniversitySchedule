@@ -7,19 +7,21 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.database.AppDatabase
-import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.database.LessonRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.database.ReminderRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
-import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
 import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
-import ru.vafeen.universityschedule.domain.database.DatabaseRepository
+import ru.vafeen.universityschedule.domain.database.LessonRepository
+import ru.vafeen.universityschedule.domain.database.ReminderRepository
 import ru.vafeen.universityschedule.domain.network.repository.DownloadFileRepository
-import ru.vafeen.universityschedule.domain.network.repository.SheetDataRepository
 import ru.vafeen.universityschedule.domain.network.repository.ReleaseRepository
+import ru.vafeen.universityschedule.domain.network.repository.SheetDataRepository
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
@@ -44,9 +46,14 @@ val networkRepositoryModule = module {
 
 
 val databaseModule = module {
-    single<DatabaseRepository> {
-        val databaseRepositoryImpl: DatabaseRepositoryImpl by inject(clazz = DatabaseRepositoryImpl::class.java)
-        databaseRepositoryImpl
+    single<LessonRepository> {
+        val lessonRepositoryImpl: LessonRepositoryImpl by inject(clazz = LessonRepositoryImpl::class.java)
+        lessonRepositoryImpl
+    }
+
+    single<ReminderRepository> {
+        val reminderRepositoryImpl: ReminderRepositoryImpl by inject(clazz = ReminderRepositoryImpl::class.java)
+        reminderRepositoryImpl
     }
     single<AppDatabase> {
         Room.databaseBuilder(
