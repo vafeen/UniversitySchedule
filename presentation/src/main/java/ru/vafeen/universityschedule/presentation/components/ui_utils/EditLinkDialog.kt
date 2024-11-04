@@ -30,7 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.compose.koinInject
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.theme.FontSize
@@ -45,7 +45,7 @@ internal fun EditLinkDialog(
     context: Context,
     onDismissRequest: () -> Unit,
 ) {
-    val sharedPreferences: SharedPreferences by inject(clazz = SharedPreferences::class.java)
+    val sharedPreferences = koinInject<SharedPreferences>()
     var settings by remember { mutableStateOf(sharedPreferences.getSettingsOrCreateIfNull()) }
     val iconsSize = 30.dp
     Dialog(

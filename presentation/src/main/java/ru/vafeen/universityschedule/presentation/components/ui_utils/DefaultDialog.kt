@@ -1,5 +1,6 @@
 package ru.vafeen.universityschedule.presentation.components.ui_utils
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
@@ -15,7 +16,7 @@ internal fun DefaultDialog(
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Card(
-            border = androidx.compose.foundation.BorderStroke(
+            border = BorderStroke(
                 width = 2.dp,
                 Theme.colors.oppositeTheme
             )

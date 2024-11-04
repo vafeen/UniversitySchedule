@@ -6,9 +6,9 @@ import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
-import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.di.main.mainDataModule
 import ru.vafeen.universityschedule.domain.di.main.mainDomainModule
 import ru.vafeen.universityschedule.domain.notifications.NotificationChannelInfo
@@ -30,10 +30,9 @@ class App : Application() {
                 mainDataModule,
             )
         }
-        val sharedPreferences: SharedPreferences by inject(clazz = SharedPreferences::class.java)
+        val sharedPreferences = get<SharedPreferences>()
         val settings = sharedPreferences.getSettingsOrCreateIfNull()
-        val getSheetDataAndUpdateDBUseCase:
-                GetSheetDataAndUpdateDBUseCase by inject(clazz = GetSheetDataAndUpdateDBUseCase::class.java)
+        val getSheetDataAndUpdateDBUseCase = get<GetSheetDataAndUpdateDBUseCase>()
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
             settings.link?.let { link ->
                 try {
