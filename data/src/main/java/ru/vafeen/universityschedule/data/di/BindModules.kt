@@ -6,54 +6,42 @@ import androidx.room.Room
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.inject
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.vafeen.universityschedule.data.database.AppDatabase
 import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
-import ru.vafeen.universityschedule.data.impl.network.ApkDownloaderImpl
-import ru.vafeen.universityschedule.data.impl.network.ApkInstallerImpl
-import ru.vafeen.universityschedule.data.impl.network.NetworkRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.GoogleSheetsRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
+import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
 import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
 import ru.vafeen.universityschedule.domain.database.DatabaseRepository
-import ru.vafeen.universityschedule.domain.network.NetworkRepository
-import ru.vafeen.universityschedule.domain.network.end_points.DownloadServiceLink
-import ru.vafeen.universityschedule.domain.network.end_points.GitHubDataServiceLink
-import ru.vafeen.universityschedule.domain.network.end_points.GoogleSheetsServiceLink
+import ru.vafeen.universityschedule.domain.network.repository.DownloadFileRepository
+import ru.vafeen.universityschedule.domain.network.repository.GoogleSheetsRepository
+import ru.vafeen.universityschedule.domain.network.repository.ReleaseRepository
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
-import ru.vafeen.universityschedule.domain.network.service.DownloadService
-import ru.vafeen.universityschedule.domain.network.service.GitHubDataService
-import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
 import ru.vafeen.universityschedule.domain.utils.SharedPreferencesValue
 
-
-val networkModule = module {
-    single<NetworkRepository> {
-        val networkRepositoryImpl: NetworkRepositoryImpl by inject(clazz = NetworkRepositoryImpl::class.java)
-        networkRepositoryImpl
+val networkRepositoryModule = module {
+    single<DownloadFileRepository> {
+        val downloadFileRepositoryImpl: DownloadFileRepositoryImpl by inject(clazz = DownloadFileRepositoryImpl::class.java)
+        downloadFileRepositoryImpl
     }
-    single<GitHubDataService> {
-        Retrofit.Builder()
-            .baseUrl(GitHubDataServiceLink.BASE_LINK)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(GitHubDataService::class.java)
+    single<GoogleSheetsRepository> {
+        val googleSheetsRepositoryImpl: GoogleSheetsRepositoryImpl by inject(clazz = GoogleSheetsRepositoryImpl::class.java)
+        googleSheetsRepositoryImpl
     }
-    single<DownloadService> {
-        Retrofit.Builder()
-            .baseUrl(DownloadServiceLink.BASE_LINK)
-            .build().create(DownloadService::class.java)
-    }
-    single<GoogleSheetsService> {
-        Retrofit.Builder()
-            .baseUrl(GoogleSheetsServiceLink.BASE_URL)
-            .build().create(GoogleSheetsService::class.java)
+    single<ReleaseRepository> {
+        val releaseRepositoryImpl: ReleaseRepositoryImpl by inject(clazz = ReleaseRepositoryImpl::class.java)
+        releaseRepositoryImpl
     }
 }
+
 
 val databaseModule = module {
     single<DatabaseRepository> {
