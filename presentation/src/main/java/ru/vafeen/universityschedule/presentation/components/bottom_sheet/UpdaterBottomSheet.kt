@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.compose.koinInject
 import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.presentation.theme.FontSize
@@ -38,7 +38,7 @@ internal fun UpdaterBottomSheet(
     onDismissRequest: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
-    val apkDownloader: ApkDownloader by inject(clazz = ApkDownloader::class.java)
+    val apkDownloader = koinInject<ApkDownloader>()
     ModalBottomSheet(
         sheetState = state,
         onDismissRequest = { onDismissRequest(false) },

@@ -19,18 +19,18 @@ import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
 
-val plannerUseCaseModule = module {
+internal val plannerUseCaseModule = module {
     singleOf(::ScheduleRepeatingJobUseCase)
     singleOf(::CancelJobUseCase)
 }
 
-val networkUseCaseModule = module {
+internal val networkUseCaseModule = module {
     singleOf(::DownloadFileUseCase)
     singleOf(::GetLatestReleaseUseCase)
     singleOf(::GetSheetDataUseCase)
 }
 
-val databaseUseCaseModule = module {
+internal val databaseUseCaseModule = module {
     singleOf(::DeleteLessonsUseCase)
     singleOf(::DeleteRemindersUseCase)
     singleOf(::GetAsFlowLessonsUseCase)
