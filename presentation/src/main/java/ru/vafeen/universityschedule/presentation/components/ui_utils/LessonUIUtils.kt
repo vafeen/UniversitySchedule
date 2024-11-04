@@ -41,8 +41,7 @@ internal fun Lesson.StringForSchedule(
     dateOfThisLesson: LocalDate?,
     colorBack: Color
 ) {
-
-    val suitableColor = colorBack.suitableColor()
+    val suitableColor by remember { mutableStateOf(colorBack.suitableColor()) }
     var notificationsIsEditing by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier

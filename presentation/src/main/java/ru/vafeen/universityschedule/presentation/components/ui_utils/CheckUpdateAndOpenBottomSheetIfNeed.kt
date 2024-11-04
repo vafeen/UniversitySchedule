@@ -22,7 +22,7 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
     onDismissRequest: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
-    val versionName = context.getVersionName()
+    val versionName by remember { mutableStateOf(context.getVersionName()) }
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isUpdateNeeded by remember {
