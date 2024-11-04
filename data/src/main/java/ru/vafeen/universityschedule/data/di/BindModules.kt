@@ -9,7 +9,7 @@ import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.database.AppDatabase
 import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
-import ru.vafeen.universityschedule.data.impl.network.repository.GoogleSheetsRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
@@ -18,7 +18,7 @@ import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceI
 import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
 import ru.vafeen.universityschedule.domain.database.DatabaseRepository
 import ru.vafeen.universityschedule.domain.network.repository.DownloadFileRepository
-import ru.vafeen.universityschedule.domain.network.repository.GoogleSheetsRepository
+import ru.vafeen.universityschedule.domain.network.repository.SheetDataRepository
 import ru.vafeen.universityschedule.domain.network.repository.ReleaseRepository
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
@@ -32,8 +32,8 @@ val networkRepositoryModule = module {
         val downloadFileRepositoryImpl: DownloadFileRepositoryImpl by inject(clazz = DownloadFileRepositoryImpl::class.java)
         downloadFileRepositoryImpl
     }
-    single<GoogleSheetsRepository> {
-        val googleSheetsRepositoryImpl: GoogleSheetsRepositoryImpl by inject(clazz = GoogleSheetsRepositoryImpl::class.java)
+    single<SheetDataRepository> {
+        val googleSheetsRepositoryImpl: SheetDataRepositoryImpl by inject(clazz = SheetDataRepositoryImpl::class.java)
         googleSheetsRepositoryImpl
     }
     single<ReleaseRepository> {

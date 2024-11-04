@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.vafeen.universityschedule.data.impl.database.DatabaseRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
-import ru.vafeen.universityschedule.data.impl.network.repository.GoogleSheetsRepositoryImpl
+import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
@@ -23,7 +23,7 @@ import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
 
 val networkRepositoryModuleImpl = module {
     singleOf(::DownloadFileRepositoryImpl)
-    singleOf(::GoogleSheetsRepositoryImpl)
+    singleOf(::SheetDataRepositoryImpl)
     singleOf(::ReleaseRepositoryImpl)
 }
 val networkServiceModuleImpl = module {
