@@ -6,8 +6,8 @@
 [![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)](#)
 [![Kotlin](https://img.shields.io/badge/Kotlin-%237F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vafeen/UniversitySchedule/release.yml)
-![GitHub Tag](https://img.shields.io/github/v/tag/vafeen/UniversitySchedule)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vafeen/UniversitySchedule/release.yml)](#)
+[![GitHub Tag](https://img.shields.io/github/v/tag/vafeen/UniversitySchedule)](https://github.com/vafeen/UniversitySchedule/releases/latest/)
 
 <img alt="app icon" height="256" src="icons/icon.png"/>
 
