@@ -37,11 +37,13 @@ Follow these simple steps:
 - If you’ve chosen a subgroup in **settings**, it will show you only this subgroup's classes; otherwise — all classes
 - You can also use the numerator/denomirator logic if your class has 2-week frequency
 
-<p>
-<img src="readmemedia/nextlesson.png" alt="Icon" width="180">
-<img src="readmemedia/currentlesson.png" alt="Icon" width="180">
-<img src="readmemedia/manualychangingfrequency.png" alt="Icon" width="180">
-<img src="readmemedia/dayoff.png" alt="Icon" width="180">
+<p align="center">
+    <img src="readmemedia/nextlesson.png" alt="Icon" width="200" style="margin: 20px;">
+    <img src="readmemedia/currentlesson.png" alt="Icon" width="200" style="margin: 20px;">
+</p>
+<p align="center">
+    <img src="readmemedia/manualychangingfrequency.png" alt="Icon" width="200" style="margin: 20px;">
+    <img src="readmemedia/dayoff.png" alt="Icon" width="200" style="margin: 20px;">
 </p>
 
 ### Settings screen
@@ -58,7 +60,8 @@ Follow these simple steps:
 - App's code on **Github**
 - Report a bug via **gmail**
 
-<img src="readmemedia/settingsscreen.png" alt="Icon" width="180">
+
+<img src="readmemedia/settingsscreen.png" alt="Icon" width="200">
 
 
 ## Getting Started
@@ -89,4 +92,5 @@ Fields A,C,D are **required**, don't leave them undefined!
 - if column H (frequency) is undefined, then this class will show up every week
 
 **Example:**
+
 ![table](readmemedia/table.png)
