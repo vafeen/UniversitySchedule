@@ -1,12 +1,33 @@
-# University schedule
+<div align="center">
 
-![Icon](icons/icon.png)
+# University Schedule
+#### Easily track your university classes with this simple scheduler app.
 
-Simple scheduler application.
+[![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)](#)
+[![Kotlin](https://img.shields.io/badge/Kotlin-%237F52FF.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 
-Works by creating a connection between *Google Sheets* and the *App* itself.
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vafeen/UniversitySchedule/release.yml)
+![GitHub Tag](https://img.shields.io/github/v/tag/vafeen/UniversitySchedule)
+
+<img alt="app icon" height="256" src="icons/icon.png"/>
+
+</div>
+
+## Navigation
+* [Installation](#installation)
+* [Features](#features)
+* [Getting Started]()
+
+## Installation
+Follow these simple steps:
+1. Download the `.apk` file from [releases](https://github.com/vafeen/UniversitySchedule/releases) (or just click [this](https://github.com/vafeen/UniversitySchedule/releases/latest/download/app-release.apk))
+2. Approve the installation of the software on your device
+3. Have fun!
+
 
 ## Features
+
+Works by creating a connection between *Google Sheets* and the *App* itself.
 
 Controlled notifications 15 minutes before lesson for a week in advance
 
