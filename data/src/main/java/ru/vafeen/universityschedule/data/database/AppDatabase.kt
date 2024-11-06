@@ -5,19 +5,18 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import ru.vafeen.universityschedule.data.database.converters.LessonTypeConverters
-import ru.vafeen.universityschedule.data.database.dao.LessonDao
-import ru.vafeen.universityschedule.data.database.dao.ReminderDao
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.database.entity.Reminder
+import ru.vafeen.universityschedule.data.database.entity.LessonEntity
+import ru.vafeen.universityschedule.data.database.entity.ReminderEntity
+import ru.vafeen.universityschedule.data.converters.DateTimeConverter
+import ru.vafeen.universityschedule.data.converters.TimeConverter
 
 @Database(
     exportSchema = true,
-    entities = [Lesson::class, Reminder::class],
+    entities = [LessonEntity::class, ReminderEntity::class],
     version = 5,
 )
-@TypeConverters(LessonTypeConverters::class, DTConverters::class)
-abstract class AppDatabase : RoomDatabase() {
+@TypeConverters(TimeConverter::class, DateTimeConverter::class)
+internal abstract class AppDatabase : RoomDatabase() {
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
@@ -59,7 +58,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 
-    abstract fun lessonDao(): LessonDao
+    abstract fun lessonDao(): ru.vafeen.universityschedule.data.database.dao.LessonDao
 
-    abstract fun reminderDao(): ReminderDao
+    abstract fun reminderDao(): ru.vafeen.universityschedule.data.database.dao.ReminderDao
 }

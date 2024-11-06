@@ -9,23 +9,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.data.network.parcelable.github_service.Release
-import ru.vafeen.universityschedule.data.network.repository.NetworkRepository
+import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.UpdaterBottomSheet
+import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CheckUpdateAndOpenBottomSheetIfNeed(
-    onDismissRequest: (Boolean) -> Unit
+    viewModel: MainActivityViewModel,
+    onDismissRequest: (Boolean) -> Unit,
 ) {
-    val networkRepository: NetworkRepository by inject(
-        clazz = NetworkRepository::class.java
-    )
     val context = LocalContext.current
-    val versionName = context.getVersionName()
+    val versionName by remember { mutableStateOf(context.getVersionName()) }
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isUpdateNeeded by remember {
@@ -35,7 +32,7 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
         mutableStateOf(null)
     }
     LaunchedEffect(key1 = null) {
-        release = networkRepository.getLatestRelease()?.body()
+        release = viewModel.getLatestReleaseUseCase.use()
         if (release != null && versionName != null &&
             release?.tagName?.substringAfter("v") != versionName
         )

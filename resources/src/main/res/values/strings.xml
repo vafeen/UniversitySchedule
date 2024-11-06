@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">University schedule</string>
+    <string name="no_link">Ссылка отсутствует</string>
+    <string name="settings">Настройки</string>
+    <string name="link_to_table">Ссылка на таблицу</string>
+    <string name="table">Таблица</string>
+    <string name="code">Код</string>
+    <string name="next_lesson">следующая пара</string>
+    <string name="version">version</string>
+    <string name="monday">ПН</string>
+    <string name="tuesday">ВТ</string>
+    <string name="wednesday">СР</string>
+    <string name="thursday">ЧТ</string>
+    <string name="friday">ПТ</string>
+    <string name="satudray">СБ</string>
+    <string name="sunday">ВС</string>
+    <string name="other_lessons_in_this_day">Пары в</string>
+    <string name="its_no_google_sheets_link">Это не ссылка Google Sheets</string>
+    <string name="interface_color">Цвет интерфейса</string>
+    <string name="new_interface_color">Новый цвет интерфейса</string>
+    <string name="cancel">Отмена</string>
+    <string name="apply">Применить</string>
+    <string name="holiday">Выходной</string>
+    <string name="subgroup">Подгруппа</string>
+    <string name="project_community">Сообщество проекта</string>
+    <string name="general">Общие</string>
+    <string name="contacts">Контакты</string>
+    <string name="update_need">Приложение устарело, пора обновить!</string>
+    <string name="view_releases">Обновление по клику на QR ниже</string>
+    <string name="updating">Обновление . . .</string>
+    <string name="auto">Авто</string>
+    <string name="notification_about_lesson_before_time">Уведомление о паре</string>
+    <string name="notification_about_lesson_after_starting">Уведомление после начала\n пары - отметиться</string>
+    <string name="reminder_about_lesson_before_time">Напоминание о паре</string>
+    <string name="reminder_about_lesson_after_starting">Напоминание отметиться на паре</string>
+    <string name="reminder_text_lesson_before_time">До пары %1$s %2$d минут</string>
+    <string name="reminder_text_about_lesson_after_starting">На паре %1$s нужно отметиться</string>
+    <string name="reminder_recovery">Восстановление будильников</string>
+    <string name="reminders_restored">Будильники восстановлены</string>
+    <string name="no_apps_to_send">Нет приложений для отправки</string>
+    <string name="report_a_bug">Сообщить об ошибке</string>
+    <string name="interface_str">Интерфейс</string>
+    <string name="cats_on_ui">Котики на UI</string>
+    <string name="weekend_cat">Котик выходного дня</string>
+    <string name="cat_in_settings">Котик в настройках</string>
+    <string name="every">Всегда</string>
+    <string name="numerator">Числитель</string>
+    <string name="denominator">Знаменатель</string>
+    <string name="every_week">Каждую неделю</string>
+    <string name="every_2_weeks">Каждые 2 недели</string>
+
+</resources>
