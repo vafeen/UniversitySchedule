@@ -44,9 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.utils.getIconByRequestStatus
-import ru.vafeen.universityschedule.data.utils.openLink
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
@@ -61,8 +58,11 @@ import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
+import ru.vafeen.universityschedule.presentation.utils.getIconByRequestStatus
+import ru.vafeen.universityschedule.presentation.utils.openLink
 import ru.vafeen.universityschedule.presentation.utils.sendEmail
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
+import ru.vafeen.universityschedule.resources.R
 
 /**
  * Screen with settings for application:
@@ -224,7 +224,7 @@ internal fun SettingsScreen(
                                 tint = it.suitableColor()
                             )
                         },
-                        onClick = { settings.link?.let { openLink(context = context, link = it) } }
+                        onClick = { settings.link?.let { context.openLink(link = it) } }
                     )
 
                 }
@@ -382,9 +382,7 @@ internal fun SettingsScreen(
                             tint = it.suitableColor()
                         )
                     }, onClick = {
-                        openLink(
-                            context = context, link = Link.CODE
-                        )
+                        context.openLink(link = Link.CODE)
                     }
                 )
 

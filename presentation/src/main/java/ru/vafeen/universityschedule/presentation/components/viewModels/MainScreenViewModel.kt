@@ -9,21 +9,35 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.database.entity.Reminder
-import ru.vafeen.universityschedule.data.network.downloader.Downloader
-import ru.vafeen.universityschedule.domain.planner.Scheduler
+import ru.vafeen.universityschedule.domain.models.Lesson
+import ru.vafeen.universityschedule.domain.models.Reminder
+import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
+import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.GetReminderByIdOfReminderUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.InsertLessonsUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.InsertRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
+import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.presentation.NotificationAboutLessonReceiver
 import java.time.LocalDate
 
 
 internal class MainScreenViewModel(
-    val databaseRepository: ru.vafeen.universityschedule.data.database.DatabaseRepository,
     val sharedPreferences: SharedPreferences,
-    private val scheduler: Scheduler,
-    private val downloader: Downloader,
+    apkDownloader: ApkDownloader,
+    getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
+    getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase,
+    private val insertLessonsUseCase: InsertLessonsUseCase,
+    private val insertRemindersUseCase: InsertRemindersUseCase,
+    private val deleteAllReminderUseCase: DeleteRemindersUseCase,
+    private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase,
+    private val scheduleRepeatingJobUseCase: ScheduleRepeatingJobUseCase,
+    private val cancelJobUseCase: CancelJobUseCase,
     context: Context,
 ) : ViewModel() {
     private val intentForNotification = Intent(context, NotificationAboutLessonReceiver::class.java)
@@ -31,13 +45,18 @@ internal class MainScreenViewModel(
     val pageNumber = 365
     val todayDate: LocalDate = LocalDate.now()
 
+    val lessonsFlow = getAsFlowLessonsUseCase.use().map {
+        it.toList()
+    }
+    val remindersFlow = getAsFlowRemindersUseCase.use()
+
     private val settingsInitial = sharedPreferences.getSettingsOrCreateIfNull()
     private val _settingsFlow = MutableStateFlow(settingsInitial)
     val settingsFlow = _settingsFlow.asStateFlow()
 
 
-    val isUpdateInProcessFlow = downloader.isUpdateInProcessFlow
-    val percentageFlow = downloader.percentageFlow
+    val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
+    val percentageFlow = apkDownloader.percentageFlow
 
     private val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -59,52 +78,48 @@ internal class MainScreenViewModel(
     }
 
     suspend fun addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
-        lesson: Lesson,
-        newReminder: Reminder,
+        lesson: Lesson, newReminder: Reminder
     ) {
         val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
-        databaseRepository.insertAllLessons(newLesson)
-        databaseRepository.insertAllReminders(newReminder)
-        scheduler.planRepeatWork(reminder = newReminder, intent = intentForNotification)
+        insertLessonsUseCase.use(newLesson)
+        insertRemindersUseCase.use(newReminder)
+        scheduleRepeatingJobUseCase.use(reminder = newReminder, intent = intentForNotification)
     }
 
     suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
-        lesson: Lesson,
+        lesson: Lesson
     ) {
         val newLesson = lesson.copy(idOfReminderBeforeLesson = null)
-        databaseRepository.insertAllLessons(newLesson)
-        val reminder =
-            databaseRepository.getReminderByIdOfReminder(
-                idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
-            )
+        insertLessonsUseCase.use(newLesson)
+        val reminder = getReminderByIdOfReminderUseCase.use(
+            idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
+        )
         reminder?.let {
-            scheduler.cancelWork(reminder = it, intent = intentForNotification)
-            databaseRepository.deleteAllReminders(it)
+            cancelJobUseCase.use(reminder = it, intent = intentForNotification)
+            deleteAllReminderUseCase.use(it)
         }
     }
 
     suspend fun addReminderAboutCheckingOnLessonAndUpdateLocalDB(
-        lesson: Lesson,
-        newReminder: Reminder,
+        lesson: Lesson, newReminder: Reminder
     ) {
-        val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder)
-        databaseRepository.insertAllLessons(newLesson)
-        databaseRepository.insertAllReminders(newReminder)
-        scheduler.planRepeatWork(reminder = newReminder, intent = intentForNotification)
+        insertLessonsUseCase.use(lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder))
+
+        insertRemindersUseCase.use(newReminder)
+        scheduleRepeatingJobUseCase.use(reminder = newReminder, intent = intentForNotification)
     }
 
     suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
         lesson: Lesson,
     ) {
         val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = null)
-        databaseRepository.insertAllLessons(newLesson)
-        val reminder =
-            databaseRepository.getReminderByIdOfReminder(
-                idOfReminder = lesson.idOfReminderAfterBeginningLesson ?: -1
-            )
+        insertLessonsUseCase.use(newLesson)
+        val reminder = getReminderByIdOfReminderUseCase.use(
+            idOfReminder = lesson.idOfReminderAfterBeginningLesson ?: -1
+        )
         reminder?.let {
-            scheduler.cancelWork(reminder = it, intent = intentForNotification)
-            databaseRepository.deleteAllReminders(it)
+            cancelJobUseCase.use(reminder = it, intent = intentForNotification)
+            deleteAllReminderUseCase.use(it)
         }
     }
 }

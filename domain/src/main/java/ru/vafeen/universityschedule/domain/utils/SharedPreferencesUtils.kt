@@ -2,10 +2,17 @@ package ru.vafeen.universityschedule.domain.utils
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import ru.vafeen.universityschedule.domain.Settings
-import ru.vafeen.universityschedule.domain.shared_preferences.SharedPreferencesValue
-import ru.vafeen.universityschedule.domain.shared_preferences.getFromSharedPreferences
-import ru.vafeen.universityschedule.domain.shared_preferences.saveInOrRemoveFromSharedPreferences
+import ru.vafeen.universityschedule.domain.models.Settings
+
+
+fun SharedPreferences.saveInOrRemoveFromSharedPreferences(save: SharedPreferences.Editor.() -> Unit) {
+    edit().apply {
+        save()
+        apply()
+    }
+}
+
+fun <T> SharedPreferences.getFromSharedPreferences(get: SharedPreferences.() -> T): T = get()
 
 fun SharedPreferences.getSettingsOrCreateIfNull(): Settings {
     val settings = getFromSharedPreferences {

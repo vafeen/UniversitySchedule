@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
  *
  * Addition: getting all entities T as Flow
  */
-interface FlowGetAllImplementation<T> {
+internal interface FlowGetAllImplementation<T> {
     /**
      * Getting all entities T as Flow
      */

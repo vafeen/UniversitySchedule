@@ -1,16 +1,16 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
-agp = "8.7.1"
+agp = "8.7.2"
 alwan = "1.0.1"
 glideCompiler = "4.14.2"
-glide = "4.14.2"
+glide = "4.15.1"
 koinAndroid = "4.0.0"
 koinAndroidxCompose = "4.0.0"
 kotlin = "2.0.21"
-coreKtx = "1.13.1"
-lifecycleRuntimeKtx = "2.8.6"
+coreKtx = "1.15.0"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.00"
+composeBom = "2024.10.01"
 retrofit = "2.11.0"
 navigationCompose = "2.8.3"
 # ROOM
@@ -21,7 +21,8 @@ junit = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
-uiAndroid = "1.7.4"
+uiAndroid = "1.7.5"
+uiGraphicsAndroid = "1.7.5"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -62,6 +63,8 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

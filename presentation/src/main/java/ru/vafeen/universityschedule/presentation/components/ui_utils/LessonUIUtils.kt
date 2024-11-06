@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.utils.getLessonTimeString
+import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.theme.FontSize
+import ru.vafeen.universityschedule.presentation.utils.getLessonTimeString
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
+import ru.vafeen.universityschedule.resources.R as DR
 
 @Composable
 internal fun Lesson.StringForSchedule(
@@ -41,8 +41,7 @@ internal fun Lesson.StringForSchedule(
     dateOfThisLesson: LocalDate?,
     colorBack: Color
 ) {
-
-    val suitableColor = colorBack.suitableColor()
+    val suitableColor by remember { mutableStateOf(colorBack.suitableColor()) }
     var notificationsIsEditing by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -63,7 +62,7 @@ internal fun Lesson.StringForSchedule(
             ) {
                 Row {
                     Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
+                        imageVector = ImageVector.vectorResource(id = DR.drawable.schedule),
                         contentDescription = "Icon schedule",
                         tint = suitableColor
                     )
@@ -109,19 +108,19 @@ internal fun Lesson.StringForSchedule(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painter = painterResource(id = if (idOfReminderBeforeLesson != null && idOfReminderAfterBeginningLesson != null) R.drawable.edit else R.drawable.add),
+                                painter = painterResource(id = if (idOfReminderBeforeLesson != null && idOfReminderAfterBeginningLesson != null) DR.drawable.edit else DR.drawable.add),
                                 contentDescription = "Edit notifications about this lesson",
                                 tint = suitableColor
                             )
                             if (idOfReminderBeforeLesson != null)
                                 Icon(
-                                    painter = painterResource(id = R.drawable.message),
+                                    painter = painterResource(id = DR.drawable.message),
                                     contentDescription = "Message about lesson",
                                     tint = suitableColor
                                 )
                             if (idOfReminderAfterBeginningLesson != null)
                                 Icon(
-                                    painter = painterResource(id = R.drawable.notification_about_checking),
+                                    painter = painterResource(id = DR.drawable.notification_about_checking),
                                     contentDescription = "Message about checking on this lesson",
                                     tint = suitableColor
                                 )
@@ -146,7 +145,7 @@ internal fun Lesson.StringForSchedule(
                 horizontalArrangement = Arrangement.End,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.person),
+                    painter = painterResource(id = DR.drawable.person),
                     contentDescription = "Icon teacher",
                     tint = suitableColor
                 )
@@ -163,7 +162,7 @@ internal fun Lesson.StringForSchedule(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.group),
+                    painter = painterResource(id = DR.drawable.group),
                     contentDescription = "Icon subgroup",
                     tint = suitableColor
                 )
