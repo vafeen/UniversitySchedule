@@ -40,6 +40,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,16 +58,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import ru.vafeen.universityschedule.data.R
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.database.lesson_additions.Frequency
-import ru.vafeen.universityschedule.data.utils.NotificationAboutLessonsSettings
-import ru.vafeen.universityschedule.data.utils.getDateStringWithWeekOfDay
-import ru.vafeen.universityschedule.data.utils.getFrequencyByLocalDate
-import ru.vafeen.universityschedule.data.utils.nowIsLesson
-import ru.vafeen.universityschedule.domain.utils.changeFrequencyIfDefinedInSettings
+import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
+import ru.vafeen.universityschedule.resources.R
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
@@ -79,6 +74,11 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainScree
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
+import ru.vafeen.universityschedule.presentation.utils.NotificationAboutLessonsSettings
+import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
+import ru.vafeen.universityschedule.presentation.utils.getDateStringWithWeekOfDay
+import ru.vafeen.universityschedule.presentation.utils.getFrequencyByLocalDate
+import ru.vafeen.universityschedule.presentation.utils.nowIsLesson
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import java.time.LocalDate
 import java.time.LocalTime
@@ -110,22 +110,17 @@ internal fun MainScreen(
     var localDate by remember {
         mutableStateOf(LocalDate.now())
     }
-    var weekOfYear by remember {
-        mutableStateOf(
+    val weekOfYear by remember {
+        derivedStateOf {
             localDate.getFrequencyByLocalDate()
                 .changeFrequencyIfDefinedInSettings(settings = settings)
-        )
+        }
     }
 
-    var lessons by remember {
-        mutableStateOf(listOf<Lesson>())
-    }
+    val lessons by viewModel.lessonsFlow.collectAsState(listOf())
     val cardsWithDateState = rememberLazyListState()
 
-    fun changeWeekOfYearDependsOnLocalDateAndSettings() {
-        weekOfYear = localDate.getFrequencyByLocalDate()
-            .changeFrequencyIfDefinedInSettings(settings = settings)
-    }
+
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
         viewModel.sharedPreferences.save(
@@ -134,14 +129,7 @@ internal fun MainScreen(
         )
         isFrequencyInChanging = false
     }
-    LaunchedEffect(key1 = settings) {
-        changeWeekOfYearDependsOnLocalDateAndSettings()
-    }
-    LaunchedEffect(key1 = null) {
-        viewModel.databaseRepository.getAllAsFlowLessons().collect {
-            lessons = it
-        }
-    }
+
 
     val pagerState = rememberPagerState(
         pageCount = {
@@ -177,9 +165,6 @@ internal fun MainScreen(
             if (pagerState.currentPage > 0) pagerState.currentPage - 1
             else pagerState.currentPage
         )
-    }
-    LaunchedEffect(key1 = localDate) {
-        changeWeekOfYearDependsOnLocalDateAndSettings()
     }
 
     Scaffold(containerColor = Theme.colors.singleTheme, topBar = {
@@ -303,7 +288,7 @@ internal fun MainScreen(
                 state = cardsWithDateState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp),
+                    .padding(bottom = 10.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 items(count = viewModel.pageNumber) { index ->

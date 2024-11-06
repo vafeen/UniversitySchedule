@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.vafeen.universityschedule.data.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
+import ru.vafeen.universityschedule.resources.R
 
 @Composable
 internal fun WeekDay(context: Context, modifier: Modifier = Modifier) {

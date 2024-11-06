@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             RequestNotificationPermission()
             MainTheme {
                 if (!viewModel.updateIsShowed)
-                    CheckUpdateAndOpenBottomSheetIfNeed {
+                    CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
                         viewModel.updateIsShowed = true
                     }
 
