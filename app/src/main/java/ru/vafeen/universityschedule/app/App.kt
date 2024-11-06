@@ -6,21 +6,16 @@ import android.content.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
-import ru.vafeen.universityschedule.data.di.koinDatabaseDIModule
-import ru.vafeen.universityschedule.data.di.koinNetworkDIModule
-import ru.vafeen.universityschedule.data.utils.cleverUpdatingLessons
-import ru.vafeen.universityschedule.data.utils.createGSheetsService
-import ru.vafeen.universityschedule.data.utils.getLessonsListFromGSheetsTable
-import ru.vafeen.universityschedule.domain.di.databaseDomainModule
-import ru.vafeen.universityschedule.domain.di.koinServicesDIModule
-import ru.vafeen.universityschedule.domain.di.networkDomainModule
+import ru.vafeen.universityschedule.data.di.main.mainDataModule
+import ru.vafeen.universityschedule.domain.di.main.mainDomainModule
 import ru.vafeen.universityschedule.domain.notifications.NotificationChannelInfo
-import ru.vafeen.universityschedule.domain.notifications.createNotificationChannelKClass
+import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
+import ru.vafeen.universityschedule.domain.utils.createNotificationChannelKClass
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
-import ru.vafeen.universityschedule.presentation.koinViewModelDIModule
+import ru.vafeen.universityschedule.presentation.di.main.mainPresentationModule
 
 
 class App : Application() {
@@ -30,15 +25,22 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             modules(
-                koinDatabaseDIModule,
-                koinNetworkDIModule,
-                koinServicesDIModule,
-                koinViewModelDIModule,
-                databaseDomainModule,
-                networkDomainModule
+                mainPresentationModule,
+                mainDomainModule,
+                mainDataModule,
             )
         }
-
+        val sharedPreferences = get<SharedPreferences>()
+        val settings = sharedPreferences.getSettingsOrCreateIfNull()
+        val getSheetDataAndUpdateDBUseCase = get<GetSheetDataAndUpdateDBUseCase>()
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
+            settings.link?.let { link ->
+                try {
+                    getSheetDataAndUpdateDBUseCase.use(link)
+                } catch (_: Exception) {
+                }
+            }
+        }
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -51,21 +53,5 @@ class App : Application() {
         notificationManager.createNotificationChannel(
             NotificationChannelInfo.ReminderRecovery.createNotificationChannelKClass()
         )
-
-        val sharedPreferences: SharedPreferences by inject()
-        val settings = sharedPreferences.getSettingsOrCreateIfNull()
-        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-
-            settings.link?.let { link ->
-                try {
-                    createGSheetsService(link = link)
-                        ?.getLessonsListFromGSheetsTable()
-                        ?.let {
-                            cleverUpdatingLessons(newLessons = it)
-                        }
-                } catch (_: Exception) {
-                }
-            }
-        }
     }
 }

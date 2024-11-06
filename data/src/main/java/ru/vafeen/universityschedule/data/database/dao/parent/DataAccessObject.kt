@@ -11,27 +11,27 @@ import androidx.room.Update
  * Parent DAO interface with base methods
  */
 @Dao
-interface DataAccessObject<T> {
+internal interface DataAccessObject<T> {
 
     /**
      * Inserting && Updating in database one or more entities
      * @param entity [Set of entities to put in database]
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)// insert && update
-    suspend fun insertAll(vararg entity: T)
+    suspend fun insert(entities: List<T>)
 
     /**
      * Updating in database one or more entities
-     * @param entity [Set of entities to update in database]
+     * @param entities [Set of entities to update in database]
      */
     @Update
-    suspend fun update(vararg entity: T)
+    suspend fun update(entities: List<T>)
 
     /**
      * Deleting from database one or more entities
-     * @param entity [Set of entities to remove from database]
+     * @param entities [Set of entities to remove from database]
      */
     @Delete
-    suspend fun delete(vararg entity: T)
+    suspend fun delete(entities: List<T>)
 
 }

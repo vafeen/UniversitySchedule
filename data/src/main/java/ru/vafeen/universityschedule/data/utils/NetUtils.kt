@@ -1,18 +1,11 @@
 package ru.vafeen.universityschedule.data.utils
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import ru.vafeen.universityschedule.data.database.entity.Lesson
-import ru.vafeen.universityschedule.data.network.service.GSheetsService
+import ru.vafeen.universityschedule.data.database.entity.LessonEntity
+import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
 
-fun openLink(context: Context, link: String) {
-    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
-}
-
-suspend fun GSheetsService.getLessonsListFromGSheetsTable(): List<Lesson> =
+internal suspend fun GoogleSheetsService.getLessonsListFromGSheetsTable(link: String): List<LessonEntity> =
 //   get data as non-parcelable string
-    getSheetData().string()
+    getSheetData(link = link).string()
 //     get data as Json
         .dataToJsonString()
 //     get data as class of Google Sheets from Json

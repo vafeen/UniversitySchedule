@@ -34,34 +34,36 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
-    implementation(project(":data"))
+    api(project(":domain"))
+    api(libs.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-// implementation(libs.androidx.ui.tooling.preview) // Закомментировано
-    implementation(libs.androidx.material3)
+    api(libs.androidx.lifecycle.runtime.ktx)
+    api(libs.androidx.activity.compose)
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.ui)
+    api(libs.androidx.ui.graphics)
+// api(libs.androidx.ui.tooling.preview) // Закомментировано
+    api(libs.androidx.material3)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-// compose navigation
-    implementation(libs.androidx.navigation.compose)
-// color-picker
-    implementation(libs.alwan)
-// permission
-    implementation(libs.accompanist.permissions)
-// koin for compose
-    implementation(libs.koin.androidx.compose)
+    // compose navigation
+    api(libs.androidx.navigation.compose)
+    // color-picker
+    api(libs.alwan)
+    // permission
+    api(libs.accompanist.permissions)
+    // koin for compose
+    api(libs.koin.androidx.compose)
     // glide
-    implementation(libs.glide)
+    api(libs.glide)
     annotationProcessor(libs.compiler)
+    // viewModel
+    api(libs.androidx.lifecycle.viewmodel.compose)
 }
