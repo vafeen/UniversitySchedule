@@ -73,8 +73,8 @@ internal class SettingsScreenViewModel(
     }
 
     private val _gSheetsServiceRequestStatusFlow =
-        MutableSharedFlow<GSheetsServiceRequestStatus>()
-    val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asSharedFlow()
+        MutableStateFlow<GSheetsServiceRequestStatus>(GSheetsServiceRequestStatus.Waiting)
+    val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asStateFlow()
 
     override fun onCleared() {
         super.onCleared()
