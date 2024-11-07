@@ -4,7 +4,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Url
 import ru.vafeen.universityschedule.domain.network.repository.DownloadFileRepository
-import ru.vafeen.universityschedule.domain.network.service.DownloadService
+import ru.vafeen.universityschedule.data.network.service.DownloadService
 
 internal class DownloadFileRepositoryImpl(private val downloadService: DownloadService) :
     DownloadFileRepository {
