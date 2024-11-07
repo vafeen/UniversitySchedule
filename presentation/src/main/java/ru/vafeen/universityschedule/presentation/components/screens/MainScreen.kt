@@ -61,7 +61,6 @@ import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
-import ru.vafeen.universityschedule.resources.R
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
@@ -80,6 +79,7 @@ import ru.vafeen.universityschedule.presentation.utils.getDateStringWithWeekOfDa
 import ru.vafeen.universityschedule.presentation.utils.getFrequencyByLocalDate
 import ru.vafeen.universityschedule.presentation.utils.nowIsLesson
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
+import ru.vafeen.universityschedule.resources.R
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -372,7 +372,8 @@ internal fun MainScreen(
                                     lesson.StringForSchedule(
                                         colorBack = mainColor,
                                         dateOfThisLesson = null,
-                                        viewModel = null
+                                        viewModel = viewModel,
+                                        isAvailableReminder = false
                                     )
                                 } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any {
                                         it.startTime > localTime
@@ -383,27 +384,24 @@ internal fun MainScreen(
                                         lesson.StringForSchedule(
                                             colorBack = Theme.colors.buttonColor,
                                             dateOfThisLesson = dateOfThisLesson,
-                                            viewModel =
-                                            if (lesson.startTime.minusMinutes(
-                                                    NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
-                                                )
-                                                > localTime
-                                            ) viewModel
-                                            else null
+                                            viewModel = viewModel,
+                                            isAvailableReminder = lesson.startTime.minusMinutes(
+                                                NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
+                                            ) > localTime
                                         )
 
                                     }
                                 } else lesson.StringForSchedule(
                                     colorBack = Theme.colors.buttonColor,
                                     dateOfThisLesson = dateOfThisLesson,
-                                    viewModel = if (
+                                    viewModel = viewModel,
+                                    isAvailableReminder =
                                         lesson.startTime.minusMinutes(
                                             NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
                                         ) > localTime &&
                                         viewModel.todayDate == dateOfThisLesson ||
                                         viewModel.todayDate != dateOfThisLesson
-                                    ) viewModel
-                                    else null
+
                                 )
                             }
                         } else WeekDay(context = context, modifier = Modifier.let {
@@ -427,7 +425,8 @@ internal fun MainScreen(
                                 lesson.StringForSchedule(
                                     colorBack = Theme.colors.buttonColor,
                                     dateOfThisLesson = null,
-                                    viewModel = null
+                                    viewModel = viewModel,
+                                    isAvailableReminder = false
                                 )
                             }
                         }

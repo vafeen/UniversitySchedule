@@ -14,7 +14,7 @@ class GetSheetDataAndUpdateDBUseCase(
         updateRequestStatus: (suspend (GSheetsServiceRequestStatus) -> Unit)? = null
     ) {
         updateRequestStatus?.invoke(GSheetsServiceRequestStatus.Waiting)
-        getSheetDataUseCase.use(link).let {
+        getSheetDataUseCase.use(link).also {
             if (it is SuccessSheetDataResult) {
                 cleverUpdatingLessonsUseCase.use(it.data)
                 updateRequestStatus?.invoke(GSheetsServiceRequestStatus.Success)

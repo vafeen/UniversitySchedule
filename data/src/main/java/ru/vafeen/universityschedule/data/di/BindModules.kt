@@ -7,6 +7,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.database.AppDatabase
+import ru.vafeen.universityschedule.data.database.AppDatabaseMigrationManager
 import ru.vafeen.universityschedule.data.impl.database.LessonRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.database.ReminderRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
@@ -58,12 +59,7 @@ internal val databaseModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
             context = get(), klass = AppDatabase::class.java, name = "universityScheduleDB.db"
-        ).addMigrations(
-            AppDatabase.MIGRATION_1_2,
-            AppDatabase.MIGRATION_2_3,
-            AppDatabase.MIGRATION_3_4,
-            AppDatabase.MIGRATION_4_5,
-        ).build()
+        ).addMigrations(*AppDatabaseMigrationManager().migrations()).build()
     }
 }
 internal val servicesModule = module {

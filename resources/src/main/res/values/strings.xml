@@ -49,5 +49,5 @@
     <string name="denominator">Знаменатель</string>
     <string name="every_week">Каждую неделю</string>
     <string name="every_2_weeks">Каждые 2 недели</string>
-
+<string name="note">Заметка</string>
 </resources>
