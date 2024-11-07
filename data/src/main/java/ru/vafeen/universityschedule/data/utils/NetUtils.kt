@@ -1,7 +1,7 @@
 package ru.vafeen.universityschedule.data.utils
 
 import ru.vafeen.universityschedule.data.database.entity.LessonEntity
-import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
+import ru.vafeen.universityschedule.data.network.service.GoogleSheetsService
 
 internal suspend fun GoogleSheetsService.getLessonsListFromGSheetsTable(link: String): List<LessonEntity> =
 //   get data as non-parcelable string

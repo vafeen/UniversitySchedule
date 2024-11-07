@@ -17,9 +17,9 @@ import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
 import ru.vafeen.universityschedule.domain.network.end_points.DownloadServiceLink
 import ru.vafeen.universityschedule.domain.network.end_points.GitHubDataServiceLink
 import ru.vafeen.universityschedule.domain.network.end_points.GoogleSheetsServiceLink
-import ru.vafeen.universityschedule.domain.network.service.DownloadService
-import ru.vafeen.universityschedule.domain.network.service.GitHubDataService
-import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
+import ru.vafeen.universityschedule.data.network.service.DownloadService
+import ru.vafeen.universityschedule.data.network.service.GitHubDataService
+import ru.vafeen.universityschedule.data.network.service.GoogleSheetsService
 
 
 internal val networkRepositoryModuleImpl = module {

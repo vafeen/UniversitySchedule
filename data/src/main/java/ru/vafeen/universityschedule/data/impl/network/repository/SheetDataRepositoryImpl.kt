@@ -1,7 +1,5 @@
 package ru.vafeen.universityschedule.data.impl.network.repository
 
-import android.R.attr.data
-import android.system.Os.link
 import retrofit2.http.Url
 import ru.vafeen.universityschedule.data.converters.LessonConverter
 import ru.vafeen.universityschedule.data.utils.getLessonsListFromGSheetsTable
@@ -10,7 +8,7 @@ import ru.vafeen.universityschedule.domain.network.repository.SheetDataRepositor
 import ru.vafeen.universityschedule.domain.network.result_status.sheet_data.ErrorSheetDataResult
 import ru.vafeen.universityschedule.domain.network.result_status.sheet_data.SheetDataResult
 import ru.vafeen.universityschedule.domain.network.result_status.sheet_data.SuccessSheetDataResult
-import ru.vafeen.universityschedule.domain.network.service.GoogleSheetsService
+import ru.vafeen.universityschedule.data.network.service.GoogleSheetsService
 
 internal class SheetDataRepositoryImpl(
     private val googleSheetsService: GoogleSheetsService,
