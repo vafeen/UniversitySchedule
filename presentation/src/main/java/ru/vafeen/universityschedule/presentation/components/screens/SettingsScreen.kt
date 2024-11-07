@@ -107,7 +107,7 @@ internal fun SettingsScreen(
         mutableStateOf(false)
     }
     val subGroupLazyRowState = rememberLazyListState()
-    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState(GSheetsServiceRequestStatus.Waiting)
+    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
 
     LaunchedEffect(key1 = null) {
         viewModel.subgroupFlow.collect {
