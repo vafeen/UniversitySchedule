@@ -40,7 +40,7 @@ internal class SettingsScreenViewModel(
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
-                val link = settings.first().link
+                val link = it.link
                 if (link.isNullOrEmpty())
                     _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.NoLink)
                 else {
