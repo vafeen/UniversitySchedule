@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -65,8 +67,8 @@ internal class SettingsScreenViewModel(
     }
 
     private val _gSheetsServiceRequestStatusFlow =
-        MutableStateFlow(GSheetsServiceRequestStatus.Waiting)
-    val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asStateFlow()
+        MutableSharedFlow<GSheetsServiceRequestStatus>()
+    val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asSharedFlow()
 
     override fun onCleared() {
         super.onCleared()

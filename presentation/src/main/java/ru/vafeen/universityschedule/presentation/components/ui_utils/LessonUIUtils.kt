@@ -63,7 +63,8 @@ internal fun Lesson.StringForSchedule(
     viewModel: MainScreenViewModel,
     dateOfThisLesson: LocalDate?,
     colorBack: Color,
-    isAvailableReminder: Boolean,
+    isNoteAvailable: Boolean,
+    isNotificationsAvailable: Boolean,
 ) {
     suspend fun generateID(): Int = viewModel.remindersFlow.first().map {
         it.idOfReminder
@@ -102,8 +103,11 @@ internal fun Lesson.StringForSchedule(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    isAdditionalInfoExpanded = !isAdditionalInfoExpanded
+                .let {
+                    if (isNoteAvailable || isNotificationsAvailable) it.clickable {
+                        isAdditionalInfoExpanded = !isAdditionalInfoExpanded
+                    }
+                    else it
                 }
                 .padding(10.dp)
         ) {
@@ -226,16 +230,15 @@ internal fun Lesson.StringForSchedule(
             if (!isAdditionalInfoExpanded && text.isNotEmpty())
                 TextForThisTheme(text = text, fontSize = FontSize.micro14)
 
-            if (isAdditionalInfoExpanded) Column(
+            if (isAdditionalInfoExpanded && (isNoteAvailable || isNotificationsAvailable)) Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 5.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
+                if (isNoteAvailable) {
                     OutlinedTextField(modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
                         .onFocusChanged { focusState -> isFocused = focusState.isFocused },
                         value = text,
                         onValueChange = {
@@ -264,8 +267,7 @@ internal fun Lesson.StringForSchedule(
                             }
                         })
                 }
-
-                if (dateOfThisLesson != null) {
+                if (dateOfThisLesson != null && isNotificationsAvailable) {
                     Spacer(modifier = Modifier.height(5.dp))
                     TextForThisTheme(
                         text = stringResource(id = if (frequency == Frequency.Every || frequency == null) R.string.every_week else R.string.every_2_weeks),
