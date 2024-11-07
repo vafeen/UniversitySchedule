@@ -73,7 +73,6 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainScree
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
-import ru.vafeen.universityschedule.presentation.utils.NotificationAboutLessonsSettings
 import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
 import ru.vafeen.universityschedule.presentation.utils.getDateStringWithWeekOfDay
 import ru.vafeen.universityschedule.presentation.utils.getFrequencyByLocalDate
@@ -373,7 +372,8 @@ internal fun MainScreen(
                                         colorBack = mainColor,
                                         dateOfThisLesson = null,
                                         viewModel = viewModel,
-                                        isAvailableReminder = false
+                                        isNoteAvailable = settings.notesAboutLesson,
+                                        isNotificationsAvailable = settings.notificationsAboutLesson
                                     )
                                 } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any {
                                         it.startTime > localTime
@@ -385,9 +385,8 @@ internal fun MainScreen(
                                             colorBack = Theme.colors.buttonColor,
                                             dateOfThisLesson = dateOfThisLesson,
                                             viewModel = viewModel,
-                                            isAvailableReminder = lesson.startTime.minusMinutes(
-                                                NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
-                                            ) > localTime
+                                            isNoteAvailable = settings.notesAboutLesson,
+                                            isNotificationsAvailable = settings.notificationsAboutLesson
                                         )
 
                                     }
@@ -395,13 +394,8 @@ internal fun MainScreen(
                                     colorBack = Theme.colors.buttonColor,
                                     dateOfThisLesson = dateOfThisLesson,
                                     viewModel = viewModel,
-                                    isAvailableReminder =
-                                        lesson.startTime.minusMinutes(
-                                            NotificationAboutLessonsSettings.MINUTES_BEFORE_LESSON_FOR_NOTIFICATION
-                                        ) > localTime &&
-                                        viewModel.todayDate == dateOfThisLesson ||
-                                        viewModel.todayDate != dateOfThisLesson
-
+                                    isNoteAvailable = settings.notesAboutLesson,
+                                    isNotificationsAvailable = settings.notificationsAboutLesson
                                 )
                             }
                         } else WeekDay(context = context, modifier = Modifier.let {
@@ -426,7 +420,8 @@ internal fun MainScreen(
                                     colorBack = Theme.colors.buttonColor,
                                     dateOfThisLesson = null,
                                     viewModel = viewModel,
-                                    isAvailableReminder = false
+                                    isNoteAvailable = settings.notesAboutLesson,
+                                    isNotificationsAvailable = settings.notificationsAboutLesson
                                 )
                             }
                         }

@@ -2,7 +2,6 @@ package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,8 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -44,12 +41,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
+import ru.vafeen.universityschedule.domain.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfSettings
 import ru.vafeen.universityschedule.presentation.components.ui_utils.ColorPickerDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.EditLinkDialog
+import ru.vafeen.universityschedule.presentation.components.ui_utils.FeatureOfSettings
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
 import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
@@ -99,19 +98,16 @@ internal fun SettingsScreen(
         navController.popBackStack()
         navController.navigate(Screen.Main.route)
     }
-    val checkBoxColors = CheckboxDefaults.colors(
-        checkedColor = Theme.colors.oppositeTheme,
-        checkmarkColor = Theme.colors.singleTheme,
-        uncheckedColor = Theme.colors.oppositeTheme
-    )
-    var subGroupIsChanging by remember {
+
+    var isFeaturesEditable by remember { mutableStateOf(false) }
+    var isSubGroupChanging by remember {
         mutableStateOf(false)
     }
     var catsOnUIIsChanging by remember {
         mutableStateOf(false)
     }
     val subGroupLazyRowState = rememberLazyListState()
-    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
+    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState(GSheetsServiceRequestStatus.Waiting)
 
     LaunchedEffect(key1 = null) {
         viewModel.subgroupFlow.collect {
@@ -239,8 +235,9 @@ internal fun SettingsScreen(
                                 contentDescription = "subgroup",
                                 tint = it.suitableColor()
                             )
-                        }, onClick = { subGroupIsChanging = !subGroupIsChanging },
-                        additionalContentIsVisible = subGroupIsChanging,
+                        },
+                        onClick = { isSubGroupChanging = !isSubGroupChanging },
+                        additionalContentIsVisible = isSubGroupChanging,
                         additionalContent = {
                             LazyRow(
                                 state = subGroupLazyRowState, modifier = Modifier
@@ -271,6 +268,41 @@ internal fun SettingsScreen(
                         }
                     )
 
+                }
+
+                CardOfSettings(text = stringResource(id = R.string.features), icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.tune),
+                        contentDescription = "features",
+                        tint = it.suitableColor()
+                    )
+                }, onClick = { isFeaturesEditable = !isFeaturesEditable },
+                    additionalContentIsVisible = isFeaturesEditable
+                ) {
+                    FeatureOfSettings(
+                        onClick = {
+                            viewModel.saveSettingsToSharedPreferences(
+                                settings = settings.copy(
+                                    notificationsAboutLesson = !settings.notificationsAboutLesson
+                                )
+                            )
+                        },
+                        padding = it,
+                        text = stringResource(R.string.notification_about_lesson_before_time),
+                        checked = settings.notificationsAboutLesson
+                    )
+                    FeatureOfSettings(
+                        onClick = {
+                            viewModel.saveSettingsToSharedPreferences(
+                                settings = settings.copy(
+                                    notesAboutLesson = !settings.notesAboutLesson
+                                )
+                            )
+                        },
+                        padding = it,
+                        text = stringResource(R.string.note),
+                        checked = settings.notesAboutLesson
+                    )
                 }
 
                 // name of section
@@ -305,58 +337,30 @@ internal fun SettingsScreen(
                     additionalContentIsVisible = catsOnUIIsChanging,
                     additionalContent = {
                         Column {
-                            val onCheckedChangeWeekendCat = {
-                                viewModel.saveSettingsToSharedPreferences(
-                                    settings = settings.copy(
-                                        weekendCat = !settings.weekendCat
+                            FeatureOfSettings(
+                                onClick = {
+                                    viewModel.saveSettingsToSharedPreferences(
+                                        settings = settings.copy(
+                                            weekendCat = !settings.weekendCat
+                                        )
                                     )
-                                )
-                            }
-                            val onCheckedChangeCatInSettings = {
-                                viewModel.saveSettingsToSharedPreferences(
+                                },
+                                padding = it,
+                                text = stringResource(R.string.weekend_cat),
+                                checked = settings.weekendCat
+                            )
+                            FeatureOfSettings(
+                                onClick = {
+                                    viewModel.saveSettingsToSharedPreferences(
                                     settings = settings.copy(
                                         catInSettings = !settings.catInSettings
                                     )
-                                )
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { onCheckedChangeWeekendCat() }
-                                    .padding(horizontal = it),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                TextForThisTheme(
-                                    text = stringResource(R.string.weekend_cat),
-                                    fontSize = FontSize.medium19
-                                )
-                                Checkbox(
-                                    checked = settings.weekendCat,
-                                    onCheckedChange = {
-                                        onCheckedChangeWeekendCat()
-                                    }, colors = checkBoxColors
-                                )
-                            }
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { onCheckedChangeCatInSettings() }
-                                    .padding(horizontal = it),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                TextForThisTheme(
-                                    text = stringResource(R.string.cat_in_settings),
-                                    fontSize = FontSize.medium19
-                                )
-                                Checkbox(
-                                    checked = settings.catInSettings,
-                                    onCheckedChange = {
-                                        onCheckedChangeCatInSettings()
-                                    }, colors = checkBoxColors
-                                )
-                            }
+                                    )
+                                },
+                                padding = it,
+                                text = stringResource(R.string.cat_in_settings),
+                                checked = settings.catInSettings
+                            )
 
                         }
                     }

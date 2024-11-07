@@ -13,18 +13,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.vafeen.universityschedule.resources.R
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.generateRandomColor
+import ru.vafeen.universityschedule.resources.R
 
 @Composable
 internal fun CardOfSettings(
@@ -77,5 +80,36 @@ internal fun CardOfSettings(
             if (additionalContentIsVisible == true)
                 additionalContent?.let { it(contentPadding) }
         }
+    }
+}
+
+@Composable
+internal fun FeatureOfSettings(
+    onClick: () -> Unit,
+    padding: Dp, text: String, checked:Boolean,
+) {
+    val checkBoxColors = CheckboxDefaults.colors(
+        checkedColor = Theme.colors.oppositeTheme,
+        checkmarkColor = Theme.colors.singleTheme,
+        uncheckedColor = Theme.colors.oppositeTheme
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = padding),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextForThisTheme(
+            text =text,
+            fontSize = FontSize.medium19
+        )
+        Checkbox(
+            checked = checked,
+            onCheckedChange = {
+                onClick()
+            }, colors = checkBoxColors
+        )
     }
 }
