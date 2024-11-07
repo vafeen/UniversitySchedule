@@ -118,7 +118,7 @@ internal fun EditLinkDialog(
                         ) {
                             Icon(
                                 modifier = Modifier.size(iconsSize),
-                                painter = painterResource(id = R.drawable.clear),
+                                painter = painterResource(id = R.drawable.drop),
                                 contentDescription = "clear",
                                 tint = Theme.colors.oppositeTheme
                             )
