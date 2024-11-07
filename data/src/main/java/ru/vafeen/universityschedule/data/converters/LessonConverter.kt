@@ -17,7 +17,8 @@ internal class LessonConverter : BaseConverter<LessonEntity, Lesson> {
         subGroup = a.subGroup,
         frequency = a.frequency?.let { Frequency.valueOf(it) },
         idOfReminderBeforeLesson = a.idOfReminderBeforeLesson,
-        idOfReminderAfterBeginningLesson = a.idOfReminderAfterBeginningLesson
+        idOfReminderAfterBeginningLesson = a.idOfReminderAfterBeginningLesson,
+        note = a.note
     )
 
     override fun convertBA(b: Lesson): LessonEntity = LessonEntity(
@@ -31,7 +32,8 @@ internal class LessonConverter : BaseConverter<LessonEntity, Lesson> {
         subGroup = b.subGroup,
         frequency = b.frequency?.toString(),
         idOfReminderBeforeLesson = b.idOfReminderBeforeLesson,
-        idOfReminderAfterBeginningLesson = b.idOfReminderAfterBeginningLesson
+        idOfReminderAfterBeginningLesson = b.idOfReminderAfterBeginningLesson,
+        note = b.note
     )
 
 }

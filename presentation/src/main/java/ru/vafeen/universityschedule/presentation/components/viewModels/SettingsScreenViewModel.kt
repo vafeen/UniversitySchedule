@@ -1,13 +1,12 @@
 package ru.vafeen.universityschedule.presentation.components.viewModels
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.GSheetsServiceRequestStatus
@@ -44,8 +43,9 @@ internal class SettingsScreenViewModel(
                 if (link.isNullOrEmpty())
                     _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.NoLink)
                 else {
-                    getSheetDataAndUpdateDBUseCase.use(link = link) {
-                        _gSheetsServiceRequestStatusFlow.emit(it)
+                    getSheetDataAndUpdateDBUseCase.use(link = link) { status ->
+                        Log.d("status", "status = $status")
+                        _gSheetsServiceRequestStatusFlow.emit(status)
                     }
                 }
             }

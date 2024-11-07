@@ -20,6 +20,7 @@ import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetReminderByIdOfReminderUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.InsertLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.InsertRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.UpdateLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
@@ -38,6 +39,7 @@ internal class MainScreenViewModel(
     private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase,
     private val scheduleRepeatingJobUseCase: ScheduleRepeatingJobUseCase,
     private val cancelJobUseCase: CancelJobUseCase,
+    private val updateLessonsUseCase: UpdateLessonsUseCase,
     context: Context,
 ) : ViewModel() {
     private val intentForNotification = Intent(context, NotificationAboutLessonReceiver::class.java)
@@ -57,7 +59,12 @@ internal class MainScreenViewModel(
 
     val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
     val percentageFlow = apkDownloader.percentageFlow
-
+    fun updateLesson(lesson: Lesson) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("update", "обновление ${lesson.note}")
+            updateLessonsUseCase.use(lesson)
+        }
+    }
     private val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             Log.d("settings", "updated ")

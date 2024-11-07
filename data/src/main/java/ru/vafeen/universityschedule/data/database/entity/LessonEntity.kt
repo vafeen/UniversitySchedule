@@ -19,6 +19,7 @@ internal data class LessonEntity(
     val frequency: String? = null,
     val idOfReminderBeforeLesson: Int? = null,
     val idOfReminderAfterBeginningLesson: Int? = null,
+    val note: String? = null,
 ) : Comparable<LessonEntity> {
     override fun toString(): String {
         return "\n dayOfWeek=${dayOfWeek ?: "\"is null\""} name=${name ?: "\"is null\""} st=${startTime}-et=${endTime} classrom=${classroom ?: "\"is null\""} tchr=${teacher ?: "\"is null\""} sbgr=${subGroup ?: "\"is null\""} fr=${frequency ?: "\"is null\""}"
