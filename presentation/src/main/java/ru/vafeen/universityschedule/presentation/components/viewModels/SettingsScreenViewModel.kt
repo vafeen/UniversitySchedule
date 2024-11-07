@@ -25,6 +25,7 @@ internal class SettingsScreenViewModel(
 ) : ViewModel() {
     private val _settings =
         MutableStateFlow(sharedPreferences.getSettingsOrCreateIfNull())
+    private var lastLink: String? = null
     val settings = _settings.asStateFlow()
     private val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -42,12 +43,17 @@ internal class SettingsScreenViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 val link = it.link
-                if (link.isNullOrEmpty())
-                    _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.NoLink)
-                else {
-                    getSheetDataAndUpdateDBUseCase.use(link = link) { status ->
-                        Log.d("status", "status = $status")
-                        _gSheetsServiceRequestStatusFlow.emit(status)
+                when {
+                    link.isNullOrEmpty() -> {
+                        _gSheetsServiceRequestStatusFlow.emit(GSheetsServiceRequestStatus.NoLink)
+                    }
+
+                    link.isNotEmpty() && link != lastLink -> {
+                        lastLink = link
+                        getSheetDataAndUpdateDBUseCase.use(link = link) { status ->
+                            Log.d("status", "status = $status")
+                            _gSheetsServiceRequestStatusFlow.emit(status)
+                        }
                     }
                 }
             }
