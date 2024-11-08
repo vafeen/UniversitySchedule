@@ -1,5 +1,5 @@
-v6.1.2
-New version 6.1.2!!
+v6.1.3
+New version 6.1.3!!
 
 What's add:
 
@@ -9,4 +9,5 @@ What's add:
 What's fix:
 
 - Updating network status in settings screen
-  
+- Settings screen crash
+- New version bottom sheet height
