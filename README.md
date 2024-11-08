@@ -30,6 +30,7 @@ Follow these simple steps:
 - Supported themes: **Dark**, **Light**
 - Works by creating a connection between **Google Sheets** and the **App** itself.
 - Notifications 15 mins before a class for a week in advance
+- Notes about lesson (enable it in )
 
 ### Main screen
 - Shows you all of the classes for each day
