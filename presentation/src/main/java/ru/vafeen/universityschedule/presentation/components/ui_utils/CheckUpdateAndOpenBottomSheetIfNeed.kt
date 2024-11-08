@@ -1,9 +1,11 @@
 package ru.vafeen.universityschedule.presentation.components.ui_utils
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,8 +21,9 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainActiv
 @Composable
 internal fun CheckUpdateAndOpenBottomSheetIfNeed(
     viewModel: MainActivityViewModel,
-    onDismissRequest: (Boolean) -> Unit,
+    onDismissRequest: () -> Unit,
 ) {
+    val settings by viewModel.settings.collectAsState()
     val context = LocalContext.current
     val versionName by remember { mutableStateOf(context.getVersionName()) }
     val bottomSheetState =
@@ -33,20 +36,27 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
     }
     LaunchedEffect(key1 = null) {
         release = viewModel.getLatestReleaseUseCase.use()
+        viewModel.saveSettingsToSharedPreferences(
+            settings = settings.copy(
+                releaseBody = release?.body ?: ""
+            )
+        )
         if (release != null && versionName != null &&
             release?.tagName?.substringAfter("v") != versionName
-        )
+        ) {
             isUpdateNeeded = true
+        } else onDismissRequest()
     }
 
-    if (isUpdateNeeded)
+    if (isUpdateNeeded) {
         release?.let { releaseParam ->
             UpdaterBottomSheet(
                 release = releaseParam,
                 state = bottomSheetState,
             ) {
                 isUpdateNeeded = false
-                onDismissRequest(it)
+                onDismissRequest()
             }
         }
+    }
 }

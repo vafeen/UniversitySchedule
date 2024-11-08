@@ -9,11 +9,12 @@ data class Settings(
     val subgroup: String? = null,
     val link: String? = null,
     val isSelectedFrequencyCorrespondsToTheWeekNumbers: Boolean? = null,
-    val lastDemonstratedVersion: Int? = null,
+    val lastDemonstratedVersion: Long = 1,
     val weekendCat: Boolean = false,
     val catInSettings: Boolean = false,
     val notesAboutLesson: Boolean = false,
     val notificationsAboutLesson: Boolean = true,
+    val releaseBody: String = ""
 ) {
     fun toJsonString(): String = Gson().toJson(this)
 }
