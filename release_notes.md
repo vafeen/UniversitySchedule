@@ -1,6 +1,12 @@
-v6.1.1
-New version 6.1.1!!
+v6.1.2
+New version 6.1.2!!
+
+What's add:
+
+- New version info bottom sheet
+- Notes about classes (enable it in settings in features/note and click on "Note")
 
 What's fix:
 
-- Notifications about lesson and after beginning lesson
+- Updating network status in settings screen
+  
