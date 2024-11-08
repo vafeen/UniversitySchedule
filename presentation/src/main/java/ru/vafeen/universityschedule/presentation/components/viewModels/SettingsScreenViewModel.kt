@@ -38,6 +38,10 @@ internal class SettingsScreenViewModel(
         sharedPreferences.save(settings = settings)
     }
 
+    private val _gSheetsServiceRequestStatusFlow =
+        MutableStateFlow<GSheetsServiceRequestStatus>(GSheetsServiceRequestStatus.Waiting)
+    val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asStateFlow()
+
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
         viewModelScope.launch(Dispatchers.IO) {
@@ -71,10 +75,6 @@ internal class SettingsScreenViewModel(
                 }
         }
     }
-
-    private val _gSheetsServiceRequestStatusFlow =
-        MutableStateFlow<GSheetsServiceRequestStatus>(GSheetsServiceRequestStatus.Waiting)
-    val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asStateFlow()
 
     override fun onCleared() {
         super.onCleared()
