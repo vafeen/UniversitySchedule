@@ -10,7 +10,8 @@ internal class ReleaseConverter : BaseConverter<ReleaseDTO, Release> {
         tagName = a.tagName,
         assets = a.assets.map {
             it.name
-        }
+        },
+        body = a.body
     )
 
     override fun convertBA(b: Release): ReleaseDTO {

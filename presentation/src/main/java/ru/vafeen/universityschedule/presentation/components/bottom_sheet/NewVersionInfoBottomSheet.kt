@@ -1,21 +1,46 @@
 package ru.vafeen.universityschedule.presentation.components.bottom_sheet
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
+import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
+import ru.vafeen.universityschedule.presentation.theme.FontSize
+import ru.vafeen.universityschedule.presentation.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun NewVersionInfoBottomSheet(onDismissRequest: () -> Unit) {
+internal fun NewVersionInfoBottomSheet(
+    viewModel: MainActivityViewModel,
+    onDismissRequest: () -> Unit,
+) {
     val state =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
+    val settings by viewModel.settings.collectAsState()
     ModalBottomSheet(
         sheetState = state,
         onDismissRequest = onDismissRequest,
-        containerColor = updateAvailableColor,
+        containerColor = Theme.colors.buttonColor,
     ) {
+        Column(
+            modifier = Modifier
+                .height(150.dp)
+        ) {
+            TextForThisTheme(
+                modifier = Modifier.fillMaxWidth(),
+                text = settings.releaseBody,
+                fontSize = FontSize.big22
+            )
+        }
     }
 }
