@@ -6,7 +6,7 @@
     <string name="link_to_table">Link to table</string>
     <string name="table">Table</string>
     <string name="code">Code</string>
-    <string name="next_lesson">next lesson</string>
+    <string name="next_lesson">next class</string>
     <string name="version">version</string>
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>
@@ -15,7 +15,7 @@
     <string name="friday">Fri</string>
     <string name="satudray">Sat</string>
     <string name="sunday">Sun</string>
-    <string name="other_lessons_in_this_day">Lessons at</string>
+    <string name="other_lessons_in_this_day">Classes at</string>
     <string name="its_no_google_sheets_link">It\'s no Google Sheets link</string>
     <string name="interface_color">Interface color</string>
     <string name="new_interface_color">New color of interface</string>
@@ -30,11 +30,11 @@
     <string name="view_releases">Updating by click on QR below</string>
     <string name="updating">Updating . . .</string>
     <string name="auto">Auto</string>
-    <string name="notification_about_lesson_before_time">Notification about lesson</string>
-    <string name="notification_about_lesson_after_starting">Notification after the start\nof the lesson - check in</string>
-    <string name="reminder_about_lesson_before_time">Reminder about lesson</string>
-    <string name="reminder_about_lesson_after_starting">Reminder to check in for lesson</string>
-    <string name="reminder_text_lesson_before_time">%2$d minutes before lesson %1$s</string>
+    <string name="notification_about_lesson_before_time">Notification about class</string>
+    <string name="notification_about_lesson_after_starting">Notification after the start\nof the class - check in</string>
+    <string name="reminder_about_lesson_before_time">Reminder about class</string>
+    <string name="reminder_about_lesson_after_starting">Reminder to check in for class</string>
+    <string name="reminder_text_lesson_before_time">%2$d minutes before class %1$s</string>
     <string name="reminder_text_about_lesson_after_starting">You need to check in for %1$s</string>
     <string name="reminder_recovery">Reminder recovery</string>
     <string name="reminders_restored">Reminders have restored</string>
