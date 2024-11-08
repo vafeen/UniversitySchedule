@@ -2,7 +2,6 @@ package ru.vafeen.universityschedule.presentation
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -51,7 +50,7 @@ class MainActivity : ComponentActivity() {
                     CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
                         updateIsShowed = true
                     }
-                if (updateIsShowed && settings.lastDemonstratedVersion < versionCode && settings.releaseBody.isNotEmpty()) {
+                if (updateIsShowed && settings.lastDemonstratedVersion < versionCode && settings.releaseBody != "") {
                     NewVersionInfoBottomSheet(viewModel = viewModel) {
                         viewModel.saveSettingsToSharedPreferences(
                             settings.copy(lastDemonstratedVersion = versionCode)
