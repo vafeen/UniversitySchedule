@@ -97,6 +97,7 @@ jobs:
           files: |
             university-schedule-signed.apk
           body_path: CHANGE.txt
+          append_body: true
 
 
   # build-and-release:

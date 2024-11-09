@@ -1,6 +1,6 @@
 ## v1.1.22
 
-**New version x.y.z!**
+**New version 1.1.22!**
 
 ### What's new:
 
@@ -20,7 +20,7 @@
 
 ## 1.1.1
 
-**New version x.y.z!**
+**New version 1.1.1!**
 
 ### What's new:
 
