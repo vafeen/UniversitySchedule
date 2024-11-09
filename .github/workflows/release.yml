@@ -12,7 +12,6 @@ on:
         type: string
 
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -50,15 +49,6 @@ jobs:
             --key-pass pass:${{ secrets.KEY_PASSWORD }} \
             --out university-schedule.apk \
             app/build/outputs/apk/release/app-release.apk
-
-      # - name: Skip Signing
-      #   run: |
-      #     mv app/build/outputs/apk/release/app-release.apk \
-      #     university-schedule.apk
-
-      # - name: Skip Signing
-      #   run: |
-      #     cat README.md > university-schedule.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
