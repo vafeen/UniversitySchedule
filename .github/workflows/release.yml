@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*.*.*'
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: vx.y.z
+        required: true
+        type: string
 
 
 
