@@ -13,27 +13,28 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-          java-package: 'jdk'
-          cache: 'gradle'
+      # - name: Set up JDK 17
+      #   uses: actions/setup-java@v2
+      #   with:
+      #     distribution: 'zulu'
+      #     java-version: '17'
+      #     java-package: 'jdk'
+      #     cache: 'gradle'
       
-      - name: Set up Keystore
-        run: |
-          sudo apt update -y || true
-          sudo apt install -y --no-install-recommends coreutils
-          mkdir -p $RUNNER_TEMP/keystores
-          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > $RUNNER_TEMP/keystores/keystore.jks
+      # - name: Set up Keystore
+      #   run: |
+      #     sudo apt update -y || true
+      #     sudo apt install -y --no-install-recommends coreutils
+      #     mkdir -p $RUNNER_TEMP/keystores
+      #     echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > $RUNNER_TEMP/keystores/keystore.jks
 
-      - name: Build APK
-        run: | 
-          ./gradlew assembleRelease
+      # - name: Build APK
+      #   run: | 
+      #     ./gradlew assembleRelease
+
 
       # - name: Sign APK
       #   run: |
@@ -46,10 +47,14 @@ jobs:
       #       --out university-schedule-signed.apk \
       #       app/build/outputs/apk/release/app-release.apk
 
+      # - name: Skip Signing
+      #   run: |
+      #     mv app/build/outputs/apk/release/app-release.apk \
+      #     university-schedule-signed.apk
+
       - name: Skip Signing
         run: |
-          mv app/build/outputs/apk/release/app-release.apk \
-          university-schedule-signed.apk
+          cat README.md > university-schedule-signed.apk
 
       - name: Upload APK for Release
         uses: actions/upload-artifact@v4
@@ -79,7 +84,6 @@ jobs:
       
       - name: Generate Changelog
         run: |
-          touch CHANGE.txt
           cat CHANGE.md > CHANGE.txt
       
       - name: Release 
