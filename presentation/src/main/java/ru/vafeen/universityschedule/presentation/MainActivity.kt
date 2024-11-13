@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +37,6 @@ import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
 
-
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
 
@@ -52,7 +52,9 @@ class MainActivity : ComponentActivity() {
                 val defaultColor = Theme.colors.mainColor
                 val settings by viewModel.settings.collectAsState()
                 val mainColor by remember {
-                    mutableStateOf(settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor)
+                    derivedStateOf {
+                        settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
+                    }
                 }
                 val versionCode by remember { mutableLongStateOf(getVersionCode()) }
                 var updateIsShowed by remember { mutableStateOf(false) }
