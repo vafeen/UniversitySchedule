@@ -5,9 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -53,13 +51,13 @@ internal class SettingsScreenViewModel(
                     }
 
                     link.isNotEmpty() && link != lastLink -> {
-                        lastLink = link
                         getSheetDataAndUpdateDBUseCase.use(link = link) { status ->
                             Log.d("status", "status = $status")
                             _gSheetsServiceRequestStatusFlow.emit(status)
                         }
                     }
                 }
+                lastLink = link
             }
         }
     }
