@@ -38,7 +38,7 @@ internal fun NewVersionInfoBottomSheet(
         ) {
             TextForThisTheme(
                 modifier = Modifier.fillMaxWidth(),
-                text = settings.releaseBody.repeat(10),
+                text = settings.releaseBody,
                 fontSize = FontSize.big22
             )
         }
