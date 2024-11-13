@@ -1,5 +1,3 @@
-# v6.1.4
-
 New version 6.1.4!!
 
 What's new:
