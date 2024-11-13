@@ -1,4 +1,4 @@
-New version 6.1.4!!
+New version 6.1.5!!
 
 What's new:
 
@@ -7,3 +7,4 @@ What's new:
 What's fixed:
 
 - Flickering screens when you switch between screens
+- Repeating change log in new version info bottom sheet
