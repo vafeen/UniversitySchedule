@@ -7,7 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -19,12 +22,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
+import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.NewVersionInfoBottomSheet
 import ru.vafeen.universityschedule.presentation.components.permissions.RequestNotificationPermission
 import ru.vafeen.universityschedule.presentation.components.screens.MainScreen
 import ru.vafeen.universityschedule.presentation.components.screens.SettingsScreen
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
+import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
@@ -41,15 +47,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         viewModel.registerGeneralExceptionCallback(context = this)
         setContent {
-            val versionCode by remember { mutableLongStateOf(getVersionCode()) }
-            var updateIsShowed by remember { mutableStateOf(false) }
-            val settings by viewModel.settings.collectAsState()
-            RequestNotificationPermission()
             MainTheme {
-                if (!updateIsShowed)
-                    CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
-                        updateIsShowed = true
-                    }
+                val dark = isSystemInDarkTheme()
+                val defaultColor = Theme.colors.mainColor
+                val settings by viewModel.settings.collectAsState()
+                val mainColor by remember {
+                    mutableStateOf(settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor)
+                }
+                val versionCode by remember { mutableLongStateOf(getVersionCode()) }
+                var updateIsShowed by remember { mutableStateOf(false) }
+                val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
+                val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
+
+                RequestNotificationPermission()
+
+                if (!updateIsShowed) CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
+                    updateIsShowed = true
+                }
                 if (updateIsShowed && settings.lastDemonstratedVersion < versionCode && settings.releaseBody != "") {
                     NewVersionInfoBottomSheet(viewModel = viewModel) {
                         viewModel.saveSettingsToSharedPreferences(
@@ -59,23 +73,35 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val navController = rememberNavController()
-                Column(
-                    modifier = Modifier
-                        .background(Theme.colors.singleTheme)
-                ) {
-                    NavHost(
-                        navController = navController, startDestination = Screen.Main.route
+
+                Scaffold(bottomBar = {
+                    BottomBar(
+                        initialSelectedScreen = viewModel.startScreen,
+                        containerColor = mainColor,
+                        navController = navController
+                    )
+                }) { innerPadding ->
+                    Column(
+                        modifier = Modifier
+                            .background(Theme.colors.singleTheme)
+                            .padding(innerPadding),
                     ) {
-                        composable(Screen.Main.route) {
-                            MainScreen(
-                                navController = navController,
-                            )
+                        NavHost(
+                            navController = navController,
+                            startDestination = viewModel.startScreen.route
+                        ) {
+                            composable(Screen.Main.route) {
+                                MainScreen(
+                                    navController = navController,
+                                ).Content()
+                            }
+                            composable(Screen.Settings.route) {
+                                SettingsScreen(
+                                    navController = navController,
+                                ).Content()
+                            }
                         }
-                        composable(Screen.Settings.route) {
-                            SettingsScreen(
-                                navController = navController,
-                            )
-                        }
+                        if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
                     }
                 }
             }

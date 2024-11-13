@@ -11,6 +11,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,10 +34,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -61,16 +59,14 @@ import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.save
-import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
+import ru.vafeen.universityschedule.presentation.components.screens.base.ComposableScreen
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
-import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.ui_utils.WeekDay
 import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
-import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
@@ -82,100 +78,96 @@ import ru.vafeen.universityschedule.resources.R
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun MainScreen(
-    navController: NavController,
-) {
-    val viewModel: MainScreenViewModel =
-        koinViewModel()
-    val context = LocalContext.current
-    val settings by viewModel.settingsFlow.collectAsState()
-    val defaultColor = Theme.colors.mainColor
-    val dark = isSystemInDarkTheme()
-    val mainColor by remember {
-        mutableStateOf(settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor)
-    }
-    var isFrequencyInChanging by remember {
-        mutableStateOf(false)
-    }
-    val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
-    val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
+internal class MainScreen(private val navController: NavController) : ComposableScreen {
 
-    val cor = rememberCoroutineScope()
-    var localTime by remember {
-        mutableStateOf(LocalTime.now())
-    }
-    var localDate by remember {
-        mutableStateOf(LocalDate.now())
-    }
-    val weekOfYear by remember {
-        derivedStateOf {
-            localDate.getFrequencyByLocalDate()
-                .changeFrequencyIfDefinedInSettings(settings = settings)
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content() {
+        val viewModel: MainScreenViewModel =
+            koinViewModel()
+        val context = LocalContext.current
+        val settings by viewModel.settingsFlow.collectAsState()
+        val defaultColor = Theme.colors.mainColor
+        val dark = isSystemInDarkTheme()
+        val mainColor by remember {
+            mutableStateOf(settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor)
         }
-    }
+        var isFrequencyInChanging by remember {
+            mutableStateOf(false)
+        }
 
-    val lessons by viewModel.lessonsFlow.collectAsState(listOf())
-    val cardsWithDateState = rememberLazyListState()
-
-
-
-    fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
-        viewModel.sharedPreferences.save(
-            settings.copy(
-                isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
-        )
-        isFrequencyInChanging = false
-    }
-
-
-    val pagerState = rememberPagerState(
-        pageCount = {
-            viewModel.pageNumber
-        }, initialPage = 0
-    )
-    BackHandler {
-        when {
-            pagerState.currentPage == 0 -> {
-                navController.popBackStack()
-                (context as Activity).finish()
+        val cor = rememberCoroutineScope()
+        var localTime by remember {
+            mutableStateOf(LocalTime.now())
+        }
+        var localDate by remember {
+            mutableStateOf(LocalDate.now())
+        }
+        val weekOfYear by remember {
+            derivedStateOf {
+                localDate.getFrequencyByLocalDate()
+                    .changeFrequencyIfDefinedInSettings(settings = settings)
             }
+        }
 
-            else -> {
-                cor.launch(Dispatchers.Main) {
-                    pagerState.animateScrollToPage(0)
+        val lessons by viewModel.lessonsFlow.collectAsState(listOf())
+        val cardsWithDateState = rememberLazyListState()
+
+
+        fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
+            viewModel.sharedPreferences.save(
+                settings.copy(
+                    isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
+            )
+            isFrequencyInChanging = false
+        }
+
+
+        val pagerState = rememberPagerState(
+            pageCount = {
+                viewModel.pageNumber
+            }, initialPage = 0
+        )
+        BackHandler {
+            when {
+                pagerState.currentPage == 0 -> {
+                    navController.popBackStack()
+                    (context as Activity).finish()
+                }
+
+                else -> {
+                    cor.launch(Dispatchers.Main) {
+                        pagerState.animateScrollToPage(0)
+                    }
                 }
             }
         }
-    }
-    LaunchedEffect(key1 = null) {
-        withContext(Dispatchers.Main) {
-            while (true) {
-                localTime = LocalTime.now()
-                delay(timeMillis = 1000L)
+        LaunchedEffect(key1 = null) {
+            withContext(Dispatchers.Main) {
+                while (true) {
+                    localTime = LocalTime.now()
+                    delay(timeMillis = 1000L)
+                }
             }
         }
-    }
 
-    LaunchedEffect(key1 = pagerState.currentPage) {
-        localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
-        cardsWithDateState.animateScrollToItem(
-            if (pagerState.currentPage > 0) pagerState.currentPage - 1
-            else pagerState.currentPage
-        )
-    }
-
-    Scaffold(containerColor = Theme.colors.singleTheme, topBar = {
-        TopAppBar(colors = TopAppBarColors(
-            containerColor = Theme.colors.singleTheme,
-            scrolledContainerColor = Theme.colors.singleTheme,
-            navigationIconContentColor = Theme.colors.oppositeTheme,
-            titleContentColor = Theme.colors.oppositeTheme,
-            actionIconContentColor = Theme.colors.singleTheme
-        ), modifier = Modifier.fillMaxWidth(), title = {
+        LaunchedEffect(key1 = pagerState.currentPage) {
+            localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
+            cardsWithDateState.animateScrollToItem(
+                if (pagerState.currentPage > 0) pagerState.currentPage - 1
+                else pagerState.currentPage
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.colors.singleTheme)
+        ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -183,7 +175,8 @@ internal fun MainScreen(
                     Row(verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable {
                             isFrequencyInChanging = true
-                        }) {
+                        })
+                    {
                         Text(
                             text = stringResource(id = weekOfYear.resourceName),
                             fontSize = FontSize.big22,
@@ -192,7 +185,8 @@ internal fun MainScreen(
 
                         Icon(
                             imageVector = if (isFrequencyInChanging) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Fold or Undolf list with frequency"
+                            contentDescription = "Fold or Undolf list with frequency",
+                            tint = Theme.colors.oppositeTheme
                         )
                     }
                     DropdownMenu(modifier = Modifier
@@ -269,25 +263,10 @@ internal fun MainScreen(
                     }
                 }
             }
-        })
-    }, bottomBar = {
-        BottomBar(
-            enabled = !isUpdateInProcess,
-            containerColor = mainColor, clickToScreen2 = {
-                if (!isUpdateInProcess) navController.navigate(Screen.Settings.route)
-            }, selected1 = true
-        )
-    }) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
             LazyRow(
                 state = cardsWithDateState,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 items(count = viewModel.pageNumber) { index ->
@@ -296,12 +275,7 @@ internal fun MainScreen(
                         Card(
                             modifier = Modifier
                                 .fillParentMaxWidth(1 / 3f)
-                                .padding(horizontal = 5.dp)
-                                .clickable {
-                                    cor.launch(Dispatchers.Main) {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
+                                .padding(horizontal = 5.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = if (day == viewModel.todayDate) mainColor
                                 else Theme.colors.buttonColor,
@@ -314,6 +288,11 @@ internal fun MainScreen(
                                 fontSize = FontSize.small17,
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clickable {
+                                        cor.launch(Dispatchers.Main) {
+                                            pagerState.animateScrollToPage(index)
+                                        }
+                                    }
                                     .padding(
                                         vertical = 5.dp, horizontal = 10.dp
                                     ),
@@ -359,10 +338,7 @@ internal fun MainScreen(
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                             .padding(horizontal = 10.dp),
-                        verticalArrangement = Arrangement.spacedBy(space = 20.dp)
                     ) {
-
-
                         if (lessonsOfThisDay.isNotEmpty()) {
                             viewModel.nowIsLesson = false
                             lessonsOfThisDay.forEach { lesson ->
@@ -382,6 +358,7 @@ internal fun MainScreen(
                                     }[0] && !viewModel.nowIsLesson) {
                                     CardOfNextLesson(colorOfCard = mainColor) {
                                         lesson.StringForSchedule(
+                                            paddingValues = PaddingValues(),
                                             colorBack = Theme.colors.buttonColor,
                                             dateOfThisLesson = dateOfThisLesson,
                                             viewModel = viewModel,
@@ -434,7 +411,7 @@ internal fun MainScreen(
                         )
                 }
             }
-            if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
         }
+
     }
 }

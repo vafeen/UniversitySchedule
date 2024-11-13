@@ -3,6 +3,7 @@ package ru.vafeen.universityschedule.presentation.components.ui_utils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -60,6 +61,7 @@ import java.time.LocalDateTime
 
 @Composable
 internal fun Lesson.StringForSchedule(
+    paddingValues: PaddingValues = PaddingValues(vertical = 10.dp),
     viewModel: MainScreenViewModel,
     dateOfThisLesson: LocalDate?,
     colorBack: Color,
@@ -94,7 +96,8 @@ internal fun Lesson.StringForSchedule(
 
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(paddingValues = paddingValues),
         colors = CardDefaults.cardColors(
             containerColor = colorBack
         ),
@@ -145,40 +148,40 @@ internal fun Lesson.StringForSchedule(
                     }
                 }
                 Row(
-                        modifier = Modifier.weight(1f),
-                        horizontalArrangement = Arrangement.End
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .clickable {
+                                isAdditionalInfoExpanded = !isAdditionalInfoExpanded
+                            },
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    isAdditionalInfoExpanded = !isAdditionalInfoExpanded
-                                },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (idOfReminderBeforeLesson == null || idOfReminderAfterBeginningLesson == null || note?.isNotEmpty() != true) Icon(
-                                painter = painterResource(id = R.drawable.add),
-                                contentDescription = "Edit notifications about this lesson",
+                        if (idOfReminderBeforeLesson == null || idOfReminderAfterBeginningLesson == null || note?.isNotEmpty() != true) Icon(
+                            painter = painterResource(id = R.drawable.add),
+                            contentDescription = "Edit notifications about this lesson",
+                            tint = suitableColor
+                        )
+                        if (note?.isNotEmpty() == true) Icon(
+                            painter = painterResource(id = R.drawable.edit),
+                            contentDescription = "note",
+                            tint = suitableColor
+                        )
+                        if (idOfReminderBeforeLesson != null)
+                            Icon(
+                                painter = painterResource(id = R.drawable.message),
+                                contentDescription = "Message about lesson",
                                 tint = suitableColor
                             )
-                            if (note?.isNotEmpty() == true) Icon(
-                                painter = painterResource(id = R.drawable.edit),
-                                contentDescription = "note",
+                        if (idOfReminderAfterBeginningLesson != null)
+                            Icon(
+                                painter = painterResource(id = R.drawable.notification_about_checking),
+                                contentDescription = "Message about checking on this lesson",
                                 tint = suitableColor
                             )
-                            if (idOfReminderBeforeLesson != null)
-                                Icon(
-                                    painter = painterResource(id = R.drawable.message),
-                                    contentDescription = "Message about lesson",
-                                    tint = suitableColor
-                                )
-                            if (idOfReminderAfterBeginningLesson != null)
-                                Icon(
-                                    painter = painterResource(id = R.drawable.notification_about_checking),
-                                    contentDescription = "Message about checking on this lesson",
-                                    tint = suitableColor
-                                )
-                        }
                     }
+                }
 
             }
 

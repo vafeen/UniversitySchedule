@@ -31,11 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.raedapps.alwan.rememberAlwanState
 import com.raedapps.alwan.ui.Alwan
-import ru.vafeen.universityschedule.resources.R
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
+import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
+import ru.vafeen.universityschedule.resources.R
 
 @Composable
 internal fun ColorPickerDialog(
@@ -74,8 +75,9 @@ internal fun ColorPickerDialog(
                 )
 
                 BottomBar(
+                    initialSelectedScreen = Screen.Settings,
                     containerColor = newColor,
-                    selected2 = true,
+                    navController = null
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
