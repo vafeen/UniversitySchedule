@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.domain.models.Reminder
-import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
@@ -30,7 +29,6 @@ import java.time.LocalDate
 
 internal class MainScreenViewModel(
     val sharedPreferences: SharedPreferences,
-    apkDownloader: ApkDownloader,
     getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
     getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase,
     private val insertLessonsUseCase: InsertLessonsUseCase,
@@ -56,9 +54,6 @@ internal class MainScreenViewModel(
     private val _settingsFlow = MutableStateFlow(settingsInitial)
     val settingsFlow = _settingsFlow.asStateFlow()
 
-
-    val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
-    val percentageFlow = apkDownloader.percentageFlow
     fun updateLesson(lesson: Lesson) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("update", "обновление ${lesson.note}")

@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,9 +23,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,10 +38,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
-import ru.vafeen.universityschedule.domain.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
-import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
+import ru.vafeen.universityschedule.presentation.components.screens.base.ComposableScreen
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfSettings
 import ru.vafeen.universityschedule.presentation.components.ui_utils.ColorPickerDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.EditLinkDialog
@@ -77,60 +73,58 @@ import ru.vafeen.universityschedule.resources.R
  * - Report a bug
  *
  */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun SettingsScreen(
-    navController: NavController,
-) {
-    val viewModel: SettingsScreenViewModel = koinViewModel()
-    val context = LocalContext.current
-    val dark = isSystemInDarkTheme()
-    var subgroupList by remember { mutableStateOf(listOf<String>()) }
-    val settings by viewModel.settings.collectAsState()
-    var linkIsEditable by remember {
-        mutableStateOf(false)
-    }
-    var colorIsEditable by remember {
-        mutableStateOf(false)
-    }
-    val gotoMainScreenCallBack = {
-        navController.popBackStack()
-        navController.popBackStack()
-        navController.navigate(Screen.Main.route)
-    }
 
-    var isFeaturesEditable by remember { mutableStateOf(false) }
-    var isSubGroupChanging by remember {
-        mutableStateOf(false)
-    }
-    var catsOnUIIsChanging by remember {
-        mutableStateOf(false)
-    }
-    val subGroupLazyRowState = rememberLazyListState()
-    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
-
-    LaunchedEffect(key1 = null) {
-        viewModel.subgroupFlow.collect {
-            subgroupList = it
+internal class SettingsScreen(private val navController: NavController) : ComposableScreen {
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content() {
+        val viewModel: SettingsScreenViewModel = koinViewModel()
+        val context = LocalContext.current
+        val dark = isSystemInDarkTheme()
+        var subgroupList by remember { mutableStateOf(listOf<String>()) }
+        val settings by viewModel.settings.collectAsState()
+        var linkIsEditable by remember {
+            mutableStateOf(false)
         }
-    }
+        var colorIsEditable by remember {
+            mutableStateOf(false)
+        }
+        val gotoMainScreenCallBack = {
+            navController.popBackStack()
+            navController.popBackStack()
+            navController.navigate(Screen.Main.route)
+        }
 
-    BackHandler(onBack = gotoMainScreenCallBack)
-    Scaffold(
-        containerColor = Theme.colors.singleTheme,
-        topBar = {
-            TopAppBar(colors = TopAppBarColors(
-                containerColor = Theme.colors.singleTheme,
-                scrolledContainerColor = Theme.colors.singleTheme,
-                navigationIconContentColor = Theme.colors.oppositeTheme,
-                titleContentColor = Theme.colors.oppositeTheme,
-                actionIconContentColor = Theme.colors.singleTheme
-            ), modifier = Modifier.fillMaxWidth(), title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+        var isFeaturesEditable by remember { mutableStateOf(false) }
+        var isSubGroupChanging by remember {
+            mutableStateOf(false)
+        }
+        var catsOnUIIsChanging by remember {
+            mutableStateOf(false)
+        }
+        val subGroupLazyRowState = rememberLazyListState()
+        val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
+
+        LaunchedEffect(key1 = null) {
+            viewModel.subgroupFlow.collect {
+                subgroupList = it
+            }
+        }
+
+        BackHandler(onBack = gotoMainScreenCallBack)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Theme.colors.singleTheme)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row {
                     Icon(
                         painter = painterResource(
                             id = getIconByRequestStatus(
@@ -145,21 +139,7 @@ internal fun SettingsScreen(
                         text = stringResource(R.string.settings), fontSize = FontSize.big22
                     )
                 }
-            })
-        },
-        bottomBar = {
-            BottomBar(
-                containerColor = settings.getMainColorForThisTheme(isDark = dark)
-                    ?: Theme.colors.mainColor,
-                clickToScreen1 = gotoMainScreenCallBack,
-                selected2 = true
-            )
-        }) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
+            }
             if (linkIsEditable) EditLinkDialog(context = context) {
                 linkIsEditable = false
             }
@@ -174,7 +154,6 @@ internal fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -185,50 +164,40 @@ internal fun SettingsScreen(
                     // name of section
                     TextForThisTheme(
                         modifier = Modifier
-                            .padding(10.dp)
                             .align(Alignment.Center),
                         fontSize = FontSize.big22,
                         text = stringResource(R.string.general)
                     )
-                    if (settings.catInSettings)
-                        GifPlayer(
-                            size = 80.dp,
-                            modifier = Modifier.align(Alignment.CenterEnd),
-                            imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
-                        )
+                    if (settings.catInSettings) GifPlayer(
+                        size = 80.dp,
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
+                    )
                 }
                 // Edit link
-                CardOfSettings(
-                    text = stringResource(R.string.link_to_table),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.link),
-                            contentDescription = "edit link",
-                            tint = it.suitableColor()
-                        )
-                    }, onClick = { linkIsEditable = true }
-                )
+                CardOfSettings(text = stringResource(R.string.link_to_table), icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.link),
+                        contentDescription = "edit link",
+                        tint = it.suitableColor()
+                    )
+                }, onClick = { linkIsEditable = true })
 
                 // View table
                 if (settings.link != null) {
-                    CardOfSettings(
-                        text = stringResource(R.string.table),
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.table),
-                                contentDescription = "edit link",
-                                tint = it.suitableColor()
-                            )
-                        },
-                        onClick = { settings.link?.let { context.openLink(link = it) } }
-                    )
+                    CardOfSettings(text = stringResource(R.string.table), icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.table),
+                            contentDescription = "edit link",
+                            tint = it.suitableColor()
+                        )
+                    }, onClick = { settings.link?.let { context.openLink(link = it) } })
 
                 }
 
                 // Subgroup
                 if (subgroupList.isNotEmpty()) {
-                    CardOfSettings(
-                        text = stringResource(R.string.subgroup),
+                    CardOfSettings(text = stringResource(R.string.subgroup),
                         icon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.group),
@@ -240,7 +209,8 @@ internal fun SettingsScreen(
                         additionalContentIsVisible = isSubGroupChanging,
                         additionalContent = {
                             LazyRow(
-                                state = subGroupLazyRowState, modifier = Modifier
+                                state = subGroupLazyRowState,
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = it)
                             ) {
@@ -265,18 +235,20 @@ internal fun SettingsScreen(
                                     )
                                 }
                             }
-                        }
-                    )
+                        })
 
                 }
 
-                CardOfSettings(text = stringResource(id = R.string.features), icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.tune),
-                        contentDescription = "features",
-                        tint = it.suitableColor()
-                    )
-                }, onClick = { isFeaturesEditable = !isFeaturesEditable },
+                CardOfSettings(
+                    text = stringResource(id = R.string.features),
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.tune),
+                            contentDescription = "features",
+                            tint = it.suitableColor()
+                        )
+                    },
+                    onClick = { isFeaturesEditable = !isFeaturesEditable },
                     additionalContentIsVisible = isFeaturesEditable
                 ) {
                     FeatureOfSettings(
@@ -314,26 +286,23 @@ internal fun SettingsScreen(
                     text = stringResource(R.string.interface_str)
                 )
                 // Color
-                CardOfSettings(
-                    text = stringResource(R.string.interface_color),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.palette),
-                            contentDescription = "change color of interface",
-                            tint = it.suitableColor()
-                        )
-                    }, onClick = { colorIsEditable = true }
-                )
-                // cats in interface 
-                CardOfSettings(
-                    text = stringResource(R.string.cats_on_ui),
+                CardOfSettings(text = stringResource(R.string.interface_color), icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.palette),
+                        contentDescription = "change color of interface",
+                        tint = it.suitableColor()
+                    )
+                }, onClick = { colorIsEditable = true })
+                // cats in interface
+                CardOfSettings(text = stringResource(R.string.cats_on_ui),
                     icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.cat),
                             contentDescription = "cats in interface",
                             tint = it.suitableColor()
                         )
-                    }, onClick = { catsOnUIIsChanging = !catsOnUIIsChanging },
+                    },
+                    onClick = { catsOnUIIsChanging = !catsOnUIIsChanging },
                     additionalContentIsVisible = catsOnUIIsChanging,
                     additionalContent = {
                         Column {
@@ -352,9 +321,9 @@ internal fun SettingsScreen(
                             FeatureOfSettings(
                                 onClick = {
                                     viewModel.saveSettingsToSharedPreferences(
-                                    settings = settings.copy(
-                                        catInSettings = !settings.catInSettings
-                                    )
+                                        settings = settings.copy(
+                                            catInSettings = !settings.catInSettings
+                                        )
                                     )
                                 },
                                 padding = it,
@@ -363,8 +332,7 @@ internal fun SettingsScreen(
                             )
 
                         }
-                    }
-                )
+                    })
 
 
                 // name of section
@@ -377,31 +345,25 @@ internal fun SettingsScreen(
                 )
 
                 // CODE
-                CardOfSettings(
-                    text = stringResource(R.string.code),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.terminal),
-                            contentDescription = "view code",
-                            tint = it.suitableColor()
-                        )
-                    }, onClick = {
-                        context.openLink(link = Link.CODE)
-                    }
-                )
+                CardOfSettings(text = stringResource(R.string.code), icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.terminal),
+                        contentDescription = "view code",
+                        tint = it.suitableColor()
+                    )
+                }, onClick = {
+                    context.openLink(link = Link.CODE)
+                })
 
-                CardOfSettings(
-                    text = stringResource(R.string.report_a_bug),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.bug_report),
-                            contentDescription = "view code",
-                            tint = it.suitableColor()
-                        )
-                    }, onClick = {
-                        context.sendEmail(email = Link.EMAIL)
-                    }
-                )
+                CardOfSettings(text = stringResource(R.string.report_a_bug), icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.bug_report),
+                        contentDescription = "view code",
+                        tint = it.suitableColor()
+                    )
+                }, onClick = {
+                    context.sendEmail(email = Link.EMAIL)
+                })
                 // version
                 TextForThisTheme(
                     modifier = Modifier
@@ -414,4 +376,5 @@ internal fun SettingsScreen(
             }
         }
     }
+
 }
