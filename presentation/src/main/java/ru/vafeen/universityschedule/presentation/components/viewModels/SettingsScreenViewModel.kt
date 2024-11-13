@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.presentation.components.viewModels
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +51,6 @@ internal class SettingsScreenViewModel(
 
                     link.isNotEmpty() && link != lastLink -> {
                         getSheetDataAndUpdateDBUseCase.use(link = link) { status ->
-                            Log.d("status", "status = $status")
                             _gSheetsServiceRequestStatusFlow.emit(status)
                         }
                     }

@@ -37,11 +37,9 @@ internal class ApkDownloaderImpl(
         CoroutineScope(Dispatchers.IO).launch {
             _isUpdateInProcessFlow.emit(true)
         }
-        Log.d("download", "2")
         val apkFilePath = context.pathToDownloadRelease()
         // Создаем вызов для загрузки файла
         val call = downloadFileRepository.downloadFile(url)
-        Log.d("download", "3")
         // Выполняем асинхронный запрос
         call?.enqueue(object : Callback<ResponseBody> {
             // Обрабатываем успешный ответ
@@ -51,12 +49,9 @@ internal class ApkDownloaderImpl(
             ) {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
-                        Log.d("download", "4")
                         val body = response.body()
-                        Log.d("download", body.toString())
                         // Проверяем, успешен ли ответ
                         if (response.isSuccessful && body != null) {
-                            Log.d("download", "6")
                             // Создаем файл для записи данных
                             val file = File(apkFilePath)
                             // Получаем поток данных из тела ответа
