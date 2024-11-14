@@ -102,6 +102,7 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding),
                     ) {
                         NavHost(
+                            modifier = Modifier.weight(1f),
                             navController = navController,
                             startDestination = viewModel.startScreen.route
                         ) {
