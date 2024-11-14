@@ -1,4 +1,4 @@
-New version 6.1.6!!
+New version 6.1.7!!
 
 What's new:
 
