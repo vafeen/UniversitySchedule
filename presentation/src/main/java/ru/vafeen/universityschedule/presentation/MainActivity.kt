@@ -75,7 +75,20 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val navController = rememberNavController()
-
+                val mainScreen by remember {
+                    mutableStateOf(
+                        MainScreen(
+                            navController = navController,
+                        )
+                    )
+                }
+                val settingsScreen by remember {
+                    mutableStateOf(
+                        SettingsScreen(
+                            navController = navController,
+                        )
+                    )
+                }
                 Scaffold(bottomBar = {
                     BottomBar(
                         initialSelectedScreen = viewModel.startScreen,
@@ -93,14 +106,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = viewModel.startScreen.route
                         ) {
                             composable(Screen.Main.route) {
-                                MainScreen(
-                                    navController = navController,
-                                ).Content()
+                                mainScreen.Content()
                             }
                             composable(Screen.Settings.route) {
-                                SettingsScreen(
-                                    navController = navController,
-                                ).Content()
+                                settingsScreen.Content()
                             }
                         }
                         if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
