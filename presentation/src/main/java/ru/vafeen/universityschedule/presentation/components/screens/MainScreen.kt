@@ -47,7 +47,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,6 +63,7 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.WeekDay
 import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
+import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.changeFrequencyIfDefinedInSettings
@@ -75,7 +75,7 @@ import ru.vafeen.universityschedule.resources.R
 import java.time.LocalDate
 import java.time.LocalTime
 
-internal class MainScreen(private val navController: NavController) : ComposableScreen {
+internal class MainScreen(private val bottomBarNavigator: BottomBarNavigator) : ComposableScreen {
 
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -129,7 +129,7 @@ internal class MainScreen(private val navController: NavController) : Composable
         BackHandler {
             when {
                 pagerState.currentPage == 0 -> {
-                    navController.popBackStack()
+                    bottomBarNavigator.back()
                     (context as Activity).finish()
                 }
 

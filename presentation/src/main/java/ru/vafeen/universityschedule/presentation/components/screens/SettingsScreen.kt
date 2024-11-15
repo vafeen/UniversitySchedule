@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
@@ -46,7 +45,7 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThis
 import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
 import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
-import ru.vafeen.universityschedule.presentation.navigation.Screen
+import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
@@ -71,7 +70,7 @@ import ru.vafeen.universityschedule.resources.R
  *
  */
 
-internal class SettingsScreen(private val navController: NavController) : ComposableScreen {
+internal class SettingsScreen(private val bottomBarNavigator: BottomBarNavigator) : ComposableScreen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -86,11 +85,7 @@ internal class SettingsScreen(private val navController: NavController) : Compos
         var colorIsEditable by remember {
             mutableStateOf(false)
         }
-        val gotoMainScreenCallBack = {
-            navController.popBackStack()
-            navController.popBackStack()
-            navController.navigate(Screen.Main.route)
-        }
+
 
         var isFeaturesEditable by remember { mutableStateOf(false) }
         var isSubGroupChanging by remember {
@@ -108,7 +103,7 @@ internal class SettingsScreen(private val navController: NavController) : Compos
             }
         }
 
-        BackHandler(onBack = gotoMainScreenCallBack)
+        BackHandler(onBack = bottomBarNavigator::navigateToMainScreen)
         Column(
             modifier = Modifier
                 .fillMaxSize()

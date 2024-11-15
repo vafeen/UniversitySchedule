@@ -74,9 +74,8 @@ internal fun ColorPickerDialog(
                 )
 
                 BottomBar(
-                    initialSelectedScreen = Screen.Settings,
+                    selectedScreen = Screen.Settings,
                     containerColor = newColor,
-                    navController = null
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

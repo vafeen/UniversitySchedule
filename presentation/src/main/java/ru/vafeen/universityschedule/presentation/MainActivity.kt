@@ -33,9 +33,11 @@ import ru.vafeen.universityschedule.presentation.components.screens.SettingsScre
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
+import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
+import ru.vafeen.universityschedule.presentation.utils.navigateeee
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
@@ -60,7 +62,7 @@ class MainActivity : ComponentActivity() {
                 var updateIsShowed by remember { mutableStateOf(false) }
                 val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
                 val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
-
+                var selectedScreen by remember { mutableStateOf(viewModel.startScreen) }
                 RequestNotificationPermission()
 
                 if (!updateIsShowed) CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
@@ -75,26 +77,37 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val navController = rememberNavController()
+                val bottomBarNavigator = object : BottomBarNavigator {
+                    override fun back() {
+                        navController.popBackStack()
+                    }
+
+                    override fun navigateToMainScreen() {
+                        if (selectedScreen != Screen.Main) {
+                            navController.navigateeee(Screen.Main)
+                            selectedScreen = Screen.Main
+                        }
+                    }
+
+                    override fun navigateToSettingsScreen() {
+                        if (selectedScreen != Screen.Settings) {
+                            navController.navigateeee(Screen.Settings)
+                            selectedScreen = Screen.Settings
+                        }
+                    }
+                }
                 val mainScreen by remember {
-                    mutableStateOf(
-                        MainScreen(
-                            navController = navController,
-                        )
-                    )
+                    mutableStateOf(MainScreen(bottomBarNavigator))
                 }
                 val settingsScreen by remember {
-                    mutableStateOf(
-                        SettingsScreen(
-                            navController = navController,
-                        )
-                    )
+                    mutableStateOf(SettingsScreen(bottomBarNavigator))
                 }
                 Scaffold(containerColor = Theme.colors.singleTheme,
                     bottomBar = {
                         BottomBar(
-                            initialSelectedScreen = viewModel.startScreen,
+                            bottomBarNavigator = bottomBarNavigator,
+                            selectedScreen = selectedScreen,
                             containerColor = mainColor,
-                            navController = navController
                         )
                     }) { innerPadding ->
                     Column(

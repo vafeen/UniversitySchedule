@@ -8,28 +8,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
-import ru.vafeen.universityschedule.presentation.utils.navigateeee
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import ru.vafeen.universityschedule.resources.R
 
 
 @Composable
 internal fun BottomBar(
-    initialSelectedScreen: Screen,
+    bottomBarNavigator: BottomBarNavigator? = null,
+    selectedScreen: Screen,
     containerColor: Color,
-    navController: NavController?,
 ) {
-    var selectedScreen by remember { mutableStateOf(initialSelectedScreen) }
     val colors = NavigationBarItemDefaults.colors(
         unselectedIconColor = containerColor.suitableColor().copy(alpha = 0.5f),
         indicatorColor = containerColor,
@@ -46,10 +40,7 @@ internal fun BottomBar(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Main,
             onClick = {
-                if (selectedScreen != Screen.Main) {
-                    navController?.navigateeee(Screen.Main)
-                    selectedScreen = Screen.Main
-                }
+                bottomBarNavigator?.navigateToMainScreen()
             },
             icon = {
                 Icon(
@@ -63,12 +54,7 @@ internal fun BottomBar(
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Settings,
-            onClick = {
-                if (selectedScreen != Screen.Settings) {
-                    navController?.navigateeee(Screen.Settings)
-                    selectedScreen = Screen.Settings
-                }
-            },
+            onClick = { bottomBarNavigator?.navigateToSettingsScreen() },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.settings),
