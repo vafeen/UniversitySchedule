@@ -2,7 +2,6 @@ package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -115,7 +114,6 @@ internal class SettingsScreen(private val navController: NavController) : Compos
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Theme.colors.singleTheme)
         ) {
             Row(
                 modifier = Modifier

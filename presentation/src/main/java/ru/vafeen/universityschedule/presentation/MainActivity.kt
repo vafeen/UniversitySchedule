@@ -89,13 +89,14 @@ class MainActivity : ComponentActivity() {
                         )
                     )
                 }
-                Scaffold(bottomBar = {
-                    BottomBar(
-                        initialSelectedScreen = viewModel.startScreen,
-                        containerColor = mainColor,
-                        navController = navController
-                    )
-                }) { innerPadding ->
+                Scaffold(containerColor = Theme.colors.singleTheme,
+                    bottomBar = {
+                        BottomBar(
+                            initialSelectedScreen = viewModel.startScreen,
+                            containerColor = mainColor,
+                            navController = navController
+                        )
+                    }) { innerPadding ->
                     Column(
                         modifier = Modifier
                             .background(Theme.colors.singleTheme)
