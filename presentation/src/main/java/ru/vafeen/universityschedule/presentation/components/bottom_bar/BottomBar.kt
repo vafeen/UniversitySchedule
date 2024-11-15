@@ -3,9 +3,6 @@ package ru.vafeen.universityschedule.presentation.components.bottom_bar
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
@@ -17,11 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.navigateeee
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
+import ru.vafeen.universityschedule.resources.R
 
 
 @Composable
@@ -54,8 +53,8 @@ internal fun BottomBar(
             },
             icon = {
                 Icon(
-                    Icons.Default.Home,
-                    contentDescription = "Icon1"
+                    painter = painterResource(id = R.drawable.home),
+                    contentDescription = "Home"
                 )
             },
             colors = colors,
@@ -72,8 +71,8 @@ internal fun BottomBar(
             },
             icon = {
                 Icon(
-                    Icons.AutoMirrored.Filled.List,
-                    contentDescription = "Icon2"
+                    painter = painterResource(id = R.drawable.settings),
+                    contentDescription = "Settings"
                 )
             },
             enabled = selectedScreen != Screen.Settings,
