@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -32,12 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -120,34 +116,29 @@ internal fun Lesson.StringForSchedule(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.schedule),
-                        contentDescription = "Icon schedule",
-                        tint = suitableColor
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = getLessonTimeString(),
-                        fontSize = FontSize.small17,
-                        color = suitableColor
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.schedule),
+                    contentDescription = "Icon schedule",
+                    tint = suitableColor
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = getLessonTimeString(),
+                    fontSize = FontSize.small17,
+                    color = suitableColor
+                )
                 if (classroom?.isNotEmpty() == true) {
                     Spacer(modifier = Modifier.width(5.dp))
-                    Row {
-                        Icon(
-                            imageVector = Icons.Default.Place,
-                            contentDescription = "Icon classroom",
-                            tint = suitableColor
-                        )
-
-                        Text(
-                            text = classroom ?: undefined,
-                            color = suitableColor,
-                            fontSize = FontSize.small17
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.place),
+                        contentDescription = "Icon classroom",
+                        tint = suitableColor
+                    )
+                    Text(
+                        text = classroom ?: undefined,
+                        color = suitableColor,
+                        fontSize = FontSize.small17
+                    )
                 }
                 Row(
                     modifier = Modifier.weight(1f),

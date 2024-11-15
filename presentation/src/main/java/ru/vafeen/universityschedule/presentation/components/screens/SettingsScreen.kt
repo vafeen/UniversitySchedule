@@ -17,8 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -216,7 +214,7 @@ internal class SettingsScreen(private val navController: NavController) : Compos
                                     AssistChip(
                                         leadingIcon = {
                                             if (subgroup == settings.subgroup) Icon(
-                                                imageVector = Icons.Default.Done,
+                                                painter = painterResource(id = R.drawable.done),
                                                 contentDescription = "this is user subgroup",
                                                 tint = Theme.colors.oppositeTheme
                                             )

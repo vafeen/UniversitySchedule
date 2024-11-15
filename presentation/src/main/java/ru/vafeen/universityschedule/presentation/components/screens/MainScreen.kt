@@ -24,10 +24,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -47,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -183,7 +180,7 @@ internal class MainScreen(private val navController: NavController) : Composable
                         )
 
                         Icon(
-                            imageVector = if (isFrequencyInChanging) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                            painter = painterResource(id = if (isFrequencyInChanging) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down),
                             contentDescription = "Fold or Undolf list with frequency",
                             tint = Theme.colors.oppositeTheme
                         )
@@ -204,7 +201,7 @@ internal class MainScreen(private val navController: NavController) : Composable
                                     fontSize = FontSize.medium19
                                 )
                                 if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
-                                    imageVector = Icons.Default.Done,
+                                    painter = painterResource(id = R.drawable.done),
                                     contentDescription = "This is selected or not",
                                     tint = Theme.colors.oppositeTheme
                                 )
@@ -227,7 +224,7 @@ internal class MainScreen(private val navController: NavController) : Composable
                                     fontSize = FontSize.medium19
                                 )
                                 if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
-                                    imageVector = Icons.Default.Done,
+                                    painter = painterResource(id = R.drawable.done),
                                     contentDescription = "This is selected or not",
                                     tint = Theme.colors.oppositeTheme
                                 )
@@ -251,7 +248,7 @@ internal class MainScreen(private val navController: NavController) : Composable
                                     fontSize = FontSize.medium19
                                 )
                                 if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
-                                    imageVector = Icons.Default.Done,
+                                    painter = painterResource(id = R.drawable.done),
                                     contentDescription = "This is selected or not",
                                     tint = Theme.colors.oppositeTheme
                                 )
