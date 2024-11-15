@@ -84,14 +84,16 @@ internal fun Lesson.StringForSchedule(
         uncheckedColor = Theme.colors.oppositeTheme
     )
     val outlinedTextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedTextColor = Theme.colors.oppositeTheme,
-        unfocusedTextColor = Theme.colors.oppositeTheme,
-        unfocusedLabelColor = Theme.colors.oppositeTheme,
-        focusedLabelColor = Theme.colors.oppositeTheme,
-        unfocusedBorderColor = Theme.colors.oppositeTheme,
-        focusedBorderColor = Theme.colors.oppositeTheme,
-        cursorColor = Theme.colors.oppositeTheme
+        focusedTextColor = suitableColor,
+        unfocusedTextColor = suitableColor,
+        unfocusedLabelColor = suitableColor,
+        focusedLabelColor = suitableColor,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        unfocusedBorderColor = suitableColor,
+        focusedBorderColor = suitableColor,
     )
+
     var isAdditionalInfoExpanded by remember { mutableStateOf(false) }
 
     Card(
@@ -231,7 +233,7 @@ internal fun Lesson.StringForSchedule(
                 )
             }
             if (!isAdditionalInfoExpanded && text.isNotEmpty())
-                TextForThisTheme(text = text, fontSize = FontSize.micro14)
+                Text(text = text, fontSize = FontSize.micro14, color = suitableColor)
 
             if (isAdditionalInfoExpanded && (isNoteAvailable || isNotificationsAvailable)) Column(
                 modifier = Modifier
@@ -247,7 +249,7 @@ internal fun Lesson.StringForSchedule(
                         onValueChange = {
                             text = it
                         },
-                        label = { TextForThisTheme(text = stringResource(R.string.note)) },
+                        label = { Text(text = stringResource(R.string.note)) },
                         colors = outlinedTextFieldColors,
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
@@ -264,7 +266,7 @@ internal fun Lesson.StringForSchedule(
                                     Icon(
                                         painter = painterResource(id = R.drawable.clear),
                                         contentDescription = "Clear text",
-                                        tint = Theme.colors.oppositeTheme
+                                        tint = suitableColor
                                     )
                                 }
                             }
