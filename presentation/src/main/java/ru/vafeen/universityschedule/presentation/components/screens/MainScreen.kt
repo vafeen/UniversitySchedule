@@ -162,7 +162,6 @@ internal class MainScreen(private val navController: NavController) : Composable
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Theme.colors.singleTheme)
         ) {
             Row(
                 modifier = Modifier
