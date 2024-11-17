@@ -111,12 +111,6 @@ class MainActivity : ComponentActivity() {
                     })
                 }
                 val currentScreen by bottomBarNavigator.currentScreen.collectAsState()
-                val mainScreen by remember {
-                    mutableStateOf(MainScreen(bottomBarNavigator))
-                }
-                val settingsScreen by remember {
-                    mutableStateOf(SettingsScreen(bottomBarNavigator))
-                }
                 Scaffold(containerColor = Theme.colors.singleTheme,
                     bottomBar = {
                         BottomBar(
@@ -135,10 +129,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = currentScreen.route
                         ) {
                             composable(Screen.Main.route) {
-                                mainScreen.Content()
+                                MainScreen(bottomBarNavigator)
                             }
                             composable(Screen.Settings.route) {
-                                settingsScreen.Content()
+                                SettingsScreen(bottomBarNavigator)
                             }
                         }
                         if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)

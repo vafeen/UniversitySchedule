@@ -21,7 +21,6 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionName
-import ru.vafeen.universityschedule.presentation.components.screens.base.ComposableScreen
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfSettings
 import ru.vafeen.universityschedule.presentation.components.ui_utils.ColorPickerDialog
 import ru.vafeen.universityschedule.presentation.components.ui_utils.EditLinkDialog
@@ -70,302 +68,293 @@ import ru.vafeen.universityschedule.resources.R
  *
  */
 
-internal class SettingsScreen(private val bottomBarNavigator: BottomBarNavigator) : ComposableScreen {
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    override fun Content() {
-        val viewModel: SettingsScreenViewModel = koinViewModel()
-        val context = LocalContext.current
-        val dark = isSystemInDarkTheme()
-        var subgroupList by remember { mutableStateOf(listOf<String>()) }
-        val settings by viewModel.settings.collectAsState()
-        var linkIsEditable by remember {
-            mutableStateOf(false)
-        }
-        var colorIsEditable by remember {
-            mutableStateOf(false)
-        }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
+    val viewModel: SettingsScreenViewModel = koinViewModel()
+    val context = LocalContext.current
+    val dark = isSystemInDarkTheme()
+    val subgroupList by viewModel.subgroupFlow.collectAsState()
+    val settings by viewModel.settings.collectAsState()
+    var linkIsEditable by remember {
+        mutableStateOf(false)
+    }
+    var colorIsEditable by remember {
+        mutableStateOf(false)
+    }
 
 
-        var isFeaturesEditable by remember { mutableStateOf(false) }
-        var isSubGroupChanging by remember {
-            mutableStateOf(false)
-        }
-        var catsOnUIIsChanging by remember {
-            mutableStateOf(false)
-        }
-        val subGroupLazyRowState = rememberLazyListState()
-        val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
+    var isFeaturesEditable by remember { mutableStateOf(false) }
+    var isSubGroupChanging by remember {
+        mutableStateOf(false)
+    }
+    var catsOnUIIsChanging by remember {
+        mutableStateOf(false)
+    }
+    val subGroupLazyRowState = rememberLazyListState()
+    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
 
-        LaunchedEffect(key1 = null) {
-            viewModel.subgroupFlow.collect {
-                subgroupList = it
-            }
-        }
-
-        BackHandler(onBack = bottomBarNavigator::navigateToMainScreen)
-        Column(
+    BackHandler(onBack = bottomBarNavigator::navigateToMainScreen)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row {
-                    Icon(
-                        painter = painterResource(
-                            id = getIconByRequestStatus(
-                                networkState = networkState
-                            )
-                        ),
-                        contentDescription = "data updating state",
-                        tint = Theme.colors.oppositeTheme
-                    )
-                    Spacer(modifier = Modifier.width(15.dp))
-                    TextForThisTheme(
-                        text = stringResource(R.string.settings), fontSize = FontSize.big22
-                    )
-                }
-            }
-            if (linkIsEditable) EditLinkDialog(context = context) {
-                linkIsEditable = false
-            }
-            if (colorIsEditable) ColorPickerDialog(context = context,
-                firstColor = settings.getMainColorForThisTheme(isDark = dark)
-                    ?: Theme.colors.mainColor,
-                onDismissRequest = { colorIsEditable = false }) {
-                viewModel.saveSettingsToSharedPreferences(
-                    if (dark) settings.copy(
-                        darkThemeColor = it
-                    ) else settings.copy(lightThemeColor = it)
+            Row {
+                Icon(
+                    painter = painterResource(
+                        id = getIconByRequestStatus(
+                            networkState = networkState
+                        )
+                    ),
+                    contentDescription = "data updating state",
+                    tint = Theme.colors.oppositeTheme
+                )
+                Spacer(modifier = Modifier.width(15.dp))
+                TextForThisTheme(
+                    text = stringResource(R.string.settings), fontSize = FontSize.big22
                 )
             }
+        }
+        if (linkIsEditable) EditLinkDialog(context = context) {
+            linkIsEditable = false
+        }
+        if (colorIsEditable) ColorPickerDialog(context = context,
+            firstColor = settings.getMainColorForThisTheme(isDark = dark)
+                ?: Theme.colors.mainColor,
+            onDismissRequest = { colorIsEditable = false }) {
+            viewModel.saveSettingsToSharedPreferences(
+                if (dark) settings.copy(
+                    darkThemeColor = it
+                ) else settings.copy(lightThemeColor = it)
+            )
+        }
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 20.dp)
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    // name of section
-                    TextForThisTheme(
-                        modifier = Modifier
-                            .align(Alignment.Center),
-                        fontSize = FontSize.big22,
-                        text = stringResource(R.string.general)
-                    )
-                    if (settings.catInSettings) GifPlayer(
-                        size = 80.dp,
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                        imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
-                    )
-                }
-                // Edit link
-                CardOfSettings(text = stringResource(R.string.link_to_table), icon = {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 20.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                // name of section
+                TextForThisTheme(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    fontSize = FontSize.big22,
+                    text = stringResource(R.string.general)
+                )
+                if (settings.catInSettings) GifPlayer(
+                    size = 80.dp,
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
+                )
+            }
+            // Edit link
+            CardOfSettings(text = stringResource(R.string.link_to_table), icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.link),
+                    contentDescription = "edit link",
+                    tint = it.suitableColor()
+                )
+            }, onClick = { linkIsEditable = true })
+
+            // View table
+            if (settings.link != null) {
+                CardOfSettings(text = stringResource(R.string.table), icon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.link),
+                        painter = painterResource(id = R.drawable.table),
                         contentDescription = "edit link",
                         tint = it.suitableColor()
                     )
-                }, onClick = { linkIsEditable = true })
+                }, onClick = { settings.link?.let { context.openLink(link = it) } })
 
-                // View table
-                if (settings.link != null) {
-                    CardOfSettings(text = stringResource(R.string.table), icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.table),
-                            contentDescription = "edit link",
-                            tint = it.suitableColor()
-                        )
-                    }, onClick = { settings.link?.let { context.openLink(link = it) } })
+            }
 
-                }
-
-                // Subgroup
-                if (subgroupList.isNotEmpty()) {
-                    CardOfSettings(text = stringResource(R.string.subgroup),
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.group),
-                                contentDescription = "subgroup",
-                                tint = it.suitableColor()
-                            )
-                        },
-                        onClick = { isSubGroupChanging = !isSubGroupChanging },
-                        additionalContentIsVisible = isSubGroupChanging,
-                        additionalContent = {
-                            LazyRow(
-                                state = subGroupLazyRowState,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = it)
-                            ) {
-                                items(subgroupList) { subgroup ->
-                                    AssistChip(
-                                        leadingIcon = {
-                                            if (subgroup == settings.subgroup) Icon(
-                                                painter = painterResource(id = R.drawable.done),
-                                                contentDescription = "this is user subgroup",
-                                                tint = Theme.colors.oppositeTheme
-                                            )
-                                        },
-                                        modifier = Modifier.padding(horizontal = 3.dp),
-                                        onClick = {
-                                            viewModel.saveSettingsToSharedPreferences(
-                                                settings.copy(
-                                                    subgroup = if (settings.subgroup != subgroup) subgroup else null
-                                                )
-                                            )
-                                        },
-                                        label = { TextForThisTheme(text = subgroup) },
-                                    )
-                                }
-                            }
-                        })
-
-                }
-
-                CardOfSettings(
-                    text = stringResource(id = R.string.features),
+            // Subgroup
+            if (subgroupList.isNotEmpty()) {
+                CardOfSettings(text = stringResource(R.string.subgroup),
                     icon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.tune),
-                            contentDescription = "features",
+                            painter = painterResource(id = R.drawable.group),
+                            contentDescription = "subgroup",
                             tint = it.suitableColor()
                         )
                     },
-                    onClick = { isFeaturesEditable = !isFeaturesEditable },
-                    additionalContentIsVisible = isFeaturesEditable
-                ) {
-                    FeatureOfSettings(
-                        onClick = {
-                            viewModel.saveSettingsToSharedPreferences(
-                                settings = settings.copy(
-                                    notificationsAboutLesson = !settings.notificationsAboutLesson
-                                )
-                            )
-                        },
-                        padding = it,
-                        text = stringResource(R.string.notification_about_lesson_before_time),
-                        checked = settings.notificationsAboutLesson
-                    )
-                    FeatureOfSettings(
-                        onClick = {
-                            viewModel.saveSettingsToSharedPreferences(
-                                settings = settings.copy(
-                                    notesAboutLesson = !settings.notesAboutLesson
-                                )
-                            )
-                        },
-                        padding = it,
-                        text = stringResource(R.string.note),
-                        checked = settings.notesAboutLesson
-                    )
-                }
-
-                // name of section
-                TextForThisTheme(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .align(Alignment.CenterHorizontally),
-                    fontSize = FontSize.big22,
-                    text = stringResource(R.string.interface_str)
-                )
-                // Color
-                CardOfSettings(text = stringResource(R.string.interface_color), icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.palette),
-                        contentDescription = "change color of interface",
-                        tint = it.suitableColor()
-                    )
-                }, onClick = { colorIsEditable = true })
-                // cats in interface
-                CardOfSettings(text = stringResource(R.string.cats_on_ui),
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.cat),
-                            contentDescription = "cats in interface",
-                            tint = it.suitableColor()
-                        )
-                    },
-                    onClick = { catsOnUIIsChanging = !catsOnUIIsChanging },
-                    additionalContentIsVisible = catsOnUIIsChanging,
+                    onClick = { isSubGroupChanging = !isSubGroupChanging },
+                    additionalContentIsVisible = isSubGroupChanging,
                     additionalContent = {
-                        Column {
-                            FeatureOfSettings(
-                                onClick = {
-                                    viewModel.saveSettingsToSharedPreferences(
-                                        settings = settings.copy(
-                                            weekendCat = !settings.weekendCat
+                        LazyRow(
+                            state = subGroupLazyRowState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = it)
+                        ) {
+                            items(subgroupList) { subgroup ->
+                                AssistChip(
+                                    leadingIcon = {
+                                        if (subgroup == settings.subgroup) Icon(
+                                            painter = painterResource(id = R.drawable.done),
+                                            contentDescription = "this is user subgroup",
+                                            tint = Theme.colors.oppositeTheme
                                         )
-                                    )
-                                },
-                                padding = it,
-                                text = stringResource(R.string.weekend_cat),
-                                checked = settings.weekendCat
-                            )
-                            FeatureOfSettings(
-                                onClick = {
-                                    viewModel.saveSettingsToSharedPreferences(
-                                        settings = settings.copy(
-                                            catInSettings = !settings.catInSettings
+                                    },
+                                    modifier = Modifier.padding(horizontal = 3.dp),
+                                    onClick = {
+                                        viewModel.saveSettingsToSharedPreferences(
+                                            settings.copy(
+                                                subgroup = if (settings.subgroup != subgroup) subgroup else null
+                                            )
                                         )
-                                    )
-                                },
-                                padding = it,
-                                text = stringResource(R.string.cat_in_settings),
-                                checked = settings.catInSettings
-                            )
-
+                                    },
+                                    label = { TextForThisTheme(text = subgroup) },
+                                )
+                            }
                         }
                     })
 
+            }
 
-                // name of section
-                TextForThisTheme(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .align(Alignment.CenterHorizontally),
-                    fontSize = FontSize.big22,
-                    text = stringResource(R.string.contacts)
+            CardOfSettings(
+                text = stringResource(id = R.string.features),
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.tune),
+                        contentDescription = "features",
+                        tint = it.suitableColor()
+                    )
+                },
+                onClick = { isFeaturesEditable = !isFeaturesEditable },
+                additionalContentIsVisible = isFeaturesEditable
+            ) {
+                FeatureOfSettings(
+                    onClick = {
+                        viewModel.saveSettingsToSharedPreferences(
+                            settings = settings.copy(
+                                notificationsAboutLesson = !settings.notificationsAboutLesson
+                            )
+                        )
+                    },
+                    padding = it,
+                    text = stringResource(R.string.notification_about_lesson_before_time),
+                    checked = settings.notificationsAboutLesson
                 )
-
-                // CODE
-                CardOfSettings(text = stringResource(R.string.code), icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.terminal),
-                        contentDescription = "view code",
-                        tint = it.suitableColor()
-                    )
-                }, onClick = {
-                    context.openLink(link = Link.CODE)
-                })
-
-                CardOfSettings(text = stringResource(R.string.report_a_bug), icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.bug_report),
-                        contentDescription = "view code",
-                        tint = it.suitableColor()
-                    )
-                }, onClick = {
-                    context.sendEmail(email = Link.EMAIL)
-                })
-                // version
-                TextForThisTheme(
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .padding(bottom = 20.dp)
-                        .align(Alignment.End),
-                    fontSize = FontSize.small17,
-                    text = "${stringResource(R.string.version)} ${LocalContext.current.getVersionName()}"
+                FeatureOfSettings(
+                    onClick = {
+                        viewModel.saveSettingsToSharedPreferences(
+                            settings = settings.copy(
+                                notesAboutLesson = !settings.notesAboutLesson
+                            )
+                        )
+                    },
+                    padding = it,
+                    text = stringResource(R.string.note),
+                    checked = settings.notesAboutLesson
                 )
             }
+
+            // name of section
+            TextForThisTheme(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterHorizontally),
+                fontSize = FontSize.big22,
+                text = stringResource(R.string.interface_str)
+            )
+            // Color
+            CardOfSettings(text = stringResource(R.string.interface_color), icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.palette),
+                    contentDescription = "change color of interface",
+                    tint = it.suitableColor()
+                )
+            }, onClick = { colorIsEditable = true })
+            // cats in interface
+            CardOfSettings(text = stringResource(R.string.cats_on_ui),
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.cat),
+                        contentDescription = "cats in interface",
+                        tint = it.suitableColor()
+                    )
+                },
+                onClick = { catsOnUIIsChanging = !catsOnUIIsChanging },
+                additionalContentIsVisible = catsOnUIIsChanging,
+                additionalContent = {
+                    Column {
+                        FeatureOfSettings(
+                            onClick = {
+                                viewModel.saveSettingsToSharedPreferences(
+                                    settings = settings.copy(
+                                        weekendCat = !settings.weekendCat
+                                    )
+                                )
+                            },
+                            padding = it,
+                            text = stringResource(R.string.weekend_cat),
+                            checked = settings.weekendCat
+                        )
+                        FeatureOfSettings(
+                            onClick = {
+                                viewModel.saveSettingsToSharedPreferences(
+                                    settings = settings.copy(
+                                        catInSettings = !settings.catInSettings
+                                    )
+                                )
+                            },
+                            padding = it,
+                            text = stringResource(R.string.cat_in_settings),
+                            checked = settings.catInSettings
+                        )
+
+                    }
+                })
+
+
+            // name of section
+            TextForThisTheme(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .align(Alignment.CenterHorizontally),
+                fontSize = FontSize.big22,
+                text = stringResource(R.string.contacts)
+            )
+
+            // CODE
+            CardOfSettings(text = stringResource(R.string.code), icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.terminal),
+                    contentDescription = "view code",
+                    tint = it.suitableColor()
+                )
+            }, onClick = {
+                context.openLink(link = Link.CODE)
+            })
+
+            CardOfSettings(text = stringResource(R.string.report_a_bug), icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.bug_report),
+                    contentDescription = "view code",
+                    tint = it.suitableColor()
+                )
+            }, onClick = {
+                context.sendEmail(email = Link.EMAIL)
+            })
+            // version
+            TextForThisTheme(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .padding(bottom = 20.dp)
+                    .align(Alignment.End),
+                fontSize = FontSize.small17,
+                text = "${stringResource(R.string.version)} ${LocalContext.current.getVersionName()}"
+            )
         }
     }
-
 }
