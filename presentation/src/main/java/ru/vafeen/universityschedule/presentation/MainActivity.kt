@@ -19,9 +19,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
@@ -62,7 +67,6 @@ class MainActivity : ComponentActivity() {
                 var updateIsShowed by remember { mutableStateOf(false) }
                 val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
                 val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
-                var selectedScreen by remember { mutableStateOf(viewModel.startScreen) }
                 RequestNotificationPermission()
 
                 if (!updateIsShowed) CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
@@ -77,25 +81,36 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val navController = rememberNavController()
-                val bottomBarNavigator = object : BottomBarNavigator {
-                    override fun back() {
-                        navController.popBackStack()
-                    }
+                val bottomBarNavigator by remember {
+                    mutableStateOf(object : BottomBarNavigator {
 
-                    override fun navigateToMainScreen() {
-                        if (selectedScreen != Screen.Main) {
-                            navController.navigateeee(Screen.Main)
-                            selectedScreen = Screen.Main
-                        }
-                    }
+                        override val currentScreen: StateFlow<Screen> =
+                            navController.currentBackStackEntryFlow.map {
+                                Screen.valueOf(it.destination.route.toString())
+                            }.stateIn(
+                                scope = lifecycleScope,
+                                started = SharingStarted.Lazily,
+                                initialValue = Screen.Main
+                            )
 
-                    override fun navigateToSettingsScreen() {
-                        if (selectedScreen != Screen.Settings) {
-                            navController.navigateeee(Screen.Settings)
-                            selectedScreen = Screen.Settings
+                        override fun back() {
+                            navController.popBackStack()
                         }
-                    }
+
+                        override fun navigateToMainScreen() {
+                            if (currentScreen.value != Screen.Main) {
+                                navController.navigateeee(Screen.Main)
+                            }
+                        }
+
+                        override fun navigateToSettingsScreen() {
+                            if (currentScreen.value != Screen.Settings) {
+                                navController.navigateeee(Screen.Settings)
+                            }
+                        }
+                    })
                 }
+                val currentScreen by bottomBarNavigator.currentScreen.collectAsState()
                 val mainScreen by remember {
                     mutableStateOf(MainScreen(bottomBarNavigator))
                 }
@@ -106,7 +121,6 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         BottomBar(
                             bottomBarNavigator = bottomBarNavigator,
-                            selectedScreen = selectedScreen,
                             containerColor = mainColor,
                         )
                     }) { innerPadding ->
@@ -118,7 +132,7 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             modifier = Modifier.weight(1f),
                             navController = navController,
-                            startDestination = viewModel.startScreen.route
+                            startDestination = currentScreen.route
                         ) {
                             composable(Screen.Main.route) {
                                 mainScreen.Content()

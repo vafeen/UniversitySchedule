@@ -30,7 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.raedapps.alwan.rememberAlwanState
 import com.raedapps.alwan.ui.Alwan
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
+import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
@@ -50,7 +53,14 @@ internal fun ColorPickerDialog(
     var newColor by remember {
         mutableStateOf(firstColor)
     }
-
+    val bottomBarNavigator by remember {
+        mutableStateOf(object : BottomBarNavigator {
+            override val currentScreen: StateFlow<Screen> = MutableStateFlow(Screen.Main)
+            override fun back() {}
+            override fun navigateToMainScreen() {}
+            override fun navigateToSettingsScreen() {}
+        })
+    }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -74,7 +84,7 @@ internal fun ColorPickerDialog(
                 )
 
                 BottomBar(
-                    selectedScreen = Screen.Settings,
+                    bottomBarNavigator = bottomBarNavigator,
                     containerColor = newColor,
                 )
 

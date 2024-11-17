@@ -14,7 +14,6 @@ import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.save
-import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
 import kotlin.system.exitProcess
@@ -25,7 +24,6 @@ internal class MainActivityViewModel(
     private val sharedPreferences: SharedPreferences,
     apkDownloader: ApkDownloader,
 ) : ViewModel() {
-    var startScreen =  Screen.Main
     val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
     val percentageFlow = apkDownloader.percentageFlow
     private val _settings =
