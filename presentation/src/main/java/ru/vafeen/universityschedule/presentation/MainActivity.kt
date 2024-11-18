@@ -34,7 +34,7 @@ import ru.vafeen.universityschedule.presentation.components.screens.SettingsScre
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
-import ru.vafeen.universityschedule.presentation.navigation.Screen
+import ru.vafeen.universityschedule.presentation.navigation.NavigationRoot
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
 
@@ -89,18 +89,7 @@ class MainActivity : ComponentActivity() {
                             .background(Theme.colors.singleTheme)
                             .padding(innerPadding),
                     ) {
-                        NavHost(
-                            modifier = Modifier.weight(1f),
-                            navController = viewModel.navController ?: rememberNavController(),
-                            startDestination = currentScreen.route
-                        ) {
-                            composable(Screen.Main.route) {
-                                MainScreen(viewModel)
-                            }
-                            composable(Screen.Settings.route) {
-                                SettingsScreen(viewModel)
-                            }
-                        }
+                        NavigationRoot(viewModel, Modifier.weight(1f))
                         if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
                     }
                 }
