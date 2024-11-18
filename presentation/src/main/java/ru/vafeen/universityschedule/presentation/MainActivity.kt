@@ -52,7 +52,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        viewModel.registerGeneralExceptionCallback(context = this)
         setContent {
             MainTheme {
                 val dark = isSystemInDarkTheme()

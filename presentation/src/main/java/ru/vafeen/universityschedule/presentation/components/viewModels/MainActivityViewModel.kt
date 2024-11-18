@@ -23,12 +23,13 @@ internal class MainActivityViewModel(
     val getLatestReleaseUseCase: GetLatestReleaseUseCase,
     private val sharedPreferences: SharedPreferences,
     apkDownloader: ApkDownloader,
+    context: Context
 ) : ViewModel() {
     val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
     val percentageFlow = apkDownloader.percentageFlow
     private val _settings =
         MutableStateFlow(sharedPreferences.getSettingsOrCreateIfNull())
-     val settings = _settings.asStateFlow()
+    val settings = _settings.asStateFlow()
     private val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             viewModelScope.launch(Dispatchers.IO) {
@@ -45,7 +46,7 @@ internal class MainActivityViewModel(
     }
 
 
-    fun registerGeneralExceptionCallback(context: Context) {
+    private fun registerGeneralExceptionCallback(context: Context) {
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             context.copyTextToClipBoard(
                 label = "Error",
@@ -54,6 +55,10 @@ internal class MainActivityViewModel(
             Log.e("GeneralException", "Exception in thread ${thread.name}", throwable)
             exitProcess(0)
         }
+    }
+
+    init {
+        registerGeneralExceptionCallback(context = context)
     }
 
     override fun onCleared() {
