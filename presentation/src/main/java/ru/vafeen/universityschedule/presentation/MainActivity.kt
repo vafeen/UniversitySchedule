@@ -19,14 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
@@ -38,11 +34,9 @@ import ru.vafeen.universityschedule.presentation.components.screens.SettingsScre
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
-import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.MainTheme
 import ru.vafeen.universityschedule.presentation.theme.Theme
-import ru.vafeen.universityschedule.presentation.utils.navigateeee
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainActivityViewModel by viewModel()
@@ -54,6 +48,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MainTheme {
+                viewModel.navController = rememberNavController()
+                val context = LocalContext.current
                 val dark = isSystemInDarkTheme()
                 val defaultColor = Theme.colors.mainColor
                 val settings by viewModel.settings.collectAsState()
@@ -79,41 +75,12 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                val navController = rememberNavController()
-                val bottomBarNavigator by remember {
-                    mutableStateOf(object : BottomBarNavigator {
 
-                        override val currentScreen: StateFlow<Screen> =
-                            navController.currentBackStackEntryFlow.map {
-                                Screen.valueOf(it.destination.route.toString())
-                            }.stateIn(
-                                scope = lifecycleScope,
-                                started = SharingStarted.Lazily,
-                                initialValue = Screen.Main
-                            )
-
-                        override fun back() {
-                            navController.popBackStack()
-                        }
-
-                        override fun navigateToMainScreen() {
-                            if (currentScreen.value != Screen.Main) {
-                                navController.navigateeee(Screen.Main)
-                            }
-                        }
-
-                        override fun navigateToSettingsScreen() {
-                            if (currentScreen.value != Screen.Settings) {
-                                navController.navigateeee(Screen.Settings)
-                            }
-                        }
-                    })
-                }
-                val currentScreen by bottomBarNavigator.currentScreen.collectAsState()
+                val currentScreen by viewModel.currentScreen.collectAsState()
                 Scaffold(containerColor = Theme.colors.singleTheme,
                     bottomBar = {
                         BottomBar(
-                            bottomBarNavigator = bottomBarNavigator,
+                            bottomBarNavigator = viewModel,
                             containerColor = mainColor,
                         )
                     }) { innerPadding ->
@@ -124,14 +91,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(
                             modifier = Modifier.weight(1f),
-                            navController = navController,
+                            navController = viewModel.navController ?: rememberNavController(),
                             startDestination = currentScreen.route
                         ) {
                             composable(Screen.Main.route) {
-                                MainScreen(bottomBarNavigator)
+                                MainScreen(viewModel)
                             }
                             composable(Screen.Settings.route) {
-                                SettingsScreen(bottomBarNavigator)
+                                SettingsScreen(viewModel)
                             }
                         }
                         if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)

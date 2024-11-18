@@ -5,8 +5,10 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Settings
@@ -14,8 +16,11 @@ import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.save
+import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
+import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
+import ru.vafeen.universityschedule.presentation.utils.navigateeee
 import kotlin.system.exitProcess
 
 
@@ -23,8 +28,8 @@ internal class MainActivityViewModel(
     val getLatestReleaseUseCase: GetLatestReleaseUseCase,
     private val sharedPreferences: SharedPreferences,
     apkDownloader: ApkDownloader,
-    context: Context
-) : ViewModel() {
+    context: Context,
+) : ViewModel(), BottomBarNavigator {
     val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
     val percentageFlow = apkDownloader.percentageFlow
     private val _settings =
@@ -61,6 +66,29 @@ internal class MainActivityViewModel(
         registerGeneralExceptionCallback(context = context)
     }
 
+    var navController: NavHostController? = null
+    private val _currentScreen = MutableStateFlow(Screen.Main)
+    override val currentScreen: StateFlow<Screen> = _currentScreen.asStateFlow()
+    private suspend fun emitLastEntry() {
+        _currentScreen.emit(
+            Screen.valueOf(
+                navController?.currentDestination?.route ?: ""
+            )
+        )
+    }
+
+    private fun navigate(navigate: NavHostController.() -> Unit) {
+        navController?.apply {
+            navController?.navigate()
+            viewModelScope.launch(Dispatchers.Main) {
+                emitLastEntry()
+            }
+        }
+    }
+
+    override fun back() = navigate { popBackStack() }
+    override fun navigateToMainScreen() = navigate { navigateeee(Screen.Main) }
+    override fun navigateToSettingsScreen() = navigate { navigateeee(Screen.Settings) }
     override fun onCleared() {
         super.onCleared()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
