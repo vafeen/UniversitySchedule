@@ -87,8 +87,7 @@ internal class MainActivityViewModel(
     }
 
     override fun back() = navigate { popBackStack() }
-    override fun navigateToMainScreen() = navigate { navigateeee(Screen.Main) }
-    override fun navigateToSettingsScreen() = navigate { navigateeee(Screen.Settings) }
+    override fun navigateTo(screen: Screen) = navigate { navigateeee(screen) }
     override fun onCleared() {
         super.onCleared()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)

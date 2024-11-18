@@ -5,6 +5,5 @@ import kotlinx.coroutines.flow.StateFlow
 internal interface BottomBarNavigator {
     val currentScreen: StateFlow<Screen>
     fun back()
-    fun navigateToMainScreen()
-    fun navigateToSettingsScreen()
+    fun navigateTo(screen: Screen)
 }

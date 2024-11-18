@@ -41,7 +41,7 @@ internal fun BottomBar(
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Main,
-            onClick = bottomBarNavigator::navigateToMainScreen,
+            onClick = { bottomBarNavigator.navigateTo(Screen.Main) },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.home),
@@ -54,7 +54,7 @@ internal fun BottomBar(
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Settings,
-            onClick = bottomBarNavigator::navigateToSettingsScreen,
+            onClick = { bottomBarNavigator.navigateTo(Screen.Settings) },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.settings),
