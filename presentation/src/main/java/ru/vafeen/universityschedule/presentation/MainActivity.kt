@@ -20,8 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
@@ -29,8 +27,6 @@ import ru.vafeen.universityschedule.domain.utils.getVersionCode
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.NewVersionInfoBottomSheet
 import ru.vafeen.universityschedule.presentation.components.permissions.RequestNotificationPermission
-import ru.vafeen.universityschedule.presentation.components.screens.MainScreen
-import ru.vafeen.universityschedule.presentation.components.screens.SettingsScreen
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
@@ -74,12 +70,11 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-
-
-                val currentScreen by viewModel.currentScreen.collectAsState()
                 Scaffold(containerColor = Theme.colors.singleTheme,
                     bottomBar = {
+                        val selectedScreen by viewModel.currentScreen.collectAsState()
                         BottomBar(
+                            selectedScreen = selectedScreen,
                             bottomBarNavigator = viewModel,
                             containerColor = mainColor,
                         )

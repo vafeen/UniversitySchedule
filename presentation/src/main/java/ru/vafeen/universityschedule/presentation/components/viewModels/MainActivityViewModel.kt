@@ -66,10 +66,10 @@ internal class MainActivityViewModel(
         registerGeneralExceptionCallback(context = context)
     }
 
-    var navController: NavHostController? = null
+    override var navController: NavHostController? = null
     private val _currentScreen = MutableStateFlow(Screen.Main)
     override val currentScreen: StateFlow<Screen> = _currentScreen.asStateFlow()
-    private suspend fun emitLastEntry() {
+    suspend fun emitLastEntry() {
         _currentScreen.emit(
             Screen.valueOf(
                 navController?.currentDestination?.route ?: ""
@@ -77,17 +77,17 @@ internal class MainActivityViewModel(
         )
     }
 
+    override fun back() = navigate { popBackStack() }
+    override fun navigateTo(screen: Screen) = navigate { navigateeee(screen) }
     private fun navigate(navigate: NavHostController.() -> Unit) {
         navController?.apply {
-            navController?.navigate()
+            navigate()
             viewModelScope.launch(Dispatchers.Main) {
                 emitLastEntry()
             }
         }
     }
 
-    override fun back() = navigate { popBackStack() }
-    override fun navigateTo(screen: Screen) = navigate { navigateeee(screen) }
     override fun onCleared() {
         super.onCleared()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)

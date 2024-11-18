@@ -8,8 +8,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -22,7 +20,8 @@ import ru.vafeen.universityschedule.resources.R
 
 @Composable
 internal fun BottomBar(
-    bottomBarNavigator: BottomBarNavigator,
+    selectedScreen: Screen,
+    bottomBarNavigator: BottomBarNavigator? = null,
     containerColor: Color,
 ) {
     val colors = NavigationBarItemDefaults.colors(
@@ -30,7 +29,6 @@ internal fun BottomBar(
         indicatorColor = containerColor,
         disabledIconColor = containerColor.suitableColor(),
     )
-    val selectedScreen by bottomBarNavigator.currentScreen.collectAsState()
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,7 +39,7 @@ internal fun BottomBar(
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Main,
-            onClick = { bottomBarNavigator.navigateTo(Screen.Main) },
+            onClick = { bottomBarNavigator?.navigateTo(Screen.Main) },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.home),
@@ -54,7 +52,7 @@ internal fun BottomBar(
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Settings,
-            onClick = { bottomBarNavigator.navigateTo(Screen.Settings) },
+            onClick = { bottomBarNavigator?.navigateTo(Screen.Settings) },
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.settings),
