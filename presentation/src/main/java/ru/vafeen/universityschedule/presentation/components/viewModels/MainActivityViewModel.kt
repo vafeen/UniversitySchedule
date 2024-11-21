@@ -71,12 +71,12 @@ internal class MainActivityViewModel(
     private val _currentScreen = MutableStateFlow(Screen.Main)
     override val currentScreen: StateFlow<Screen> = _currentScreen.asStateFlow()
 
-    fun emit() {
+    fun emitCurrentScreen() {
         viewModelScope.launch(Dispatchers.Main) {
             navController?.currentBackStackEntryFlow?.collect {
                 _currentScreen.emit(
                     Screen.valueOf(
-                        it.destination.route ?: throw Exception("route is null ")
+                        it.destination.route.toString()
                     )
                 )
             }
@@ -85,14 +85,14 @@ internal class MainActivityViewModel(
 
     override fun back() {
         navController?.popBackStack()
-        emit()
+        emitCurrentScreen()
     }
 
     override fun navigateTo(screen: Screen) {
         if (screen != Screen.Main)
             navController?.navigate(screen.route)
         else navController?.popBackStack()
-        emit()
+        emitCurrentScreen()
     }
 
 
