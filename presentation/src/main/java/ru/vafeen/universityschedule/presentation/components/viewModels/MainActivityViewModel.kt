@@ -21,7 +21,7 @@ import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
-import ru.vafeen.universityschedule.presentation.utils.navigateeee
+import ru.vafeen.universityschedule.presentation.utils.navigateOnScreenWithSingleScreenRule
 import kotlin.system.exitProcess
 
 
@@ -79,7 +79,8 @@ internal class MainActivityViewModel(
     }
 
     override fun back() = navigate { popBackStack() }
-    override fun navigateTo(screen: Screen) = navigate { navigateeee(screen) }
+    override fun navigateTo(screen: Screen) =
+        navigate { navigateOnScreenWithSingleScreenRule(screen) }
     private fun navigate(navigate: NavHostController.() -> Unit) {
         navController?.apply {
             navigate()
