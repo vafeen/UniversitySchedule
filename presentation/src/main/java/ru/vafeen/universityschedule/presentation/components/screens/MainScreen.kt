@@ -47,6 +47,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -77,6 +79,8 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
+    val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateFlow.collectAsState()
+
     val viewModel: MainScreenViewModel =
         koinViewModel()
     val context = LocalContext.current
@@ -144,7 +148,6 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             }
         }
     }
-
     LaunchedEffect(key1 = pagerState.currentPage) {
         localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
         cardsWithDateState.animateScrollToItem(
@@ -152,6 +155,17 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             else pagerState.currentPage
         )
     }
+    LaunchedEffect(lifecycleState) {
+        when (lifecycleState) {
+            Lifecycle.State.DESTROYED -> {}
+            Lifecycle.State.INITIALIZED -> {}
+            Lifecycle.State.CREATED -> {}
+            Lifecycle.State.STARTED -> {}
+            Lifecycle.State.RESUMED -> {}
+        }
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()

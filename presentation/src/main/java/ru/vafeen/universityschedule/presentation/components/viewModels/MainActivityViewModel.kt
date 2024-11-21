@@ -21,7 +21,6 @@ import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
-import ru.vafeen.universityschedule.presentation.utils.navigateOnScreenWithSingleScreenRule
 import kotlin.system.exitProcess
 
 
@@ -67,28 +66,35 @@ internal class MainActivityViewModel(
         registerGeneralExceptionCallback(context = context)
     }
 
+    val startScreen = Screen.Main
     override var navController: NavHostController? = null
     private val _currentScreen = MutableStateFlow(Screen.Main)
     override val currentScreen: StateFlow<Screen> = _currentScreen.asStateFlow()
-    suspend fun emitLastEntry() {
-        _currentScreen.emit(
-            Screen.valueOf(
-                navController?.currentDestination?.route ?: ""
-            )
-        )
-    }
 
-    override fun back() = navigate { popBackStack() }
-    override fun navigateTo(screen: Screen) =
-        navigate { navigateOnScreenWithSingleScreenRule(screen) }
-    private fun navigate(navigate: NavHostController.() -> Unit) {
-        navController?.apply {
-            navigate()
-            viewModelScope.launch(Dispatchers.Main) {
-                emitLastEntry()
+    fun emit() {
+        viewModelScope.launch(Dispatchers.Main) {
+            navController?.currentBackStackEntryFlow?.collect {
+                _currentScreen.emit(
+                    Screen.valueOf(
+                        it.destination.route ?: throw Exception("route is null ")
+                    )
+                )
             }
         }
     }
+
+    override fun back() {
+        navController?.popBackStack()
+        emit()
+    }
+
+    override fun navigateTo(screen: Screen) {
+        if (screen != Screen.Main)
+            navController?.navigate(screen.route)
+        else navController?.popBackStack()
+        emit()
+    }
+
 
     val versionCode = context.getVersionCode()
     override fun onCleared() {

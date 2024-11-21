@@ -14,10 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.NewVersionInfoBottomSheet
@@ -32,8 +30,6 @@ import ru.vafeen.universityschedule.presentation.theme.Theme
 internal fun NavigationRoot(
     viewModel: MainActivityViewModel,
 ) {
-    val context = LocalContext.current
-    val currentScreen by viewModel.currentScreen.collectAsState()
     val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
     val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
     val dark = isSystemInDarkTheme()
@@ -70,8 +66,9 @@ internal fun NavigationRoot(
                 .background(Theme.colors.singleTheme)
         ) {
             NavHost(
-                navController = viewModel.navController ?: rememberNavController(),
-                startDestination = currentScreen.route
+                navController = viewModel.navController
+                    ?: throw Exception("navController is null "),
+                startDestination = viewModel.startScreen.route
             ) {
                 composable(Screen.Main.route) {
                     MainScreen(viewModel)

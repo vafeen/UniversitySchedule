@@ -44,7 +44,6 @@ import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
 import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
-import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.Link
@@ -96,7 +95,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
     val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
 
     BackHandler {
-        bottomBarNavigator.navigateTo(Screen.Main)
+        bottomBarNavigator.back()
     }
     Column(
         modifier = Modifier
