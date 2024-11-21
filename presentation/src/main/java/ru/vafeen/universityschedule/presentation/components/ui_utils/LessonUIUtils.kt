@@ -118,7 +118,7 @@ internal fun Lesson.StringForSchedule(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.schedule),
-                    contentDescription = "Icon schedule",
+                    contentDescription = stringResource(R.string.icon_time),
                     tint = suitableColor
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -131,7 +131,7 @@ internal fun Lesson.StringForSchedule(
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.place),
-                        contentDescription = "Icon classroom",
+                        contentDescription = stringResource(R.string.icon_classroom),
                         tint = suitableColor
                     )
                     Text(
@@ -153,24 +153,24 @@ internal fun Lesson.StringForSchedule(
                     ) {
                         if (idOfReminderBeforeLesson == null || idOfReminderAfterBeginningLesson == null || note?.isNotEmpty() != true) Icon(
                             painter = painterResource(id = R.drawable.add),
-                            contentDescription = "Edit notifications about this lesson",
+                            contentDescription = stringResource(R.string.edit_notifications_about_this_lesson),
                             tint = suitableColor
                         )
                         if (note?.isNotEmpty() == true) Icon(
                             painter = painterResource(id = R.drawable.edit),
-                            contentDescription = "note",
+                            contentDescription = stringResource(R.string.note),
                             tint = suitableColor
                         )
                         if (idOfReminderBeforeLesson != null)
                             Icon(
                                 painter = painterResource(id = R.drawable.message),
-                                contentDescription = "Message about lesson",
+                                contentDescription = stringResource(R.string.reminder_about_lesson_before_time),
                                 tint = suitableColor
                             )
                         if (idOfReminderAfterBeginningLesson != null)
                             Icon(
                                 painter = painterResource(id = R.drawable.notification_about_checking),
-                                contentDescription = "Message about checking on this lesson",
+                                contentDescription = stringResource(R.string.reminder_about_lesson_before_time),
                                 tint = suitableColor
                             )
                     }
@@ -195,7 +195,7 @@ internal fun Lesson.StringForSchedule(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.person),
-                    contentDescription = "Icon teacher",
+                    contentDescription = stringResource(R.string.icon_teacher),
                     tint = suitableColor
                 )
                 Spacer(modifier = Modifier.width(3.dp))
@@ -212,7 +212,7 @@ internal fun Lesson.StringForSchedule(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.group),
-                    contentDescription = "Icon subgroup",
+                    contentDescription = stringResource(R.string.icon_subgroup),
                     tint = suitableColor
                 )
                 Spacer(modifier = Modifier.width(3.dp))
@@ -256,7 +256,7 @@ internal fun Lesson.StringForSchedule(
                                 }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.clear),
-                                        contentDescription = "Clear text",
+                                        contentDescription = stringResource(R.string.clear_text),
                                         tint = suitableColor
                                     )
                                 }
@@ -281,7 +281,7 @@ internal fun Lesson.StringForSchedule(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.message),
-                                contentDescription = "Message about lesson",
+                                contentDescription = stringResource(R.string.reminder_about_lesson_before_time),
                                 tint = Theme.colors.oppositeTheme
                             )
                             Spacer(modifier = Modifier.width(5.dp))
@@ -332,7 +332,7 @@ internal fun Lesson.StringForSchedule(
 
                             Icon(
                                 painter = painterResource(id = R.drawable.notification_about_checking),
-                                contentDescription = "Message about checking on this lesson",
+                                contentDescription = stringResource(R.string.notification_about_lesson_after_starting),
                                 tint = Theme.colors.oppositeTheme
                             )
                             Spacer(modifier = Modifier.width(2.dp))

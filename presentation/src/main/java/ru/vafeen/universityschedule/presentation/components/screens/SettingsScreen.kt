@@ -116,7 +116,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                             networkState = networkState
                         )
                     ),
-                    contentDescription = "data updating state",
+                    contentDescription = stringResource(R.string.icon_data_updating_state),
                     tint = Theme.colors.oppositeTheme
                 )
                 Spacer(modifier = Modifier.width(15.dp))
@@ -163,7 +163,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             CardOfSettings(text = stringResource(R.string.link_to_table), icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.link),
-                    contentDescription = "edit link",
+                    contentDescription = stringResource(R.string.edit_link),
                     tint = it.suitableColor()
                 )
             }, onClick = { linkIsEditable = true })
@@ -173,7 +173,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 CardOfSettings(text = stringResource(R.string.table), icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.table),
-                        contentDescription = "edit link",
+                        contentDescription = stringResource(R.string.view_table),
                         tint = it.suitableColor()
                     )
                 }, onClick = { settings.link?.let { context.openLink(link = it) } })
@@ -186,7 +186,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                     icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.group),
-                            contentDescription = "subgroup",
+                            contentDescription = stringResource(R.string.subgroup),
                             tint = it.suitableColor()
                         )
                     },
@@ -204,7 +204,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                                     leadingIcon = {
                                         if (subgroup == settings.subgroup) Icon(
                                             painter = painterResource(id = R.drawable.done),
-                                            contentDescription = "this is user subgroup",
+                                            contentDescription = stringResource(R.string.this_is_user_subgroup),
                                             tint = Theme.colors.oppositeTheme
                                         )
                                     },
@@ -229,7 +229,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.tune),
-                        contentDescription = "features",
+                        contentDescription = stringResource(R.string.features),
                         tint = it.suitableColor()
                     )
                 },
@@ -274,7 +274,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             CardOfSettings(text = stringResource(R.string.interface_color), icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.palette),
-                    contentDescription = "change color of interface",
+                    contentDescription = stringResource(R.string.change_color_of_interface),
                     tint = it.suitableColor()
                 )
             }, onClick = { colorIsEditable = true })
@@ -283,7 +283,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.cat),
-                        contentDescription = "cats in interface",
+                        contentDescription = stringResource(R.string.cats_in_interface),
                         tint = it.suitableColor()
                     )
                 },
@@ -333,7 +333,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             CardOfSettings(text = stringResource(R.string.code), icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.terminal),
-                    contentDescription = "view code",
+                    contentDescription = stringResource(R.string.view_code),
                     tint = it.suitableColor()
                 )
             }, onClick = {
@@ -343,7 +343,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             CardOfSettings(text = stringResource(R.string.report_a_bug), icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.bug_report),
-                    contentDescription = "view code",
+                    contentDescription = stringResource(R.string.report_a_bug),
                     tint = it.suitableColor()
                 )
             }, onClick = {

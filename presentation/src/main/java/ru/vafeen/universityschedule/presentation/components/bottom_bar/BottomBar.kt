@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
@@ -43,7 +44,7 @@ internal fun BottomBar(
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.home),
-                    contentDescription = "Home"
+                    contentDescription = stringResource(R.string.icon_home_screen)
                 )
             },
             colors = colors,
@@ -56,7 +57,7 @@ internal fun BottomBar(
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.settings),
-                    contentDescription = "Settings"
+                    contentDescription = stringResource(R.string.icon_settings_screen)
                 )
             },
             enabled = selectedScreen != Screen.Settings,

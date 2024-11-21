@@ -177,7 +177,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
 
                     Icon(
                         painter = painterResource(id = if (isFrequencyInChanging) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down),
-                        contentDescription = "Fold or Undolf list with frequency",
+                        contentDescription = stringResource(R.string.icon_fold_or_unfold_list_with_frequency),
                         tint = Theme.colors.oppositeTheme
                     )
                 }
@@ -198,7 +198,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                             )
                             if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
                                 painter = painterResource(id = R.drawable.done),
-                                contentDescription = "This is selected or not",
+                                contentDescription = stringResource(R.string.this_is_selected_or_not),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }
@@ -221,7 +221,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                             )
                             if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
                                 painter = painterResource(id = R.drawable.done),
-                                contentDescription = "This is selected or not",
+                                contentDescription = stringResource(R.string.this_is_selected_or_not),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }
@@ -245,7 +245,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                             )
                             if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
                                 painter = painterResource(id = R.drawable.done),
-                                contentDescription = "This is selected or not",
+                                contentDescription = stringResource(R.string.this_is_selected_or_not),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }

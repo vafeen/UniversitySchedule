@@ -112,7 +112,7 @@ internal fun ColorPickerDialog(
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.drop),
-                                contentDescription = "delete this theme",
+                                contentDescription = stringResource(R.string.icon_delete_this_theme),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }
