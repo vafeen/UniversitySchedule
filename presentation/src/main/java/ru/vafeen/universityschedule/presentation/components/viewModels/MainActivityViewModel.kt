@@ -15,6 +15,7 @@ import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
+import ru.vafeen.universityschedule.domain.utils.getVersionCode
 import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
@@ -88,6 +89,7 @@ internal class MainActivityViewModel(
         }
     }
 
+    val versionCode = context.getVersionCode()
     override fun onCleared() {
         super.onCleared()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
