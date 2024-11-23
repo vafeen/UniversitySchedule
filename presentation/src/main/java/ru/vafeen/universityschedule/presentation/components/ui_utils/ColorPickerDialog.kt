@@ -51,7 +51,6 @@ internal fun ColorPickerDialog(
         mutableStateOf(firstColor)
     }
 
-
     Dialog(
         onDismissRequest = onDismissRequest,
     ) {
@@ -74,9 +73,8 @@ internal fun ColorPickerDialog(
                 )
 
                 BottomBar(
-                    initialSelectedScreen = Screen.Settings,
+                    selectedScreen = Screen.Settings,
                     containerColor = newColor,
-                    navController = null
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -114,7 +112,7 @@ internal fun ColorPickerDialog(
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.drop),
-                                contentDescription = "delete this theme",
+                                contentDescription = stringResource(R.string.icon_delete_this_theme),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }
