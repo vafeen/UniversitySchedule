@@ -66,6 +66,7 @@ internal fun NavigationRoot(
                 .background(Theme.colors.singleTheme)
         ) {
             NavHost(
+                modifier = Modifier.weight(1f),
                 navController = viewModel.navController
                     ?: throw Exception("navController is null "),
                 startDestination = viewModel.startScreen.route
