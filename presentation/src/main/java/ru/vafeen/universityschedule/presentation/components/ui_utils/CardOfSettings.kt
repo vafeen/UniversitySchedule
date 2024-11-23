@@ -73,7 +73,7 @@ internal fun CardOfSettings(
 
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_forward),
-                    contentDescription = "open section",
+                    contentDescription = stringResource(R.string.icon_open_section),
                     tint = Theme.colors.oppositeTheme
                 )
             }

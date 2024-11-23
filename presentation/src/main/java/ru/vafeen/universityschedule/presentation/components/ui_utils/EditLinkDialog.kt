@@ -68,7 +68,7 @@ internal fun EditLinkDialog(
                     Icon(
                         modifier = Modifier.size(30.dp),
                         painter = painterResource(id = R.drawable.close),
-                        contentDescription = "close",
+                        contentDescription = stringResource(R.string.close),
                         tint = Theme.colors.oppositeTheme
                     )
                 }
@@ -103,7 +103,7 @@ internal fun EditLinkDialog(
                             Icon(
                                 modifier = Modifier.size(iconsSize),
                                 painter = painterResource(id = R.drawable.copy),
-                                contentDescription = "copy",
+                                contentDescription = stringResource(R.string.copy),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }
@@ -117,7 +117,7 @@ internal fun EditLinkDialog(
                             Icon(
                                 modifier = Modifier.size(iconsSize),
                                 painter = painterResource(id = R.drawable.drop),
-                                contentDescription = "clear",
+                                contentDescription = stringResource(R.string.clear),
                                 tint = Theme.colors.oppositeTheme
                             )
                         }
@@ -143,7 +143,7 @@ internal fun EditLinkDialog(
                         Icon(
                             modifier = Modifier.size(iconsSize),
                             painter = painterResource(id = R.drawable.paste),
-                            contentDescription = "paste",
+                            contentDescription = stringResource(R.string.paste),
                             tint = Theme.colors.oppositeTheme
                         )
                     }

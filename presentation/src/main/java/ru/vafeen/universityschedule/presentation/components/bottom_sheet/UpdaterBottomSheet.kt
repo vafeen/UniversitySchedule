@@ -26,8 +26,7 @@ import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
-import ru.vafeen.universityschedule.resources.R as DR
-import ru.vafeen.universityschedule.resources.R as PR
+import ru.vafeen.universityschedule.resources.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,18 +58,18 @@ internal fun UpdaterBottomSheet(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = stringResource(id = PR.string.update_need),
+                text = stringResource(id = R.string.update_need),
                 fontSize = FontSize.huge27, color = Color.White
             )
             Spacer(modifier = Modifier.height(40.dp))
             Text(
-                text = stringResource(id = PR.string.view_releases),
+                text = stringResource(id = R.string.view_releases),
                 fontSize = FontSize.huge27, color = Color.White
             )
             Spacer(modifier = Modifier.height(40.dp))
             Image(
-                painter = painterResource(id = DR.drawable.releases_win),
-                contentDescription = "qr",
+                painter = painterResource(id = R.drawable.releases_win),
+                contentDescription = stringResource(R.string.icon_updating_qr),
                 modifier = Modifier
                     .clickable {
                         apkDownloader.downloadApk(
