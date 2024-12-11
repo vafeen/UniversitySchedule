@@ -1,4 +1,4 @@
-New version 6.1.10!!
+New version 6.1.12!!
 
 What's new:
 

@@ -12,8 +12,8 @@ android {
         applicationId = "ru.vafeen.universityschedule"
         minSdk = 26
         targetSdk = 35
-        versionCode = 46
-        versionName = "6.1.11"
+        versionCode = 47
+        versionName = "6.1.12"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
