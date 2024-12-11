@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -68,7 +67,6 @@ import ru.vafeen.universityschedule.resources.R
  *
  */
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
     val viewModel: SettingsScreenViewModel = koinViewModel()
@@ -98,8 +96,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
         bottomBarNavigator.back()
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Row(
             modifier = Modifier
@@ -128,8 +125,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             linkIsEditable = false
         }
         if (colorIsEditable) ColorPickerDialog(context = context,
-            firstColor = settings.getMainColorForThisTheme(isDark = dark)
-                ?: Theme.colors.mainColor,
+            firstColor = settings.getMainColorForThisTheme(isDark = dark) ?: Theme.colors.mainColor,
             onDismissRequest = { colorIsEditable = false }) {
             viewModel.saveSettingsToSharedPreferences(
                 if (dark) settings.copy(
@@ -147,8 +143,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 // name of section
                 TextForThisTheme(
-                    modifier = Modifier
-                        .align(Alignment.Center),
+                    modifier = Modifier.align(Alignment.Center),
                     fontSize = FontSize.big22,
                     text = stringResource(R.string.general)
                 )

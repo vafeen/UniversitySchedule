@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -14,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
@@ -46,10 +48,15 @@ internal fun NavigationRoot(
     }
     if (updateIsShowed && settings.lastDemonstratedVersion < viewModel.versionCode && settings.releaseBody != "") {
         NewVersionInfoBottomSheet(viewModel = viewModel) {
-            viewModel.saveSettingsToSharedPreferences(
-                settings.copy(lastDemonstratedVersion = viewModel.versionCode)
-            )
+            if (viewModel.versionCode != settings.lastDemonstratedVersion) {
+                viewModel.saveSettingsToSharedPreferences(
+                    settings.copy(lastDemonstratedVersion = viewModel.versionCode)
+                )
+            }
         }
+    }
+    LaunchedEffect(null) {
+        viewModel.callSchedulerAPIMigration()
     }
     Scaffold(containerColor = Theme.colors.singleTheme,
         bottomBar = {
@@ -67,8 +74,7 @@ internal fun NavigationRoot(
         ) {
             NavHost(
                 modifier = Modifier.weight(1f),
-                navController = viewModel.navController
-                    ?: throw Exception("navController is null "),
+                navController = viewModel.navController as NavHostController,
                 startDestination = viewModel.startScreen.route
             ) {
                 composable(Screen.Main.route) {
