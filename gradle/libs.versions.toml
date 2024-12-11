@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.31.1-alpha"
-agp = "8.7.2"
+agp = "8.7.3"
 alwan = "1.0.1"
 glideCompiler = "4.14.2"
 glide = "4.15.1"
@@ -23,6 +23,7 @@ appcompat = "1.7.0"
 material = "1.12.0"
 uiAndroid = "1.7.5"
 uiGraphicsAndroid = "1.7.5"
+workRuntimeKtxVersion = "2.10.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -65,6 +66,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
+work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtxVersion" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
