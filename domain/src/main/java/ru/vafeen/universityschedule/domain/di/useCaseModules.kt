@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import ru.vafeen.universityschedule.domain.usecase.db.CleverUpdatingLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
+import ru.vafeen.universityschedule.domain.usecase.db.DeleteUseLessRemindersForLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetReminderByIdOfReminderUseCase
@@ -42,4 +43,5 @@ internal val databaseUseCaseModule = module {
     singleOf(::UpdateRemindersUseCase)
     singleOf(::CleverUpdatingLessonsUseCase)
     singleOf(::GetSheetDataAndUpdateDBUseCase)
+    singleOf(::DeleteUseLessRemindersForLessonsUseCase)
 }

@@ -10,9 +10,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
+import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
@@ -29,6 +31,7 @@ internal class MainActivityViewModel(
     private val sharedPreferences: SharedPreferences,
     apkDownloader: ApkDownloader,
     context: Context,
+    private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
 ) : ViewModel(), BottomBarNavigator {
     val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
     val percentageFlow = apkDownloader.percentageFlow
@@ -50,6 +53,14 @@ internal class MainActivityViewModel(
         sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
     }
 
+    suspend fun callSchedulerAPIMigration() {
+        if (!settings.value.isMigrationFromAlarmManagerToWorkManagerSuccessful) {
+            schedulerAPIMigrationManager.migrate()
+            saveSettingsToSharedPreferences(
+                settings.first().copy(isMigrationFromAlarmManagerToWorkManagerSuccessful = true)
+            )
+        }
+    }
 
     private fun registerGeneralExceptionCallback(context: Context) {
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->

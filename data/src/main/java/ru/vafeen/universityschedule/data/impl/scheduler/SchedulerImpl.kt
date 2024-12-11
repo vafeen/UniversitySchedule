@@ -1,53 +1,92 @@
 package ru.vafeen.universityschedule.data.impl.scheduler
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import ru.vafeen.universityschedule.data.converters.DateTimeConverter
 import ru.vafeen.universityschedule.domain.models.Reminder
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerExtra
+import ru.vafeen.universityschedule.domain.utils.getUniqueReminderWorkID
+import java.util.concurrent.TimeUnit
 
-
+/**
+ * Реализация интерфейса [Scheduler][ru.vafeen.universityschedule.domain.scheduler.Scheduler] для планирования повторяющихся задач с использованием WorkManager.
+ */
 internal class SchedulerImpl(
-    private val context: Context,
-    private val dtConverter: DateTimeConverter,
+    private val context: Context, // Контекст приложения для инициализации WorkManager.
+    private val dtConverter: DateTimeConverter // Конвертер для обработки даты и времени.
 ) : Scheduler {
-    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-    override fun scheduleRepeatingJob(
-        reminder: Reminder,
-        intent: Intent
-    ) {
-        intent.apply {
-            putExtra(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            reminder.idOfReminder,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
+    // Экземпляр WorkManager для управления задачами.
+    private val workManager = WorkManager.getInstance(context)
+
+    /**
+     * Планирует повторяющуюся задачу для напоминания.
+     *
+     * @param reminder Напоминание с данными о времени и длительности.
+     */
+    override fun scheduleRepeatingJob(reminder: Reminder) {
+        // Создаем объект данных, передаваемых в Worker.
+        val data = Data.Builder()
+            .putInt(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder) // ID напоминания.
+            .build()
+
+        // Вычисляем задержку перед первым запуском задачи.
+        val initialDelay = calculateInitialDelay(reminder)
+
+        // Настраиваем ограничения для задачи, чтобы она выполнялась в любых условиях.
+        val constraints = androidx.work.Constraints.Builder()
+            .setRequiresBatteryNotLow(false) // Игнорировать низкий заряд батареи.
+            .setRequiresDeviceIdle(false) // Игнорировать состояние покоя устройства.
+            .setRequiredNetworkType(androidx.work.NetworkType.NOT_REQUIRED) // Не требовать сети.
+            .build()
+
+        // Создаем запрос на повторяющуюся задачу.
+        val repeatingWorkRequest = PeriodicWorkRequest.Builder(
+            ReminderWorker::class.java, // Класс Worker, который будет выполнять задачу.
+            reminder.duration.duration.milliSeconds, // Интервал повторения задачи.
+            TimeUnit.MILLISECONDS
         )
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            dtConverter.convertAB(reminder.dt),
-            reminder.duration.duration.milliSeconds,
-            pendingIntent
+            .setConstraints(constraints) // Устанавливаем ограничения.
+            .setInitialDelay(
+                initialDelay,
+                TimeUnit.MILLISECONDS
+            ) // Устанавливаем задержку перед первым запуском.
+            .setInputData(data) // Передаем данные в Worker.
+            .build()
+
+        // Добавляем задачу в WorkManager с уникальным идентификатором.
+        workManager.enqueueUniquePeriodicWork(
+            reminder.getUniqueReminderWorkID(), // Уникальный идентификатор задачи.
+            ExistingPeriodicWorkPolicy.UPDATE, // Политика замены существующей задачи.
+            repeatingWorkRequest
         )
     }
 
-    override fun cancelJob(
-        reminder: Reminder,
-        intent: Intent
-    ) {
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            reminder.idOfReminder,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.cancel(pendingIntent)
+    /**
+     * Отменяет задачу, связанную с заданным напоминанием.
+     *
+     * @param reminder Напоминание, для которого нужно отменить задачу.
+     */
+    override fun cancelJob(reminder: Reminder) {
+        workManager.cancelUniqueWork(reminder.getUniqueReminderWorkID())
+    }
+
+    /**
+     * Вычисляет задержку перед запуском задачи на основе текущего времени и времени напоминания.
+     *
+     * @param reminder Напоминание с указанием времени.
+     * @return Задержка в миллисекундах.
+     */
+    private fun calculateInitialDelay(reminder: Reminder): Long {
+        val now = System.currentTimeMillis() // Текущее время в миллисекундах.
+        val reminderTime =
+            dtConverter.convertAB(reminder.dt) // Время напоминания, преобразованное в миллисекунды.
+        // Если время напоминания позже текущего времени, вычисляем разницу, иначе возвращаем 0.
+        return if (reminderTime > now) reminderTime - now else 0L
     }
 
 }

@@ -1,5 +1,5 @@
-New version 6.1.7!!
+New version 6.1.10!!
 
-What's fixed:
+What's new:
 
-- Navigation between screens bug
+- Improved reminder scheduling
