@@ -47,7 +47,7 @@ jobs:
             --ks-key-alias ${{ secrets.KEY_ALIAS }} \
             --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
             --key-pass pass:${{ secrets.KEY_PASSWORD }} \
-            --out university-schedule.apk \
+            --out app-release.apk \
             app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK Artifact
