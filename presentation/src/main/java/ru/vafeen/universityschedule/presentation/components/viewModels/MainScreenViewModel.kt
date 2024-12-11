@@ -1,7 +1,5 @@
 package ru.vafeen.universityschedule.presentation.components.viewModels
 
-import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -23,7 +21,6 @@ import ru.vafeen.universityschedule.domain.usecase.db.UpdateLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
-import ru.vafeen.universityschedule.presentation.NotificationAboutLessonReceiver
 import java.time.LocalDate
 
 
@@ -38,9 +35,7 @@ internal class MainScreenViewModel(
     private val scheduleRepeatingJobUseCase: ScheduleRepeatingJobUseCase,
     private val cancelJobUseCase: CancelJobUseCase,
     private val updateLessonsUseCase: UpdateLessonsUseCase,
-    context: Context,
 ) : ViewModel() {
-    private val intentForNotification = Intent(context, NotificationAboutLessonReceiver::class.java)
     var nowIsLesson: Boolean = false
     val pageNumber = 365
     val todayDate: LocalDate = LocalDate.now()
@@ -60,6 +55,7 @@ internal class MainScreenViewModel(
             updateLessonsUseCase.use(lesson)
         }
     }
+
     private val spListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             Log.d("settings", "updated ")
@@ -85,7 +81,7 @@ internal class MainScreenViewModel(
         val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
         insertLessonsUseCase.use(newLesson)
         insertRemindersUseCase.use(newReminder)
-        scheduleRepeatingJobUseCase.use(reminder = newReminder, intent = intentForNotification)
+        scheduleRepeatingJobUseCase.use(reminder = newReminder)
     }
 
     suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
@@ -97,7 +93,7 @@ internal class MainScreenViewModel(
             idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
         )
         reminder?.let {
-            cancelJobUseCase.use(reminder = it, intent = intentForNotification)
+            cancelJobUseCase.use(reminder = it)
             deleteAllReminderUseCase.use(it)
         }
     }
@@ -108,7 +104,7 @@ internal class MainScreenViewModel(
         insertLessonsUseCase.use(lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder))
 
         insertRemindersUseCase.use(newReminder)
-        scheduleRepeatingJobUseCase.use(reminder = newReminder, intent = intentForNotification)
+        scheduleRepeatingJobUseCase.use(reminder = newReminder)
     }
 
     suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
@@ -120,7 +116,7 @@ internal class MainScreenViewModel(
             idOfReminder = lesson.idOfReminderAfterBeginningLesson ?: -1
         )
         reminder?.let {
-            cancelJobUseCase.use(reminder = it, intent = intentForNotification)
+            cancelJobUseCase.use(reminder = it)
             deleteAllReminderUseCase.use(it)
         }
     }

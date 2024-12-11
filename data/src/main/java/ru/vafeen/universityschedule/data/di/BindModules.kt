@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.inject
 import ru.vafeen.universityschedule.data.database.AppDatabase
@@ -17,6 +19,7 @@ import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
+import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerAPIMigrationManagerImpl
 import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerImpl
 import ru.vafeen.universityschedule.domain.database.LessonRepository
 import ru.vafeen.universityschedule.domain.database.ReminderRepository
@@ -28,6 +31,7 @@ import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
+import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.utils.SharedPreferencesValue
 
 internal val networkRepositoryModule = module {
@@ -88,5 +92,11 @@ internal val servicesModule = module {
         val apkInstallerImpl: ApkInstallerImpl by inject(clazz = ApkInstallerImpl::class.java)
         apkInstallerImpl
     }
+    singleOf(::SchedulerAPIMigrationManagerImpl) {
+        bind<SchedulerAPIMigrationManager>()
+    }
+//    singleOf(::SettingsManagerImpl) {
+//        bind<SettingsManager>()
+//    }
 }
 

@@ -40,6 +40,8 @@ dependencies {
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // color ui graphics for settings
+    api(libs.androidx.ui.graphics)
     //koin
     api(libs.koin.android)
     //retrofit

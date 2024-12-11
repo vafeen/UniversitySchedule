@@ -4,17 +4,18 @@ import androidx.compose.ui.graphics.Color
 import com.google.gson.Gson
 
 data class Settings(
-    val lightThemeColor: Color? = null,
-    val darkThemeColor: Color? = null,
-    val subgroup: String? = null,
-    val link: String? = null,
-    val isSelectedFrequencyCorrespondsToTheWeekNumbers: Boolean? = null,
-    val lastDemonstratedVersion: Long = 1,
-    val weekendCat: Boolean = false,
-    val catInSettings: Boolean = false,
-    val notesAboutLesson: Boolean = false,
-    val notificationsAboutLesson: Boolean = true,
-    val releaseBody: String = ""
+    var lightThemeColor: Color? = null,
+    var darkThemeColor: Color? = null,
+    var subgroup: String? = null,
+    var link: String? = null,
+    var isSelectedFrequencyCorrespondsToTheWeekNumbers: Boolean? = null,
+    var lastDemonstratedVersion: Long = 1,
+    var weekendCat: Boolean = false,
+    var catInSettings: Boolean = false,
+    var notesAboutLesson: Boolean = false,
+    var notificationsAboutLesson: Boolean = true,
+    var releaseBody: String = "",
+    var isMigrationFromAlarmManagerToWorkManagerSuccessful: Boolean = false
 ) {
     fun toJsonString(): String = Gson().toJson(this)
 }
