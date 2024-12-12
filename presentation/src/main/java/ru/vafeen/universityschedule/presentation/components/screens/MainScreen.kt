@@ -56,7 +56,6 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
 import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
-import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextLesson
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
@@ -113,7 +112,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
 
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
-        viewModel.sharedPreferences.save(
+        viewModel.saveSettingsToSharedPreferences(
             settings.copy(
                 isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
         )

@@ -17,6 +17,7 @@ import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseReposito
 import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkDownloaderImpl
 import ru.vafeen.universityschedule.data.impl.network.service.ApkInstallerImpl
+import ru.vafeen.universityschedule.data.impl.network.service.SettingsManagerImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
 import ru.vafeen.universityschedule.data.impl.scheduler.SchedulerAPIMigrationManagerImpl
@@ -28,6 +29,7 @@ import ru.vafeen.universityschedule.domain.network.repository.ReleaseRepository
 import ru.vafeen.universityschedule.domain.network.repository.SheetDataRepository
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
 import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
+import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
 import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
@@ -95,8 +97,8 @@ internal val servicesModule = module {
     singleOf(::SchedulerAPIMigrationManagerImpl) {
         bind<SchedulerAPIMigrationManager>()
     }
-//    singleOf(::SettingsManagerImpl) {
-//        bind<SettingsManager>()
-//    }
+    singleOf(::SettingsManagerImpl) {
+        bind<SettingsManager>()
+    }
 }
 
