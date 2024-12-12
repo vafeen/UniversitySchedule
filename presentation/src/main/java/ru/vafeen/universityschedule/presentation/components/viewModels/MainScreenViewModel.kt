@@ -76,8 +76,8 @@ internal class MainScreenViewModel(
         }
     }
 
-    fun saveSettingsToSharedPreferences(settings: Settings) {
-        settingsManager.save(settings)
+    fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
+        settingsManager.save(saving)
     }
 
     suspend fun addReminderAboutCheckingOnLessonAndUpdateLocalDB(

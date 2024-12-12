@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
@@ -36,17 +35,17 @@ internal class MainActivityViewModel(
 
     val settings = settingsManager.settingsFlow
 
-    fun saveSettingsToSharedPreferences(settings: Settings) {
-        settingsManager.save(settings = settings)
+    fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
+        settingsManager.save(saving)
     }
 
 
     suspend fun callSchedulerAPIMigration() {
         if (!settings.value.isMigrationFromAlarmManagerToWorkManagerSuccessful) {
             schedulerAPIMigrationManager.migrate()
-            saveSettingsToSharedPreferences(
-                settings.first().copy(isMigrationFromAlarmManagerToWorkManagerSuccessful = true)
-            )
+            saveSettingsToSharedPreferences {
+                it.copy(isMigrationFromAlarmManagerToWorkManagerSuccessful = true)
+            }
         }
     }
 

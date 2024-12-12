@@ -5,5 +5,5 @@ import ru.vafeen.universityschedule.domain.models.Settings
 
 interface SettingsManager {
     val settingsFlow: StateFlow<Settings>
-    fun save(settings: Settings)
+    fun save(saving: (Settings) -> Settings)
 }

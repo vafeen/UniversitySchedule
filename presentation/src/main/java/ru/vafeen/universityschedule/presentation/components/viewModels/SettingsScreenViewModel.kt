@@ -1,6 +1,5 @@
 package ru.vafeen.universityschedule.presentation.components.viewModels
 
-import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,6 @@ import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdate
 internal class SettingsScreenViewModel(
     private val getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
     private val getSheetDataAndUpdateDBUseCase: GetSheetDataAndUpdateDBUseCase,
-    private val sharedPreferences: SharedPreferences,
     private val settingsManager: SettingsManager,
 ) : ViewModel() {
 
@@ -26,8 +24,8 @@ internal class SettingsScreenViewModel(
     val settings = settingsManager.settingsFlow
 
 
-    fun saveSettingsToSharedPreferences(settings: Settings) {
-        settingsManager.save(settings)
+    fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
+        settingsManager.save(saving)
     }
 
     private val _gSheetsServiceRequestStatusFlow =

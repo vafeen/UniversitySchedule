@@ -112,10 +112,10 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
 
 
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
-        viewModel.saveSettingsToSharedPreferences(
-            settings.copy(
-                isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
-        )
+        viewModel.saveSettingsToSharedPreferences {
+            it.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers =
+            selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
+        }
         isFrequencyInChanging = false
     }
 
