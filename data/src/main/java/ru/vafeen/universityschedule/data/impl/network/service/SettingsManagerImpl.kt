@@ -21,14 +21,14 @@ internal class SettingsManagerImpl(private val sharedPreferences: SharedPreferen
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             CoroutineScope(Dispatchers.IO).launch {
-                settings = sharedPreferences.getSettingsOrCreateIfNull()
-                _settingsFlow.emit(settings)
+                _settingsFlow.emit(sharedPreferences.getSettingsOrCreateIfNull())
             }
         }
     }
 
     @Synchronized
     override fun save(saving: (Settings) -> Settings) {
-        sharedPreferences.save(saving(settings))
+        settings = saving(settings)
+        sharedPreferences.save(settings)
     }
 }
