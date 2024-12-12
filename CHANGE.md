@@ -1,5 +1,5 @@
 New version 6.1.12!!
 
-What's new:
+What's fix:
 
-- Improved reminder scheduling
+- Some ui bugs
