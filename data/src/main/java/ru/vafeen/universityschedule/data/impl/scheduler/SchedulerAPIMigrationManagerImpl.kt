@@ -10,7 +10,7 @@ import ru.vafeen.universityschedule.domain.scheduler.Scheduler
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
 
-class SchedulerAPIMigrationManagerImpl(private val context: Context) :
+internal class SchedulerAPIMigrationManagerImpl(private val context: Context) :
     SchedulerAPIMigrationManager {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private val getAsFlowRemindersUseCase = getKoin().get<GetAsFlowRemindersUseCase>()
