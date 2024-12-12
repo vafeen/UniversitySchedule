@@ -1,6 +1,5 @@
 package ru.vafeen.universityschedule.presentation.components.ui_utils
 
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -36,11 +35,10 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
     }
     LaunchedEffect(key1 = null) {
         release = viewModel.getLatestReleaseUseCase.use()
-        viewModel.saveSettingsToSharedPreferences(
-            settings = settings.copy(
-                releaseBody = release?.body ?: ""
-            )
-        )
+        viewModel.saveSettingsToSharedPreferences {
+            it.copy(releaseBody = release?.body ?: "")
+        }
+
         if (release != null && versionName != null &&
             release?.tagName?.substringAfter("v") != versionName
         ) {

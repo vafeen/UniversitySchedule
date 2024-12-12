@@ -49,9 +49,9 @@ internal fun NavigationRoot(
     if (updateIsShowed && settings.lastDemonstratedVersion < viewModel.versionCode && settings.releaseBody != "") {
         NewVersionInfoBottomSheet(viewModel = viewModel) {
             if (viewModel.versionCode != settings.lastDemonstratedVersion) {
-                viewModel.saveSettingsToSharedPreferences(
+                viewModel.saveSettingsToSharedPreferences { settings ->
                     settings.copy(lastDemonstratedVersion = viewModel.versionCode)
-                )
+                }
             }
         }
     }
