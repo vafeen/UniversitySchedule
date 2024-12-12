@@ -1,16 +1,15 @@
 package ru.vafeen.universityschedule.presentation.components.viewModels
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.domain.models.Reminder
+import ru.vafeen.universityschedule.domain.models.Settings
+import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
@@ -20,12 +19,10 @@ import ru.vafeen.universityschedule.domain.usecase.db.InsertRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.UpdateLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
-import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import java.time.LocalDate
 
 
 internal class MainScreenViewModel(
-    val sharedPreferences: SharedPreferences,
     getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
     getAsFlowRemindersUseCase: GetAsFlowRemindersUseCase,
     private val insertLessonsUseCase: InsertLessonsUseCase,
@@ -35,6 +32,7 @@ internal class MainScreenViewModel(
     private val scheduleRepeatingJobUseCase: ScheduleRepeatingJobUseCase,
     private val cancelJobUseCase: CancelJobUseCase,
     private val updateLessonsUseCase: UpdateLessonsUseCase,
+    private val settingsManager: SettingsManager
 ) : ViewModel() {
     var nowIsLesson: Boolean = false
     val pageNumber = 365
@@ -45,9 +43,7 @@ internal class MainScreenViewModel(
     }
     val remindersFlow = getAsFlowRemindersUseCase.use()
 
-    private val settingsInitial = sharedPreferences.getSettingsOrCreateIfNull()
-    private val _settingsFlow = MutableStateFlow(settingsInitial)
-    val settingsFlow = _settingsFlow.asStateFlow()
+    val settingsFlow = settingsManager.settingsFlow
 
     fun updateLesson(lesson: Lesson) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -56,24 +52,6 @@ internal class MainScreenViewModel(
         }
     }
 
-    private val spListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            Log.d("settings", "updated ")
-            viewModelScope.launch(Dispatchers.IO) {
-                val settings = sharedPreferences.getSettingsOrCreateIfNull()
-                _settingsFlow.emit(settings)
-            }
-        }
-
-
-    init {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
-    }
 
     suspend fun addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
         lesson: Lesson, newReminder: Reminder
@@ -96,6 +74,10 @@ internal class MainScreenViewModel(
             cancelJobUseCase.use(reminder = it)
             deleteAllReminderUseCase.use(it)
         }
+    }
+
+    fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
+        settingsManager.save(saving)
     }
 
     suspend fun addReminderAboutCheckingOnLessonAndUpdateLocalDB(

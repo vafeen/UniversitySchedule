@@ -1,7 +1,6 @@
 package ru.vafeen.universityschedule.presentation.components.viewModels
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,15 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
+import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
-import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
-import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
@@ -28,37 +25,27 @@ import kotlin.system.exitProcess
 
 internal class MainActivityViewModel(
     val getLatestReleaseUseCase: GetLatestReleaseUseCase,
-    private val sharedPreferences: SharedPreferences,
     apkDownloader: ApkDownloader,
     context: Context,
     private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
+    private val settingsManager: SettingsManager
 ) : ViewModel(), BottomBarNavigator {
     val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
     val percentageFlow = apkDownloader.percentageFlow
-    private val _settings =
-        MutableStateFlow(sharedPreferences.getSettingsOrCreateIfNull())
-    val settings = _settings.asStateFlow()
-    private val spListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            viewModelScope.launch(Dispatchers.IO) {
-                _settings.emit(sharedPreferences.getSettingsOrCreateIfNull())
-            }
-        }
 
-    fun saveSettingsToSharedPreferences(settings: Settings) {
-        sharedPreferences.save(settings = settings)
+    val settings = settingsManager.settingsFlow
+
+    fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
+        settingsManager.save(saving)
     }
 
-    init {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
-    }
 
     suspend fun callSchedulerAPIMigration() {
         if (!settings.value.isMigrationFromAlarmManagerToWorkManagerSuccessful) {
             schedulerAPIMigrationManager.migrate()
-            saveSettingsToSharedPreferences(
-                settings.first().copy(isMigrationFromAlarmManagerToWorkManagerSuccessful = true)
-            )
+            saveSettingsToSharedPreferences {
+                it.copy(isMigrationFromAlarmManagerToWorkManagerSuccessful = true)
+            }
         }
     }
 
@@ -108,8 +95,4 @@ internal class MainActivityViewModel(
 
 
     val versionCode = context.getVersionCode()
-    override fun onCleared() {
-        super.onCleared()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
-    }
 }

@@ -127,11 +127,11 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
         if (colorIsEditable) ColorPickerDialog(context = context,
             firstColor = settings.getMainColorForThisTheme(isDark = dark) ?: Theme.colors.mainColor,
             onDismissRequest = { colorIsEditable = false }) {
-            viewModel.saveSettingsToSharedPreferences(
+            viewModel.saveSettingsToSharedPreferences { settings ->
                 if (dark) settings.copy(
                     darkThemeColor = it
                 ) else settings.copy(lightThemeColor = it)
-            )
+            }
         }
 
         Column(
@@ -204,11 +204,11 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                                     },
                                     modifier = Modifier.padding(horizontal = 3.dp),
                                     onClick = {
-                                        viewModel.saveSettingsToSharedPreferences(
+                                        viewModel.saveSettingsToSharedPreferences { settings ->
                                             settings.copy(
                                                 subgroup = if (settings.subgroup != subgroup) subgroup else null
                                             )
-                                        )
+                                        }
                                     },
                                     label = { TextForThisTheme(text = subgroup) },
                                 )
@@ -232,11 +232,9 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             ) {
                 FeatureOfSettings(
                     onClick = {
-                        viewModel.saveSettingsToSharedPreferences(
-                            settings = settings.copy(
-                                notificationsAboutLesson = !settings.notificationsAboutLesson
-                            )
-                        )
+                        viewModel.saveSettingsToSharedPreferences { settings ->
+                            settings.copy(notificationsAboutLesson = !settings.notificationsAboutLesson)
+                        }
                     },
                     padding = it,
                     text = stringResource(R.string.notification_about_lesson_before_time),
@@ -244,11 +242,11 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 )
                 FeatureOfSettings(
                     onClick = {
-                        viewModel.saveSettingsToSharedPreferences(
-                            settings = settings.copy(
+                        viewModel.saveSettingsToSharedPreferences { settings ->
+                            settings.copy(
                                 notesAboutLesson = !settings.notesAboutLesson
                             )
-                        )
+                        }
                     },
                     padding = it,
                     text = stringResource(R.string.note),
@@ -287,11 +285,9 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                     Column {
                         FeatureOfSettings(
                             onClick = {
-                                viewModel.saveSettingsToSharedPreferences(
-                                    settings = settings.copy(
-                                        weekendCat = !settings.weekendCat
-                                    )
-                                )
+                                viewModel.saveSettingsToSharedPreferences { settings ->
+                                    settings.copy(weekendCat = !settings.weekendCat)
+                                }
                             },
                             padding = it,
                             text = stringResource(R.string.weekend_cat),
@@ -299,11 +295,9 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                         )
                         FeatureOfSettings(
                             onClick = {
-                                viewModel.saveSettingsToSharedPreferences(
-                                    settings = settings.copy(
-                                        catInSettings = !settings.catInSettings
-                                    )
-                                )
+                                viewModel.saveSettingsToSharedPreferences { settings ->
+                                    settings.copy(catInSettings = !settings.catInSettings)
+                                }
                             },
                             padding = it,
                             text = stringResource(R.string.cat_in_settings),
