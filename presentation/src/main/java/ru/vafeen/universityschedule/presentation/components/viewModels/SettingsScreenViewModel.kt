@@ -3,8 +3,10 @@ package ru.vafeen.universityschedule.presentation.components.viewModels
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -15,24 +17,36 @@ import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdate
 import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
 import ru.vafeen.universityschedule.domain.utils.save
 
+class x(val sharedPreferences: SharedPreferences) {
+    private val _settingsFlow = MutableStateFlow(sharedPreferences.getSettingsOrCreateIfNull())
+    val settingsFlow: StateFlow<Settings> = _settingsFlow
+
+    init {
+        sharedPreferences.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
+            CoroutineScope(Dispatchers.IO).launch {
+                _settingsFlow.emit(sharedPreferences.getSettingsOrCreateIfNull())
+            }
+        }
+    }
+
+    @Synchronized
+    fun save(settings: Settings) {
+        sharedPreferences.save(settings = settings)
+    }
+}
+
 internal class SettingsScreenViewModel(
     private val getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
     private val getSheetDataAndUpdateDBUseCase: GetSheetDataAndUpdateDBUseCase,
     private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
-    private val _settings =
-        MutableStateFlow(sharedPreferences.getSettingsOrCreateIfNull())
+    val x = x(sharedPreferences)
     private var lastLink: String? = null
-    val settings = _settings.asStateFlow()
-    private val spListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            viewModelScope.launch(Dispatchers.IO) {
-                _settings.emit(sharedPreferences.getSettingsOrCreateIfNull())
-            }
-        }
+    val settings = x.settingsFlow
+
 
     fun saveSettingsToSharedPreferences(settings: Settings) {
-        sharedPreferences.save(settings = settings)
+        x.save(settings)
     }
 
     private val _gSheetsServiceRequestStatusFlow =
@@ -40,7 +54,7 @@ internal class SettingsScreenViewModel(
     val gSheetsServiceRequestStatusFlow = _gSheetsServiceRequestStatusFlow.asStateFlow()
 
     init {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(spListener)
+
         viewModelScope.launch(Dispatchers.IO) {
             settings.collect {
                 val link = it.link
@@ -72,8 +86,5 @@ internal class SettingsScreenViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(spListener)
-    }
+
 }
