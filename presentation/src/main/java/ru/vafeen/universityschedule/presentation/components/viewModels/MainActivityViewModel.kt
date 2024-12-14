@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,9 +73,10 @@ internal class MainActivityViewModel(
     private fun emitCurrentScreen() {
         viewModelScope.launch(Dispatchers.Main) {
             navController?.currentBackStackEntryFlow?.collect { backStackEntry ->
-                when (backStackEntry.destination.route) {
-                    Screen.Main::class.simpleName -> _currentScreen.emit(Screen.Main)
-                    Screen.Settings::class.simpleName -> _currentScreen.emit(Screen.Settings)
+                val destination = backStackEntry.destination
+                when {
+                    destination.hasRoute(Screen.Main::class) -> _currentScreen.emit(Screen.Main)
+                    destination.hasRoute(Screen.Settings::class) -> _currentScreen.emit(Screen.Settings)
                 }
             }
         }
