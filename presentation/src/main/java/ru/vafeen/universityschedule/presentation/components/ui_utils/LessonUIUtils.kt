@@ -228,11 +228,11 @@ internal fun Lesson.StringForSchedule(
 
             if (isAdditionalInfoExpanded && (isNoteAvailable || isNotificationsAvailable)) Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isNoteAvailable) {
+                    Spacer(modifier = Modifier.height(10.dp))
                     OutlinedTextField(modifier = Modifier
                         .fillMaxWidth()
                         .onFocusChanged { focusState -> isFocused = focusState.isFocused },
