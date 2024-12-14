@@ -1,6 +1,12 @@
 package ru.vafeen.universityschedule.presentation.navigation
 
-internal enum class Screen(val route: String) {
-    Main(route = "Main"),
-    Settings(route = "Settings");
+import kotlinx.serialization.Serializable
+
+
+internal sealed class Screen {
+    @Serializable
+    data object Main : Screen()
+
+    @Serializable
+    data object Settings : Screen()
 }

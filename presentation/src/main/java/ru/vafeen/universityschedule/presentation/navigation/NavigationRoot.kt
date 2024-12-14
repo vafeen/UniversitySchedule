@@ -75,12 +75,12 @@ internal fun NavigationRoot(
             NavHost(
                 modifier = Modifier.weight(1f),
                 navController = viewModel.navController as NavHostController,
-                startDestination = viewModel.startScreen.route
+                startDestination = viewModel.startScreen
             ) {
-                composable(Screen.Main.route) {
+                composable<Screen.Main> {
                     MainScreen(viewModel)
                 }
-                composable(Screen.Settings.route) {
+                composable<Screen.Settings> {
                     SettingsScreen(viewModel)
                 }
             }
