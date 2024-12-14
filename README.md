@@ -45,6 +45,7 @@ Follow these simple steps:
 <p align="center">
     <img src="readmemedia/manualychangingfrequency.png" alt="Icon" width="200" style="margin: 20px;">
     <img src="readmemedia/dayoff.png" alt="Icon" width="200" style="margin: 20px;">
+    <img src="readmemedia/note.png" alt="Icon" width="200" style="margin: 20px;">
 </p>
 
 ### Settings screen

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,20 +67,21 @@ internal class MainActivityViewModel(
 
     val startScreen = Screen.Main
     override var navController: NavHostController? = null
-    private val _currentScreen = MutableStateFlow(Screen.Main)
+    private val _currentScreen: MutableStateFlow<Screen> = MutableStateFlow(startScreen)
     override val currentScreen: StateFlow<Screen> = _currentScreen.asStateFlow()
 
-    fun emitCurrentScreen() {
+    private fun emitCurrentScreen() {
         viewModelScope.launch(Dispatchers.Main) {
-            navController?.currentBackStackEntryFlow?.collect {
-                _currentScreen.emit(
-                    Screen.valueOf(
-                        it.destination.route.toString()
-                    )
-                )
+            navController?.currentBackStackEntryFlow?.collect { backStackEntry ->
+                val destination = backStackEntry.destination
+                when {
+                    destination.hasRoute(Screen.Main::class) -> _currentScreen.emit(Screen.Main)
+                    destination.hasRoute(Screen.Settings::class) -> _currentScreen.emit(Screen.Settings)
+                }
             }
         }
     }
+
 
     override fun back() {
         navController?.popBackStack()
@@ -88,7 +90,7 @@ internal class MainActivityViewModel(
 
     override fun navigateTo(screen: Screen) {
         if (screen != Screen.Main)
-            navController?.navigate(screen.route)
+            navController?.navigate(screen)
         else navController?.popBackStack()
         emitCurrentScreen()
     }
