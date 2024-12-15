@@ -1,6 +1,7 @@
 package ru.vafeen.universityschedule.data.utils
 
 import com.google.gson.GsonBuilder
+import ru.vafeen.universityschedule.data.database.entity.LessonEntity
 import ru.vafeen.universityschedule.data.network.dto.googlesheets_service.ResponseWrapper
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -72,3 +73,11 @@ internal fun String.toFrequencyString(): String = when (this.normalizeCase()) {
     "Знаменатель" -> "Denominator"
     else -> "Every"
 }
+
+internal fun String.getLessonsListFromGSheetsTable(): List<LessonEntity> =
+//     get data as Json
+    dataToJsonString()
+//     get data as class of Google Sheets from Json
+        .getResponseFromJson()
+//     get lessons list from class Google Sheets
+        .toLessonsList()
