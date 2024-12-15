@@ -10,6 +10,7 @@ import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.domain.models.Reminder
 import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
+import ru.vafeen.universityschedule.domain.usecase.CatMeowUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowRemindersUseCase
@@ -30,6 +31,7 @@ internal class MainScreenViewModel(
     private val deleteAllReminderUseCase: DeleteRemindersUseCase,
     private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase,
     private val scheduleRepeatingJobUseCase: ScheduleRepeatingJobUseCase,
+    private val catMeowUseCase: CatMeowUseCase,
     private val cancelJobUseCase: CancelJobUseCase,
     private val updateLessonsUseCase: UpdateLessonsUseCase,
     private val settingsManager: SettingsManager
@@ -44,6 +46,9 @@ internal class MainScreenViewModel(
     val remindersFlow = getAsFlowRemindersUseCase.use()
 
     val settingsFlow = settingsManager.settingsFlow
+    fun meow() {
+        catMeowUseCase.invoke()
+    }
 
     fun updateLesson(lesson: Lesson) {
         viewModelScope.launch(Dispatchers.IO) {
