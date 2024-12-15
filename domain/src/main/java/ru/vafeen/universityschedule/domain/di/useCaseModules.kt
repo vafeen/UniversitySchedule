@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.domain.di
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import ru.vafeen.universityschedule.domain.usecase.CatMeowUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.CleverUpdatingLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
@@ -44,4 +45,5 @@ internal val databaseUseCaseModule = module {
     singleOf(::CleverUpdatingLessonsUseCase)
     singleOf(::GetSheetDataAndUpdateDBUseCase)
     singleOf(::DeleteUseLessRemindersForLessonsUseCase)
+    singleOf(::CatMeowUseCase)
 }
