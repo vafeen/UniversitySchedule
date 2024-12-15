@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.GSheetsServiceRequestStatus
 import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
+import ru.vafeen.universityschedule.domain.usecase.CatMeowUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.GetAsFlowLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
 
@@ -17,13 +18,16 @@ import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdate
 internal class SettingsScreenViewModel(
     private val getAsFlowLessonsUseCase: GetAsFlowLessonsUseCase,
     private val getSheetDataAndUpdateDBUseCase: GetSheetDataAndUpdateDBUseCase,
+    private val catMeowUseCase: CatMeowUseCase,
     private val settingsManager: SettingsManager,
 ) : ViewModel() {
 
     private var lastLink: String? = null
     val settings = settingsManager.settingsFlow
 
-
+    fun meow() {
+        catMeowUseCase.invoke()
+    }
     fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
         settingsManager.save(saving)
     }

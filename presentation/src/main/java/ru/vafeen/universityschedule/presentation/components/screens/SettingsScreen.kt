@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -149,7 +150,11 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 )
                 if (settings.catInSettings) GifPlayer(
                     size = 80.dp,
-                    modifier = Modifier.align(Alignment.CenterEnd),
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .clickable {
+                            viewModel.meow()
+                        },
                     imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
                 )
             }
