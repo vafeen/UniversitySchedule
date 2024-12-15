@@ -5,5 +5,5 @@ import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
 class InsertLessonsUseCase(private val lessonRepository: LessonRepository) : UseCase {
-    suspend fun use(vararg lesson: Lesson) = lessonRepository.insertLessons(lesson.toList())
+    suspend fun invoke(vararg lesson: Lesson) = lessonRepository.insertLessons(lesson.toList())
 }

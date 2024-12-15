@@ -40,10 +40,10 @@ internal class MainScreenViewModel(
     val pageNumber = 365
     val todayDate: LocalDate = LocalDate.now()
 
-    val lessonsFlow = getAsFlowLessonsUseCase.use().map {
+    val lessonsFlow = getAsFlowLessonsUseCase.invoke().map {
         it.toList()
     }
-    val remindersFlow = getAsFlowRemindersUseCase.use()
+    val remindersFlow = getAsFlowRemindersUseCase.invoke()
 
     val settingsFlow = settingsManager.settingsFlow
     fun meow() {
@@ -53,7 +53,7 @@ internal class MainScreenViewModel(
     fun updateLesson(lesson: Lesson) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("update", "обновление ${lesson.note}")
-            updateLessonsUseCase.use(lesson)
+            updateLessonsUseCase.invoke(lesson)
         }
     }
 
@@ -62,22 +62,22 @@ internal class MainScreenViewModel(
         lesson: Lesson, newReminder: Reminder
     ) {
         val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
-        insertLessonsUseCase.use(newLesson)
-        insertRemindersUseCase.use(newReminder)
-        scheduleRepeatingJobUseCase.use(reminder = newReminder)
+        insertLessonsUseCase.invoke(newLesson)
+        insertRemindersUseCase.invoke(newReminder)
+        scheduleRepeatingJobUseCase.invoke(reminder = newReminder)
     }
 
     suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
         lesson: Lesson
     ) {
         val newLesson = lesson.copy(idOfReminderBeforeLesson = null)
-        insertLessonsUseCase.use(newLesson)
-        val reminder = getReminderByIdOfReminderUseCase.use(
+        insertLessonsUseCase.invoke(newLesson)
+        val reminder = getReminderByIdOfReminderUseCase.invoke(
             idOfReminder = lesson.idOfReminderBeforeLesson ?: -1
         )
         reminder?.let {
-            cancelJobUseCase.use(reminder = it)
-            deleteAllReminderUseCase.use(it)
+            cancelJobUseCase.invoke(reminder = it)
+            deleteAllReminderUseCase.invoke(it)
         }
     }
 
@@ -88,23 +88,23 @@ internal class MainScreenViewModel(
     suspend fun addReminderAboutCheckingOnLessonAndUpdateLocalDB(
         lesson: Lesson, newReminder: Reminder
     ) {
-        insertLessonsUseCase.use(lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder))
+        insertLessonsUseCase.invoke(lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder))
 
-        insertRemindersUseCase.use(newReminder)
-        scheduleRepeatingJobUseCase.use(reminder = newReminder)
+        insertRemindersUseCase.invoke(newReminder)
+        scheduleRepeatingJobUseCase.invoke(reminder = newReminder)
     }
 
     suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
         lesson: Lesson,
     ) {
         val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = null)
-        insertLessonsUseCase.use(newLesson)
-        val reminder = getReminderByIdOfReminderUseCase.use(
+        insertLessonsUseCase.invoke(newLesson)
+        val reminder = getReminderByIdOfReminderUseCase.invoke(
             idOfReminder = lesson.idOfReminderAfterBeginningLesson ?: -1
         )
         reminder?.let {
-            cancelJobUseCase.use(reminder = it)
-            deleteAllReminderUseCase.use(it)
+            cancelJobUseCase.invoke(reminder = it)
+            deleteAllReminderUseCase.invoke(it)
         }
     }
 }

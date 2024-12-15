@@ -30,7 +30,7 @@ class ReminderWorker(context: Context, params: WorkerParameters) :
             -1
         )
         CoroutineScope(Dispatchers.IO).launch {
-            val reminder = getReminderByIdOfReminderUseCase.use(
+            val reminder = getReminderByIdOfReminderUseCase.invoke(
                 idOfReminder = idOfReminder
             )
             reminder?.let {

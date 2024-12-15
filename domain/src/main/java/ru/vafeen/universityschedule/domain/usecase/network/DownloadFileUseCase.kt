@@ -7,6 +7,6 @@ import ru.vafeen.universityschedule.domain.network.service.DownloadFileRepositor
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
 class DownloadFileUseCase(private val downloadFileRepository: DownloadFileRepository) : UseCase {
-    suspend fun use(@Url fileUrl: String): ResponseResult<CompositeFileStream> =
+    suspend fun invoke(@Url fileUrl: String): ResponseResult<CompositeFileStream> =
         downloadFileRepository.downloadFile(fileUrl = fileUrl)
 }

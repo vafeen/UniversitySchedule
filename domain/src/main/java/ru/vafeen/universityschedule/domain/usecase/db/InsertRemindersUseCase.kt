@@ -5,6 +5,6 @@ import ru.vafeen.universityschedule.domain.models.Reminder
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
 class InsertRemindersUseCase(private val reminderRepository: ReminderRepository) : UseCase {
-    suspend fun use(vararg reminders: Reminder) =
+    suspend fun invoke(vararg reminders: Reminder) =
         reminderRepository.insertReminders(reminders.toList())
 }
