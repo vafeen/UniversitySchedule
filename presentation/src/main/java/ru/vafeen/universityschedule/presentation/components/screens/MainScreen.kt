@@ -411,7 +411,11 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                 if (lessonsOfThisDay.isEmpty() && settings.weekendCat)
                     GifPlayer(
                         size = 150.dp,
-                        modifier = Modifier.align(Alignment.BottomCenter),
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .clickable {
+                                viewModel.meow()
+                            },
                         imageUri = Uri.parse(AssetsInfo.DANCING_CAT)
                     )
             }
