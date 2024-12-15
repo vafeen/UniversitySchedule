@@ -5,6 +5,6 @@ import ru.vafeen.universityschedule.domain.models.Reminder
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
 class GetReminderByIdOfReminderUseCase(private val reminderRepository: ReminderRepository) : UseCase {
-    fun use(idOfReminder: Int): Reminder? =
+    fun invoke(idOfReminder: Int): Reminder? =
         reminderRepository.getReminderByIdOfReminder(idOfReminder = idOfReminder)
 }

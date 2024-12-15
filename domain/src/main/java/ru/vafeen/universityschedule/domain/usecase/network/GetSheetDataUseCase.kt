@@ -7,7 +7,7 @@ import ru.vafeen.universityschedule.domain.network.result.ResponseResult
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
 class GetSheetDataUseCase(private val sheetDataRepository: SheetDataRepository) : UseCase {
-    suspend fun use(link: String): ResponseResult<List<Lesson>> =
+    suspend fun invoke(link: String): ResponseResult<List<Lesson>> =
         sheetDataRepository.getLessonsListFromGSheetsTable(
             "${
                 link.substringBefore("/edit?")

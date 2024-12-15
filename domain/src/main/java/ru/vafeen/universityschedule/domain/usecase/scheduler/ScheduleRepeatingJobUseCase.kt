@@ -5,7 +5,7 @@ import ru.vafeen.universityschedule.domain.scheduler.Scheduler
 import ru.vafeen.universityschedule.domain.usecase.base.UseCase
 
 class ScheduleRepeatingJobUseCase(private val scheduler: Scheduler) : UseCase {
-    fun use(reminder: Reminder) {
+    fun invoke(reminder: Reminder) {
         scheduler.scheduleRepeatingJob(reminder = reminder)
     }
 }

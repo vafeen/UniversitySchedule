@@ -36,11 +36,11 @@ class CleverUpdatingLessonsUseCase(
      *
      * @param newLessons Список новых пар, которые должны быть в базе данных.
      */
-    fun use(newLessons: List<Lesson>) {
+    fun invoke(newLessons: List<Lesson>) {
         // Запускаем обновление в отдельной корутине, используя IO-диспетчер.
         CoroutineScope(Dispatchers.IO).launch {
             // Получаем текущий список пар из базы данных.
-            val lastLessons = getAsFlowLessonsUseCase.use().first()
+            val lastLessons = getAsFlowLessonsUseCase.invoke().first()
 
             // Список для добавления новых или обновленных пар.
             val result = mutableListOf<Lesson>()
@@ -64,11 +64,11 @@ class CleverUpdatingLessonsUseCase(
             }
 
             // Добавляем новые или обновленные пары в базу данных.
-            insertLessonsUseCase.use(*result.toTypedArray())
+            insertLessonsUseCase.invoke(*result.toTypedArray())
             // Удаляем старые пары из базы данных.
-            deleteLessonsUseCase.use(*resultForDelete.toTypedArray())
+            deleteLessonsUseCase.invoke(*resultForDelete.toTypedArray())
             // Удаляем напоминания, связанные с удаленными парами.
-            deleteUseLessRemindersForLessonsUseCase.use(resultForDelete)
+            deleteUseLessRemindersForLessonsUseCase.invoke(resultForDelete)
         }
     }
 }

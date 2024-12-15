@@ -9,19 +9,19 @@ class GetSheetDataAndUpdateDBUseCase(
     private val getSheetDataUseCase: GetSheetDataUseCase,
     private val cleverUpdatingLessonsUseCase: CleverUpdatingLessonsUseCase,
 ) : UseCase {
-    suspend fun use(
+    suspend fun invoke(
         link: String,
         updateRequestStatus: (suspend (GSheetsServiceRequestStatus) -> Unit)? = null
     ) {
         updateRequestStatus?.invoke(GSheetsServiceRequestStatus.Waiting)
-        getSheetDataUseCase.use(link).also {
+        getSheetDataUseCase.invoke(link).also {
             when (it) {
                 is ResponseResult.Error -> {
                     updateRequestStatus?.invoke(GSheetsServiceRequestStatus.NetworkError)
                 }
 
                 is ResponseResult.Success -> {
-                    cleverUpdatingLessonsUseCase.use(it.data)
+                    cleverUpdatingLessonsUseCase.invoke(it.data)
                     updateRequestStatus?.invoke(GSheetsServiceRequestStatus.Success)
                 }
             }
