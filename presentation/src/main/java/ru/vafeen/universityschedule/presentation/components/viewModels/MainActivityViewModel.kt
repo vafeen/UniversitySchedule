@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Settings
-import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
+import ru.vafeen.universityschedule.domain.network.service.Downloader
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
@@ -26,13 +26,13 @@ import kotlin.system.exitProcess
 
 internal class MainActivityViewModel(
     val getLatestReleaseUseCase: GetLatestReleaseUseCase,
-    apkDownloader: ApkDownloader,
+    downloader: Downloader,
     context: Context,
     private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
     private val settingsManager: SettingsManager
 ) : ViewModel(), BottomBarNavigator {
-    val isUpdateInProcessFlow = apkDownloader.isUpdateInProcessFlow
-    val percentageFlow = apkDownloader.percentageFlow
+    val isUpdateInProcessFlow = downloader.isUpdateInProcessFlow
+    val percentageFlow = downloader.percentageFlow
 
     val settings = settingsManager.settingsFlow
 
