@@ -43,7 +43,7 @@ internal class SettingsScreenViewModel(
                     }
 
                     link.isNotEmpty() && link != lastLink -> {
-                        getSheetDataAndUpdateDBUseCase.use(link = link) { status ->
+                        getSheetDataAndUpdateDBUseCase.invoke(link = link) { status ->
                             _gSheetsServiceRequestStatusFlow.emit(status)
                         }
                     }
@@ -58,7 +58,7 @@ internal class SettingsScreenViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            getAsFlowLessonsUseCase.use().map { it.mapNotNull { lesson -> lesson.subGroup } }
+            getAsFlowLessonsUseCase.invoke().map { it.mapNotNull { lesson -> lesson.subGroup } }
                 .collect { subGroups ->
                     _subgroupFlow.emit(subGroups.distinct())
                 }

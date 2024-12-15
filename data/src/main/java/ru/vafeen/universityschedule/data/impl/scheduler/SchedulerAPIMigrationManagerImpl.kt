@@ -17,7 +17,7 @@ internal class SchedulerAPIMigrationManagerImpl(private val context: Context) :
     private val mainActivityIntentProvider = getKoin().get<MainActivityIntentProvider>()
     private val scheduler = getKoin().get<Scheduler>()
     override suspend fun migrate() {
-        val allReminders = getAsFlowRemindersUseCase.use().first()
+        val allReminders = getAsFlowRemindersUseCase.invoke().first()
 
         allReminders.forEach { reminder ->
             alarmManager.cancel(
