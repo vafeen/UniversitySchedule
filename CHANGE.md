@@ -1,5 +1,6 @@
-New version 6.1.7!!
+New version 6.1.15!!
 
 What's fixed:
 
-- Navigation between screens bug
+- Repeating notifications
+- Some logic bugs
