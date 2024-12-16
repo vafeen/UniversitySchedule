@@ -14,9 +14,8 @@ import ru.vafeen.universityschedule.domain.models.Reminder
 import ru.vafeen.universityschedule.domain.scheduler.Scheduler
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerExtra
 import ru.vafeen.universityschedule.domain.utils.getUniqueReminderWorkID
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 
 /**
  * Реализация интерфейса [Scheduler] для планирования задач с использованием WorkManager.
@@ -41,37 +40,23 @@ internal class SchedulerImpl(
      * @param reminder Напоминание с данными о времени и длительности.
      */
     override fun scheduleRepeatingJob(reminder: Reminder) {
-        // Создаем объект данных, передаваемых в Worker.
-        val data = Data.Builder()
-            .putInt(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder) // ID напоминания.
-            .build()
-
-        // Настраиваем ограничения для задачи, чтобы она выполнялась в любых условиях.
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(false) // Разрешить выполнение даже при низком заряде батареи.
-            .setRequiresDeviceIdle(false) // Разрешить выполнение, даже если устройство не в состоянии покоя.
-            .setRequiredNetworkType(NetworkType.NOT_REQUIRED) // Не требовать подключения к сети.
-            .build()
-
         // Создаем запрос на повторяющуюся задачу с эластичным интервалом.
         val repeatingWorkRequest = PeriodicWorkRequestBuilder<ReminderWorker>(
             reminder.duration.duration.milliSeconds, // Интервал повторения задачи.
-            TimeUnit.MILLISECONDS,
-            flexInterval.inWholeMilliseconds, // Эластичный интервал для гибкости.
             TimeUnit.MILLISECONDS
         )
-            .setConstraints(constraints) // Устанавливаем ограничения.
+            .setConstraints(createConstraints()) // Устанавливаем ограничения.
             .setInitialDelay(
                 calculateInitialDelay(reminder),
                 TimeUnit.MILLISECONDS
             ) // Задержка перед первым запуском.
-            .setInputData(data) // Передаем данные в Worker.
+            .setInputData(createInputData(reminder)) // Передаем данные в Worker.
             .build()
 
         // Добавляем задачу в WorkManager с уникальным идентификатором.
         workManager.enqueueUniquePeriodicWork(
             reminder.getUniqueReminderWorkID(), // Уникальный идентификатор задачи.
-            ExistingPeriodicWorkPolicy.UPDATE, // Политика замены существующей задачи.
+            ExistingPeriodicWorkPolicy.REPLACE, // Политика замены существующей задачи.
             repeatingWorkRequest
         )
     }
@@ -81,21 +66,15 @@ internal class SchedulerImpl(
      *
      * @param reminder Напоминание с данными о времени.
      */
-    fun scheduleOneTimeJob(reminder: Reminder) {
+    override fun scheduleOneTimeJob(reminder: Reminder) {
         // Создаем объект данных, передаваемых в Worker.
-        val data = Data.Builder()
-            .putInt(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder) // ID напоминания.
-            .build()
+        val data = createInputData(reminder)
 
         // Вычисляем задержку перед запуском задачи.
         val initialDelay = calculateInitialDelay(reminder)
 
-        // Настраиваем ограничения для задачи.
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(false) // Разрешить выполнение при низком заряде батареи.
-            .setRequiresDeviceIdle(false) // Разрешить выполнение, даже если устройство не в состоянии покоя.
-            .setRequiredNetworkType(NetworkType.NOT_REQUIRED) // Не требовать подключения к сети.
-            .build()
+        // Создаем ограничения для задачи.
+        val constraints = createConstraints()
 
         // Создаем запрос на одноразовую задачу.
         val oneTimeWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
@@ -122,6 +101,10 @@ internal class SchedulerImpl(
         workManager.cancelUniqueWork(reminder.getUniqueReminderWorkID())
     }
 
+    override fun cancelAll() {
+        workManager.cancelAllWork()
+    }
+
     /**
      * Вычисляет задержку перед запуском задачи на основе текущего времени и времени напоминания.
      *
@@ -129,14 +112,34 @@ internal class SchedulerImpl(
      * @return Задержка в миллисекундах.
      */
     private fun calculateInitialDelay(reminder: Reminder): Long {
-        val now = System.currentTimeMillis() // Текущее время в миллисекундах.
+        val now = dtConverter.convertAB(LocalDateTime.now()) // Текущее время в миллисекундах.
         val reminderTime = dtConverter.convertAB(reminder.dt) // Время напоминания в миллисекундах.
         return if (reminderTime > now) reminderTime - now else 0L // Вычисляем разницу между временем напоминания и текущим временем.
     }
 
     /**
-     * Эластичный интервал повторения задачи.
-     * Задает минимальное время, которое WorkManager может подождать для выполнения задачи в гибком режиме.
+     * Создает объект данных, передаваемых в Worker для указанного напоминания.
+     *
+     * @param reminder Напоминание, для которого создаются данные.
+     * @return Объект Data с данными о напоминании.
      */
-    private val flexInterval: Duration = 1.minutes
+    private fun createInputData(reminder: Reminder): Data {
+        return Data.Builder()
+            .putInt(SchedulerExtra.ID_OF_REMINDER, reminder.idOfReminder)
+            .build()
+    }
+
+    /**
+     * Создает ограничения для задач WorkManager.
+     *
+     * @return Объект Constraints с установленными ограничениями для выполнения задач.
+     */
+    private fun createConstraints(): Constraints {
+        return Constraints.Builder()
+            .setRequiresBatteryNotLow(false) // Разрешить выполнение при низком заряде батареи.
+            .setRequiresDeviceIdle(false) // Разрешить выполнение, даже если устройство не в состоянии покоя.
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED) // Не требовать подключения к сети.
+            .build()
+    }
+
 }

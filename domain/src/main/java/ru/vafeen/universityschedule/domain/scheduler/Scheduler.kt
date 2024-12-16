@@ -7,6 +7,7 @@ import ru.vafeen.universityschedule.domain.models.Reminder
  */
 interface Scheduler {
 
+    fun scheduleOneTimeJob(reminder: Reminder)
     /**
      * Запланировать повторяющуюся задачу на основе указанного напоминания.
      *
@@ -20,4 +21,5 @@ interface Scheduler {
      * @param reminder Объект [Reminder], представляющий напоминание, которое нужно отменить.
      */
     fun cancelJob(reminder: Reminder)
+    fun cancelAll()
 }
