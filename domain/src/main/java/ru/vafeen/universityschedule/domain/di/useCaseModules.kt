@@ -19,6 +19,7 @@ import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCa
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
+import ru.vafeen.universityschedule.domain.usecase.scheduler.RebootingRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
 
 internal val plannerUseCaseModule = module {
@@ -46,4 +47,5 @@ internal val databaseUseCaseModule = module {
     singleOf(::GetSheetDataAndUpdateDBUseCase)
     singleOf(::DeleteUseLessRemindersForLessonsUseCase)
     singleOf(::CatMeowUseCase)
+    singleOf(::RebootingRemindersUseCase)
 }
