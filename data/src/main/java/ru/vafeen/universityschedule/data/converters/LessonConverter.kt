@@ -5,7 +5,19 @@ import ru.vafeen.universityschedule.domain.converter.BaseConverter
 import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 
+/**
+ * Конвертер для преобразования [LessonEntity] в [Lesson] и обратно.
+ *
+ * Используется для преобразования данных между сущностью базы данных и моделью доменного уровня.
+ */
 internal class LessonConverter : BaseConverter<LessonEntity, Lesson> {
+
+    /**
+     * Преобразует [LessonEntity] в [Lesson].
+     *
+     * @param a Экземпляр [LessonEntity], полученный из базы данных.
+     * @return Экземпляр [Lesson], используемый на уровне доменной модели.
+     */
     override fun convertAB(a: LessonEntity): Lesson = Lesson(
         id = a.id,
         dayOfWeek = a.dayOfWeek,
@@ -21,6 +33,12 @@ internal class LessonConverter : BaseConverter<LessonEntity, Lesson> {
         note = a.note
     )
 
+    /**
+     * Преобразует [Lesson] в [LessonEntity].
+     *
+     * @param b Экземпляр [Lesson], используемый на уровне доменной модели.
+     * @return Экземпляр [LessonEntity], предназначенный для сохранения в базу данных.
+     */
     override fun convertBA(b: Lesson): LessonEntity = LessonEntity(
         id = b.id,
         dayOfWeek = b.dayOfWeek,
@@ -35,5 +53,4 @@ internal class LessonConverter : BaseConverter<LessonEntity, Lesson> {
         idOfReminderAfterBeginningLesson = b.idOfReminderAfterBeginningLesson,
         note = b.note
     )
-
 }
