@@ -16,6 +16,7 @@ import ru.vafeen.universityschedule.domain.network.service.Downloader
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
+import ru.vafeen.universityschedule.domain.usecase.scheduler.RebootingRemindersUseCase
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
@@ -35,6 +36,7 @@ import kotlin.system.exitProcess
  */
 internal class MainActivityViewModel(
     val getLatestReleaseUseCase: GetLatestReleaseUseCase,
+    private val rebootingRemindersUseCase: RebootingRemindersUseCase,
     downloader: Downloader,
     context: Context,
     private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
@@ -75,6 +77,12 @@ internal class MainActivityViewModel(
             schedulerAPIMigrationManager.migrate()
             saveSettingsToSharedPreferences {
                 it.copy(isMigrationFromAlarmManagerToWorkManagerSuccessful = true)
+            }
+        }
+        if (!settings.value.isRemindersRebootedForVersion6_1_15) {
+            rebootingRemindersUseCase.invoke()
+            saveSettingsToSharedPreferences {
+                it.copy(isRemindersRebootedForVersion6_1_15 = true)
             }
         }
     }

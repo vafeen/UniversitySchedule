@@ -18,6 +18,7 @@ import com.google.gson.Gson
  * @property notificationsAboutLesson Флаг, указывающий на наличие функции уведомлений о паре (по умолчанию true).
  * @property releaseBody Описание релиза.
  * @property isMigrationFromAlarmManagerToWorkManagerSuccessful Флаг, указывающий на успешность миграции от AlarmManager к WorkManager (по умолчанию false).
+ * @property isRemindersRebootedForVersion6_1_15 Флаг указывающий на перезагрузку всех задач после изменений в [Scheduler][ru.vafeen.universityschedule.domain.scheduler.Scheduler]
  */
 data class Settings(
     var lightThemeColor: Color? = null,
@@ -31,7 +32,8 @@ data class Settings(
     var notesAboutLesson: Boolean = false,
     var notificationsAboutLesson: Boolean = true,
     var releaseBody: String = "",
-    var isMigrationFromAlarmManagerToWorkManagerSuccessful: Boolean = false
+    var isMigrationFromAlarmManagerToWorkManagerSuccessful: Boolean = false,
+    var isRemindersRebootedForVersion6_1_15: Boolean = false,
 ) {
     /**
      * Преобразует объект [Settings] в строку формата JSON.
