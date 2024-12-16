@@ -4,13 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.FileProvider
-import ru.vafeen.universityschedule.domain.network.service.ApkInstaller
+import ru.vafeen.universityschedule.domain.network.service.Installer
 import ru.vafeen.universityschedule.domain.utils.pathToDownloadRelease
 import java.io.File
 
-internal class ApkInstallerImpl : ApkInstaller {
-    override fun installApk(context: Context) {
-        val apkFilePath = context.pathToDownloadRelease()
+/**
+ * Реализация установщика для установки APK файлов.
+ *
+ * @property context Контекст приложения.
+ */
+internal class InstallerImpl(private val context: Context) : Installer {
+
+    /**
+     * Установка APK файла.
+     *
+     * Получает путь к загруженному APK файлу и запускает процесс установки,
+     * если файл существует.
+     */
+    override fun installApk() {
+        val apkFilePath = context.pathToDownloadRelease() // Получаем путь к APK файлу
         // Создаем объект File для APK файла по указанному пути
         val file = File(apkFilePath)
 

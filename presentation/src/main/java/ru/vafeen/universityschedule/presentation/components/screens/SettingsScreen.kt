@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.presentation.components.screens
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,21 +53,6 @@ import ru.vafeen.universityschedule.presentation.utils.sendEmail
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import ru.vafeen.universityschedule.resources.R
 
-/**
- * Screen with settings for application:
- *
- * General:
- * - Link
- * - Table
- * - Interface color
- * - Subgroup
- *
- * Contacts:
- * - Code
- * - Report a bug
- *
- */
-
 @Composable
 internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
     val viewModel: SettingsScreenViewModel = koinViewModel()
@@ -74,30 +60,24 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
     val dark = isSystemInDarkTheme()
     val subgroupList by viewModel.subgroupFlow.collectAsState()
     val settings by viewModel.settings.collectAsState()
-    var linkIsEditable by remember {
-        mutableStateOf(false)
-    }
-    var colorIsEditable by remember {
-        mutableStateOf(false)
-    }
 
-
+    var linkIsEditable by remember { mutableStateOf(false) }
+    var colorIsEditable by remember { mutableStateOf(false) }
     var isFeaturesEditable by remember { mutableStateOf(false) }
-    var isSubGroupChanging by remember {
-        mutableStateOf(false)
-    }
-    var catsOnUIIsChanging by remember {
-        mutableStateOf(false)
-    }
+    var isSubGroupChanging by remember { mutableStateOf(false) }
+    var catsOnUIIsChanging by remember { mutableStateOf(false) }
+
     val subGroupLazyRowState = rememberLazyListState()
     val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
 
     BackHandler {
         bottomBarNavigator.back()
     }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // Заголовок экрана
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,66 +97,92 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 )
                 Spacer(modifier = Modifier.width(15.dp))
                 TextForThisTheme(
-                    text = stringResource(R.string.settings), fontSize = FontSize.big22
+                    text = stringResource(R.string.settings),
+                    fontSize = FontSize.big22
                 )
             }
         }
-        if (linkIsEditable) EditLinkDialog(context = context) {
-            linkIsEditable = false
-        }
-        if (colorIsEditable) ColorPickerDialog(context = context,
-            firstColor = settings.getMainColorForThisTheme(isDark = dark) ?: Theme.colors.mainColor,
-            onDismissRequest = { colorIsEditable = false }) {
-            viewModel.saveSettingsToSharedPreferences { settings ->
-                if (dark) settings.copy(
-                    darkThemeColor = it
-                ) else settings.copy(lightThemeColor = it)
+
+        // Диалоговое окно для редактирования ссылки
+        if (linkIsEditable) {
+            EditLinkDialog(context = context) {
+                linkIsEditable = false
             }
         }
 
+        // Диалоговое окно для изменения цвета интерфейса
+        if (colorIsEditable) {
+            ColorPickerDialog(
+                context = context,
+                firstColor = settings.getMainColorForThisTheme(isDark = dark)
+                    ?: Theme.colors.mainColor,
+                onDismissRequest = { colorIsEditable = false }
+            ) {
+                viewModel.saveSettingsToSharedPreferences { settings ->
+                    if (dark) settings.copy(
+                        darkThemeColor = it
+                    ) else settings.copy(lightThemeColor = it)
+                }
+            }
+        }
+
+        // Основной контент настроек
         Column(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 20.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
         ) {
+            // Раздел "Общие"
             Box(modifier = Modifier.fillMaxWidth()) {
-                // name of section
                 TextForThisTheme(
                     modifier = Modifier.align(Alignment.Center),
                     fontSize = FontSize.big22,
                     text = stringResource(R.string.general)
                 )
-                if (settings.catInSettings) GifPlayer(
-                    size = 80.dp,
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
-                )
+                if (settings.catInSettings) {
+                    GifPlayer(
+                        size = 80.dp,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .clickable { viewModel.meow() },
+                        imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
+                    )
+                }
             }
-            // Edit link
-            CardOfSettings(text = stringResource(R.string.link_to_table), icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.link),
-                    contentDescription = stringResource(R.string.edit_link),
-                    tint = it.suitableColor()
-                )
-            }, onClick = { linkIsEditable = true })
 
-            // View table
-            if (settings.link != null) {
-                CardOfSettings(text = stringResource(R.string.table), icon = {
+            // Карточка для редактирования ссылки
+            CardOfSettings(
+                text = stringResource(R.string.link_to_table),
+                icon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.table),
-                        contentDescription = stringResource(R.string.view_table),
+                        painter = painterResource(id = R.drawable.link),
+                        contentDescription = stringResource(R.string.edit_link),
                         tint = it.suitableColor()
                     )
-                }, onClick = { settings.link?.let { context.openLink(link = it) } })
+                },
+                onClick = { linkIsEditable = true }
+            )
 
+            // Карточка для просмотра таблицы
+            if (settings.link != null) {
+                CardOfSettings(
+                    text = stringResource(R.string.table),
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.table),
+                            contentDescription = stringResource(R.string.view_table),
+                            tint = it.suitableColor()
+                        )
+                    },
+                    onClick = { settings.link?.let { context.openLink(link = it) } }
+                )
             }
 
-            // Subgroup
+            // Подгруппа
             if (subgroupList.isNotEmpty()) {
-                CardOfSettings(text = stringResource(R.string.subgroup),
+                CardOfSettings(
+                    text = stringResource(R.string.subgroup),
                     icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.group),
@@ -196,11 +202,13 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                             items(subgroupList) { subgroup ->
                                 AssistChip(
                                     leadingIcon = {
-                                        if (subgroup == settings.subgroup) Icon(
-                                            painter = painterResource(id = R.drawable.done),
-                                            contentDescription = stringResource(R.string.this_is_user_subgroup),
-                                            tint = Theme.colors.oppositeTheme
-                                        )
+                                        if (subgroup == settings.subgroup) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.done),
+                                                contentDescription = stringResource(R.string.this_is_user_subgroup),
+                                                tint = Theme.colors.oppositeTheme
+                                            )
+                                        }
                                     },
                                     modifier = Modifier.padding(horizontal = 3.dp),
                                     onClick = {
@@ -210,14 +218,15 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                                             )
                                         }
                                     },
-                                    label = { TextForThisTheme(text = subgroup) },
+                                    label = { TextForThisTheme(text = subgroup) }
                                 )
                             }
                         }
-                    })
-
+                    }
+                )
             }
 
+            // Карточка для настроек уведомлений
             CardOfSettings(
                 text = stringResource(id = R.string.features),
                 icon = {
@@ -254,7 +263,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 )
             }
 
-            // name of section
+            // Раздел "Интерфейс"
             TextForThisTheme(
                 modifier = Modifier
                     .padding(10.dp)
@@ -262,16 +271,23 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 fontSize = FontSize.big22,
                 text = stringResource(R.string.interface_str)
             )
-            // Color
-            CardOfSettings(text = stringResource(R.string.interface_color), icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.palette),
-                    contentDescription = stringResource(R.string.change_color_of_interface),
-                    tint = it.suitableColor()
-                )
-            }, onClick = { colorIsEditable = true })
-            // cats in interface
-            CardOfSettings(text = stringResource(R.string.cats_on_ui),
+
+            // Карточка для изменения цвета интерфейса
+            CardOfSettings(
+                text = stringResource(R.string.interface_color),
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.palette),
+                        contentDescription = stringResource(R.string.change_color_of_interface),
+                        tint = it.suitableColor()
+                    )
+                },
+                onClick = { colorIsEditable = true }
+            )
+
+            // Карточка для изменения отображения котиков
+            CardOfSettings(
+                text = stringResource(R.string.cats_on_ui),
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.cat),
@@ -303,12 +319,11 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                             text = stringResource(R.string.cat_in_settings),
                             checked = settings.catInSettings
                         )
-
                     }
-                })
+                }
+            )
 
-
-            // name of section
+            // Раздел "Контакты"
             TextForThisTheme(
                 modifier = Modifier
                     .padding(10.dp)
@@ -317,23 +332,28 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 text = stringResource(R.string.contacts)
             )
 
-            // CODE
-            CardOfSettings(text = stringResource(R.string.code), icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.terminal),
-                    contentDescription = stringResource(R.string.view_code),
-                    tint = it.suitableColor()
-                )
-            }, onClick = {
-                context.openLink(link = Link.CODE)
-            })
+            // Карточка для отправки email
+            CardOfSettings(
+                text = stringResource(R.string.code),
+                icon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.terminal),
+                        contentDescription = stringResource(R.string.view_code),
+                        tint = it.suitableColor()
+                    )
+                },
+                onClick = { context.openLink(link = Link.CODE) }
+            )
 
-            CardOfSettings(text = stringResource(R.string.report_a_bug), icon = {
-                Icon(
+            // Карточка для отправки сообщения об ошибке
+            CardOfSettings(
+                text = stringResource(R.string.report_a_bug),
+                icon = {
+                    Icon(
                     painter = painterResource(id = R.drawable.bug_report),
                     contentDescription = stringResource(R.string.report_a_bug),
-                    tint = it.suitableColor()
-                )
+                        tint = it.suitableColor()
+                    )
             }, onClick = {
                 context.sendEmail(email = Link.EMAIL)
             })

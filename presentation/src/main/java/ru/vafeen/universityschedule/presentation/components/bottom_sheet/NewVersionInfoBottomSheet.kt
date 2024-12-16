@@ -18,28 +18,41 @@ import ru.vafeen.universityschedule.presentation.components.viewModels.MainActiv
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 
+/**
+ * Компонент нижнего модального окна для отображения информации о новой версии приложения.
+ *
+ * Этот компонент отображает информацию о новой версии, полученную из настроек,
+ * в виде нижнего модального окна. Пользователь может закрыть это окно по своему усмотрению.
+ *
+ * @param viewModel ViewModel, содержащий данные о настройках приложения.
+ * @param onDismissRequest Функция, вызываемая при закрытии модального окна.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NewVersionInfoBottomSheet(
     viewModel: MainActivityViewModel,
     onDismissRequest: () -> Unit,
 ) {
-    val state =
-        rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    // Создание состояния модального нижнего окна.
+    val state = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    // Подписка на настройки из ViewModel.
     val settings by viewModel.settings.collectAsState()
+
+    // Отображение модального нижнего окна.
     ModalBottomSheet(
         sheetState = state,
         onDismissRequest = onDismissRequest,
         containerColor = Theme.colors.buttonColor,
     ) {
         Column(modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(15.dp)
+            .verticalScroll(rememberScrollState()) // Добавление прокрутки для содержимого.
+            .padding(15.dp) // Установка отступов.
         ) {
             TextForThisTheme(
                 modifier = Modifier.fillMaxWidth(),
-                text = settings.releaseBody,
-                fontSize = FontSize.big22
+                text = settings.releaseBody, // Текст информации о новой версии.
+                fontSize = FontSize.big22 // Размер шрифта для текста.
             )
         }
     }

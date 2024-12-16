@@ -34,7 +34,7 @@ internal fun CheckUpdateAndOpenBottomSheetIfNeed(
         mutableStateOf(null)
     }
     LaunchedEffect(key1 = null) {
-        release = viewModel.getLatestReleaseUseCase.use()
+        release = viewModel.getLatestReleaseUseCase.invoke()
         viewModel.saveSettingsToSharedPreferences {
             it.copy(releaseBody = release?.body ?: "")
         }

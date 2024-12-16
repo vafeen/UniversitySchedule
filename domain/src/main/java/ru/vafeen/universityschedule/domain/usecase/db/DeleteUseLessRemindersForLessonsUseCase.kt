@@ -30,11 +30,11 @@ class DeleteUseLessRemindersForLessonsUseCase(
      *
      * @param lessonsForDelete Список пар, для которых нужно удалить напоминания.
      */
-    suspend fun use(lessonsForDelete: List<Lesson>) {
+    suspend fun invoke(lessonsForDelete: List<Lesson>) {
         // Получаем все напоминания в виде списка, блокируя поток до получения первого значения.
-        val reminders = getAsFlowRemindersUseCase.use().first()
+        val reminders = getAsFlowRemindersUseCase.invoke().first()
         val remindersForDelete = mutableListOf<Reminder>()
-        val lessons = getAsFlowLessonsUseCase.use().first()
+        val lessons = getAsFlowLessonsUseCase.invoke().first()
         // Обрабатываем каждую пару из списка на удаление.
         lessonsForDelete.forEach {
             // Проверяем и удаляем напоминания "до пары".
@@ -74,6 +74,6 @@ class DeleteUseLessRemindersForLessonsUseCase(
         }
 
         // Удаляем собранные напоминания.
-        deleteRemindersUseCase.use(*remindersForDelete.toTypedArray())
+        deleteRemindersUseCase.invoke(*remindersForDelete.toTypedArray())
     }
 }

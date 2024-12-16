@@ -2,6 +2,7 @@ package ru.vafeen.universityschedule.domain.di
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import ru.vafeen.universityschedule.domain.usecase.CatMeowUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.CleverUpdatingLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.DeleteRemindersUseCase
@@ -18,6 +19,7 @@ import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCa
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
+import ru.vafeen.universityschedule.domain.usecase.scheduler.RebootingRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
 
 internal val plannerUseCaseModule = module {
@@ -44,4 +46,6 @@ internal val databaseUseCaseModule = module {
     singleOf(::CleverUpdatingLessonsUseCase)
     singleOf(::GetSheetDataAndUpdateDBUseCase)
     singleOf(::DeleteUseLessRemindersForLessonsUseCase)
+    singleOf(::CatMeowUseCase)
+    singleOf(::RebootingRemindersUseCase)
 }

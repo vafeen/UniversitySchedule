@@ -23,12 +23,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import ru.vafeen.universityschedule.domain.models.Release
-import ru.vafeen.universityschedule.domain.network.service.ApkDownloader
+import ru.vafeen.universityschedule.domain.network.service.Downloader
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.updateAvailableColor
 import ru.vafeen.universityschedule.resources.R
 
-
+/**
+ * Компонент нижнего модального окна для обновления приложения.
+ *
+ * Этот компонент отображает информацию о доступном обновлении и предоставляет
+ * возможность загрузки новой версии приложения. Пользователь может закрыть это окно
+ * по своему усмотрению.
+ *
+ * @param release Объект [Release], содержащий информацию о новой версии.
+ * @param state Состояние модального окна [SheetState].
+ * @param onDismissRequest Функция, вызываемая при закрытии модального окна.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun UpdaterBottomSheet(
@@ -36,8 +46,10 @@ internal fun UpdaterBottomSheet(
     state: SheetState,
     onDismissRequest: (Boolean) -> Unit
 ) {
-    val context = LocalContext.current
-    val apkDownloader = koinInject<ApkDownloader>()
+    val context = LocalContext.current // Получение текущего контекста.
+    val downloader = koinInject<Downloader>() // Внедрение зависимости Downloader.
+
+    // Отображение модального нижнего окна.
     ModalBottomSheet(
         sheetState = state,
         onDismissRequest = { onDismissRequest(false) },
@@ -49,37 +61,42 @@ internal fun UpdaterBottomSheet(
                 .fillMaxSize(0.8f)
                 .padding(10.dp),
         ) {
-
+            // Заголовок с эмодзи.
             Text(
                 text = ":)",
                 fontSize = FontSize.gigant,
                 modifier = Modifier.align(Alignment.Start),
                 color = Color.White
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp)) // Отступ между элементами.
+
+            // Сообщение о необходимости обновления.
             Text(
                 text = stringResource(id = R.string.update_need),
                 fontSize = FontSize.huge27, color = Color.White
             )
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(40.dp)) // Отступ между элементами.
+
+            // Инструкция по просмотру релизов.
             Text(
                 text = stringResource(id = R.string.view_releases),
                 fontSize = FontSize.huge27, color = Color.White
             )
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(40.dp)) // Отступ между элементами.
+
+            // Изображение для загрузки обновления.
             Image(
                 painter = painterResource(id = R.drawable.releases_win),
                 contentDescription = stringResource(R.string.icon_updating_qr),
                 modifier = Modifier
                     .clickable {
-                        apkDownloader.downloadApk(
-                            context = context,
+                        downloader.downloadApk(
                             url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0]}",
                         )
-                        onDismissRequest(true)
+                        onDismissRequest(true) // Закрытие окна после начала загрузки.
                     }
                     .size(150.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally) // Центрирование изображения.
             )
         }
     }

@@ -10,8 +10,9 @@ import ru.vafeen.universityschedule.domain.utils.containsLesson
 
 /**
  * UseCase для интеллектуального обновления пар.
- * Выполняет:
- * 1. Добавление новых пар.
+ *
+ * Этот класс отвечает за:
+ * 1. Добавление новых пар в базу данных.
  * 2. Удаление старых пар, которые отсутствуют в новых данных.
  * 3. Удаление напоминаний, связанных с удаленными парами.
  *
@@ -29,18 +30,19 @@ class CleverUpdatingLessonsUseCase(
 
     /**
      * Выполняет обновление пар.
-     * 1. Сравнивает текущий список пар с новыми данными.
-     * 2. Добавляет новые пары, которых еще нет в базе данных.
-     * 3. Удаляет пары, отсутствующие в новых данных.
-     * 4. Удаляет напоминания, связанные с удаленными парами.
+     *
+     * Сравнивает текущий список пар с новыми данными и выполняет следующие действия:
+     * 1. Добавляет новые пары, которых еще нет в базе данных.
+     * 2. Удаляет пары, отсутствующие в новых данных.
+     * 3. Удаляет напоминания, связанные с удаленными парами.
      *
      * @param newLessons Список новых пар, которые должны быть в базе данных.
      */
-    fun use(newLessons: List<Lesson>) {
+    fun invoke(newLessons: List<Lesson>) {
         // Запускаем обновление в отдельной корутине, используя IO-диспетчер.
         CoroutineScope(Dispatchers.IO).launch {
             // Получаем текущий список пар из базы данных.
-            val lastLessons = getAsFlowLessonsUseCase.use().first()
+            val lastLessons = getAsFlowLessonsUseCase.invoke().first()
 
             // Список для добавления новых или обновленных пар.
             val result = mutableListOf<Lesson>()
@@ -64,11 +66,11 @@ class CleverUpdatingLessonsUseCase(
             }
 
             // Добавляем новые или обновленные пары в базу данных.
-            insertLessonsUseCase.use(*result.toTypedArray())
+            insertLessonsUseCase.invoke(*result.toTypedArray())
             // Удаляем старые пары из базы данных.
-            deleteLessonsUseCase.use(*resultForDelete.toTypedArray())
+            deleteLessonsUseCase.invoke(*resultForDelete.toTypedArray())
             // Удаляем напоминания, связанные с удаленными парами.
-            deleteUseLessRemindersForLessonsUseCase.use(resultForDelete)
+            deleteUseLessRemindersForLessonsUseCase.invoke(resultForDelete)
         }
     }
 }
