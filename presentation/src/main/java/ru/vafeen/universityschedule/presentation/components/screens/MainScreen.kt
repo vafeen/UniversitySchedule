@@ -75,31 +75,40 @@ import ru.vafeen.universityschedule.resources.R
 import java.time.LocalDate
 import java.time.LocalTime
 
+/**
+ * Главный экран приложения.
+ *
+ * Этот экран отображает расписание уроков, позволяет пользователю
+ * взаимодействовать с различными элементами интерфейса и управлять
+ * настройками частоты уроков.
+ *
+ * @param bottomBarNavigator Навигатор для управления нижней панелью навигации.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
     val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateFlow.collectAsState()
-
-    val viewModel: MainScreenViewModel =
-        koinViewModel()
+    val viewModel: MainScreenViewModel = koinViewModel()
     val context = LocalContext.current
+
+    // Подписка на настройки из ViewModel.
     val settings by viewModel.settingsFlow.collectAsState()
     val defaultColor = Theme.colors.mainColor
+
+    // Определение текущей темы (темная или светлая).
     val dark = isSystemInDarkTheme()
     val mainColor by remember {
-        mutableStateOf(settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor)
-    }
-    var isFrequencyInChanging by remember {
-        mutableStateOf(false)
+        mutableStateOf(
+            settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
+        )
     }
 
+    var isFrequencyInChanging by remember { mutableStateOf(false) }
     val cor = rememberCoroutineScope()
-    var localTime by remember {
-        mutableStateOf(LocalTime.now())
-    }
-    var localDate by remember {
-        mutableStateOf(LocalDate.now())
-    }
+    var localTime by remember { mutableStateOf(LocalTime.now()) }
+    var localDate by remember { mutableStateOf(LocalDate.now()) }
+
+    // Получение частоты по текущей дате.
     val weekOfYear by remember {
         derivedStateOf {
             localDate.getFrequencyByLocalDate()
@@ -107,24 +116,22 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
         }
     }
 
+    // Получение списка уроков из ViewModel.
     val lessons by viewModel.lessonsFlow.collectAsState(listOf())
     val cardsWithDateState = rememberLazyListState()
 
-
+    // Функция для выбора типа частоты.
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
         viewModel.saveSettingsToSharedPreferences {
-            it.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers =
-            selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
+            it.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
         }
-        isFrequencyInChanging = false
+        isFrequencyInChanging = false // Сброс состояния изменения частоты.
     }
 
+    // Создание состояния для горизонтального пагера.
+    val pagerState = rememberPagerState(pageCount = { viewModel.pageNumber }, initialPage = 0)
 
-    val pagerState = rememberPagerState(
-        pageCount = {
-            viewModel.pageNumber
-        }, initialPage = 0
-    )
+    // Обработка нажатия кнопки "Назад".
     BackHandler {
         when {
             pagerState.currentPage == 0 -> {
@@ -139,6 +146,8 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             }
         }
     }
+
+    // Обновление времени каждую секунду.
     LaunchedEffect(key1 = null) {
         withContext(Dispatchers.Main) {
             while (true) {
@@ -147,13 +156,14 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             }
         }
     }
+
+    // Обновление даты при смене страницы в пагере.
     LaunchedEffect(key1 = pagerState.currentPage) {
         localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
-        cardsWithDateState.animateScrollToItem(
-            if (pagerState.currentPage > 0) pagerState.currentPage - 1
-            else pagerState.currentPage
-        )
+        cardsWithDateState.animateScrollToItem(if (pagerState.currentPage > 0) pagerState.currentPage - 1 else pagerState.currentPage)
     }
+
+    // Обработка состояния жизненного цикла.
     LaunchedEffect(lifecycleState) {
         when (lifecycleState) {
             Lifecycle.State.DESTROYED -> {}
@@ -164,114 +174,115 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
         }
     }
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    // Основной контейнер для экрана.
+    Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 10.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box {
-                Row(verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable {
-                        isFrequencyInChanging = true
-                    })
-                {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { isFrequencyInChanging = true }) {
                     Text(
                         text = stringResource(id = weekOfYear.resourceName),
                         fontSize = FontSize.big22,
-                        color = Theme.colors.oppositeTheme
+                        color = Theme.colors.oppositeTheme,
                     )
-
                     Icon(
                         painter = painterResource(id = if (isFrequencyInChanging) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down),
                         contentDescription = stringResource(R.string.icon_fold_or_unfold_list_with_frequency),
-                        tint = Theme.colors.oppositeTheme
+                        tint = Theme.colors.oppositeTheme,
                     )
                 }
-                DropdownMenu(modifier = Modifier
-                    .background(Theme.colors.singleTheme)
-                    .border(
-                        border = BorderStroke(
-                            width = 2.dp, color = Theme.colors.oppositeTheme
-                        )
-                    ),
+
+                // Выпадающее меню для выбора частоты.
+                DropdownMenu(
+                    modifier = Modifier
+                        .background(Theme.colors.singleTheme)
+                        .border(BorderStroke(width = 2.dp, color = Theme.colors.oppositeTheme)),
                     expanded = isFrequencyInChanging,
-                    onDismissRequest = { isFrequencyInChanging = false }) {
-                    DropdownMenuItem(text = {
-                        Row {
-                            TextForThisTheme(
-                                text = stringResource(id = Frequency.Numerator.resourceName),
-                                fontSize = FontSize.medium19
-                            )
-                            if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
-                                painter = painterResource(id = R.drawable.done),
-                                contentDescription = stringResource(R.string.this_is_selected_or_not),
-                                tint = Theme.colors.oppositeTheme
-                            )
-                        }
-                    }, onClick = {
-                        chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Numerator)
-                    })
+                    onDismissRequest = { isFrequencyInChanging = false },
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Row {
+                                TextForThisTheme(
+                                    text = stringResource(id = Frequency.Numerator.resourceName),
+                                    fontSize = FontSize.medium19
+                                )
+                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null
+                                    && weekOfYear == Frequency.Numerator
+                                )
+                                    Icon(
+                                        painterResource(id = R.drawable.done),
+                                        contentDescription = stringResource(R.string.this_is_selected_or_not),
+                                        tint = Theme.colors.oppositeTheme
+                                    )
+                            }
+                        },
+                        onClick = { chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Numerator) })
 
                     Spacer(
                         modifier = Modifier
                             .height(2.dp)
                             .padding(horizontal = 15.dp)
-                            .background(color = Theme.colors.oppositeTheme),
+                            .background(color = Theme.colors.oppositeTheme)
                     )
 
-                    DropdownMenuItem(text = {
-                        Row {
-                            TextForThisTheme(
-                                text = stringResource(id = Frequency.Denominator.resourceName),
-                                fontSize = FontSize.medium19
-                            )
-                            if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
-                                painter = painterResource(id = R.drawable.done),
-                                contentDescription = stringResource(R.string.this_is_selected_or_not),
-                                tint = Theme.colors.oppositeTheme
-                            )
-                        }
-
-                    }, onClick = {
-                        chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Denominator)
-                    })
+                    DropdownMenuItem(
+                        text = {
+                            Row {
+                                TextForThisTheme(
+                                    text = stringResource(id = Frequency.Denominator.resourceName),
+                                    fontSize = FontSize.medium19
+                                )
+                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null
+                                    && weekOfYear == Frequency.Denominator
+                                )
+                                    Icon(
+                                        painterResource(id = R.drawable.done),
+                                        contentDescription = stringResource(R.string.this_is_selected_or_not),
+                                        tint = Theme.colors.oppositeTheme
+                                    )
+                            }
+                        },
+                        onClick = { chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Denominator) })
 
                     Spacer(
                         modifier = Modifier
                             .height(2.dp)
                             .padding(horizontal = 15.dp)
-                            .background(color = Theme.colors.oppositeTheme),
+                            .background(color = Theme.colors.oppositeTheme)
                     )
 
-                    DropdownMenuItem(text = {
-                        Row {
-                            TextForThisTheme(
-                                text = stringResource(id = R.string.auto),
-                                fontSize = FontSize.medium19
-                            )
-                            if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
-                                painter = painterResource(id = R.drawable.done),
-                                contentDescription = stringResource(R.string.this_is_selected_or_not),
-                                tint = Theme.colors.oppositeTheme
-                            )
-                        }
-                    }, onClick = {
-                        chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = null)
-                    })
+                    DropdownMenuItem(
+                        text = {
+                            Row {
+                                TextForThisTheme(
+                                    text = stringResource(id = R.string.auto),
+                                    fontSize = FontSize.medium19
+                                )
+                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null)
+                                    Icon(
+                                        painterResource(id = R.drawable.done),
+                                        contentDescription = stringResource(R.string.this_is_selected_or_not),
+                                        tint = Theme.colors.oppositeTheme
+                                    )
+                            }
+                        },
+                        onClick = { chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = null) })
                 }
             }
         }
+
+        // Горизонтальный ряд для отображения дат.
         LazyRow(
             state = cardsWithDateState,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             items(count = viewModel.pageNumber) { index ->
@@ -282,11 +293,10 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                             .fillParentMaxWidth(1 / 3f)
                             .padding(horizontal = 5.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (day == viewModel.todayDate) mainColor
-                            else Theme.colors.buttonColor,
-                            contentColor = (if (day == viewModel.todayDate) mainColor
-                            else Theme.colors.buttonColor).suitableColor()
-                        ), elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+                            containerColor = if (day == viewModel.todayDate) mainColor else Theme.colors.buttonColor,
+                            contentColor = (if (day == viewModel.todayDate) mainColor else Theme.colors.buttonColor).suitableColor(),
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                     ) {
                         Text(
                             text = day.getDateStringWithWeekOfDay(context = context),
@@ -298,12 +308,12 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                                         pagerState.animateScrollToPage(index)
                                     }
                                 }
-                                .padding(
-                                    vertical = 5.dp, horizontal = 10.dp
-                                ),
-                            textAlign = TextAlign.Center
+                                .padding(vertical = 5.dp, horizontal = 10.dp),
+                            textAlign = TextAlign.Center,
                         )
                     }
+
+                    // Отображение разделителя для текущей даты.
                     if (day == localDate)
                         Card(
                             modifier = Modifier
@@ -317,6 +327,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             }
         }
 
+        // Горизонтальный пагер для отображения пар по дням.
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -326,6 +337,8 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             val dateOfThisLesson = viewModel.todayDate.plusDays(page.toLong())
             val weekOfYearOfThisDay = dateOfThisLesson.getFrequencyByLocalDate()
                 .changeFrequencyIfDefinedInSettings(settings = settings)
+
+            // Фильтрация уроков по дню недели и частоте.
             val lessonsOfThisDay = lessons.filter {
                 it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
                         (it.frequency == null || it.frequency == weekOfYearOfThisDay) &&
@@ -337,6 +350,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                         it.frequency == weekOfYearOfThisDay.getOpposite() &&
                         (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
             }.sorted()
+
             Box {
                 Column(
                     modifier = Modifier
@@ -346,21 +360,19 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                 ) {
                     if (lessonsOfThisDay.isNotEmpty()) {
                         viewModel.nowIsLesson = false
+
                         lessonsOfThisDay.forEach { lesson ->
                             if (lesson.nowIsLesson(localTime) && viewModel.todayDate == dateOfThisLesson) {
                                 viewModel.nowIsLesson = true
+
                                 lesson.StringForSchedule(
                                     colorBack = mainColor,
                                     dateOfThisLesson = null,
                                     viewModel = viewModel,
                                     isNoteAvailable = settings.notesAboutLesson,
-                                    isNotificationsAvailable = settings.notificationsAboutLesson
+                                    isNotificationsAvailable = settings.notificationsAboutLesson,
                                 )
-                            } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any {
-                                    it.startTime > localTime
-                                } && lesson == lessonsOfThisDay.filter {
-                                    it.startTime > localTime
-                                }[0] && !viewModel.nowIsLesson) {
+                            } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any { it.startTime > localTime } && lesson == lessonsOfThisDay.filter { it.startTime > localTime }[0] && !viewModel.nowIsLesson) {
                                 CardOfNextLesson(colorOfCard = mainColor) {
                                     lesson.StringForSchedule(
                                         paddingValues = PaddingValues(),
@@ -368,24 +380,24 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                                         dateOfThisLesson = dateOfThisLesson,
                                         viewModel = viewModel,
                                         isNoteAvailable = settings.notesAboutLesson,
-                                        isNotificationsAvailable = settings.notificationsAboutLesson
+                                        isNotificationsAvailable = settings.notificationsAboutLesson,
                                     )
-
                                 }
                             } else lesson.StringForSchedule(
                                 colorBack = Theme.colors.buttonColor,
                                 dateOfThisLesson = dateOfThisLesson,
                                 viewModel = viewModel,
                                 isNoteAvailable = settings.notesAboutLesson,
-                                isNotificationsAvailable = settings.notificationsAboutLesson
+                                isNotificationsAvailable = settings.notificationsAboutLesson,
                             )
                         }
-                    } else WeekDay(context = context, modifier = Modifier.let {
-                        var modifier = Modifier.padding(vertical = 100.dp)
-                        if (lessonsInOppositeNumAndDenDay.isEmpty()) modifier =
-                            Modifier.weight(1f)
-                        modifier
-                    })
+                    } else WeekDay(
+                        context = context,
+                        modifier = Modifier.let {
+                            var modifier =
+                                Modifier.padding(vertical = 100.dp); if (lessonsInOppositeNumAndDenDay.isEmpty()) modifier =
+                            Modifier.weight(1f); modifier
+                        })
 
                     if (lessonsInOppositeNumAndDenDay.isNotEmpty()) {
                         TextForThisTheme(
@@ -395,32 +407,31 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                                 )
                             }",
                             modifier = Modifier.align(Alignment.CenterHorizontally),
-                            fontSize = FontSize.big22
+                            fontSize = FontSize.big22,
                         )
+
                         lessonsInOppositeNumAndDenDay.forEach { lesson ->
                             lesson.StringForSchedule(
                                 colorBack = Theme.colors.buttonColor,
                                 dateOfThisLesson = null,
                                 viewModel = viewModel,
                                 isNoteAvailable = settings.notesAboutLesson,
-                                isNotificationsAvailable = settings.notificationsAboutLesson
+                                isNotificationsAvailable = settings.notificationsAboutLesson,
                             )
                         }
                     }
                 }
+
+                // Отображение GIF-картинки, если нет пар и выходной день.
                 if (lessonsOfThisDay.isEmpty() && settings.weekendCat)
                     GifPlayer(
                         size = 150.dp,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .clickable {
-                                viewModel.meow()
-                            },
+                            .clickable { viewModel.meow() },
                         imageUri = Uri.parse(AssetsInfo.DANCING_CAT)
                     )
             }
         }
     }
-
 }
-
