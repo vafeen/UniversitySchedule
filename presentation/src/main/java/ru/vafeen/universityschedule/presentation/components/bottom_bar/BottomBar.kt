@@ -18,18 +18,31 @@ import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.suitableColor
 import ru.vafeen.universityschedule.resources.R
 
-
+/**
+ * Компонент нижней панели навигации (Bottom Bar).
+ *
+ * Этот компонент отображает нижнюю панель навигации с двумя пунктами: "Главная" и "Настройки".
+ * Позволяет пользователю переключаться между экранами приложения.
+ *
+ * @param selectedScreen Текущий выбранный экран [Screen].
+ * @param bottomBarNavigator Навигатор для обработки переходов между экранами.
+ *                           Может быть null, если навигация не требуется.
+ * @param containerColor Цвет фона нижней панели навигации.
+ */
 @Composable
 internal fun BottomBar(
     selectedScreen: Screen,
     bottomBarNavigator: BottomBarNavigator? = null,
     containerColor: Color,
 ) {
+    // Настройка цветов для элементов навигации.
     val colors = NavigationBarItemDefaults.colors(
         unselectedIconColor = containerColor.suitableColor().copy(alpha = 0.5f),
         indicatorColor = containerColor,
         disabledIconColor = containerColor.suitableColor(),
     )
+
+    // Создание нижней панели приложения.
     BottomAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,6 +50,7 @@ internal fun BottomBar(
             .height(55.dp),
         containerColor = containerColor
     ) {
+        // Элемент навигации для экрана "Главная".
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Main,
@@ -48,8 +62,10 @@ internal fun BottomBar(
                 )
             },
             colors = colors,
-            enabled = selectedScreen != Screen.Main
+            enabled = selectedScreen != Screen.Main // Деактивировать, если выбран текущий экран.
         )
+
+        // Элемент навигации для экрана "Настройки".
         NavigationBarItem(
             modifier = Modifier.weight(1 / 2f),
             selected = selectedScreen == Screen.Settings,
@@ -60,7 +76,7 @@ internal fun BottomBar(
                     contentDescription = stringResource(R.string.icon_settings_screen)
                 )
             },
-            enabled = selectedScreen != Screen.Settings,
+            enabled = selectedScreen != Screen.Settings, // Деактивировать, если выбран текущий экран.
             colors = colors
         )
     }

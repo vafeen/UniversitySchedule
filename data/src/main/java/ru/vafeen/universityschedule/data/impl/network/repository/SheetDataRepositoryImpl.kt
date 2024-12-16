@@ -9,11 +9,23 @@ import ru.vafeen.universityschedule.domain.network.result.ResponseResult
 import java.io.IOException
 import java.net.UnknownHostException
 
+/**
+ * Реализация репозитория для получения данных о парах из Google Sheets.
+ *
+ * @property googleSheetsService Сервис для выполнения запросов к Google Sheets.
+ * @property lessonConverter Конвертер для преобразования объектов Lesson между слоями.
+ */
 internal class SheetDataRepositoryImpl(
     private val googleSheetsService: GoogleSheetsService,
     private val lessonConverter: LessonConverter
 ) : SheetDataRepository {
 
+    /**
+     * Получение списка пар из таблицы Google Sheets по указанной ссылке.
+     *
+     * @param link Ссылка на таблицу Google Sheets.
+     * @return Результат запроса, содержащий список пар или ошибку.
+     */
     override suspend fun getLessonsListFromGSheetsTable(link: String): ResponseResult<List<Lesson>> =
         try {
             // Выполнение запроса

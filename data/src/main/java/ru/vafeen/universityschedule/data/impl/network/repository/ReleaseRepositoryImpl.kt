@@ -8,16 +8,28 @@ import ru.vafeen.universityschedule.domain.network.service.ReleaseRepository
 import java.io.IOException
 import java.net.UnknownHostException
 
+/**
+ * Реализация репозитория для получения информации о релизах из GitHub.
+ *
+ * @property gitHubDataService Сервис для выполнения запросов к API GitHub.
+ * @property releaseConverter Конвертер для преобразования объектов Release между слоями.
+ */
 internal class ReleaseRepositoryImpl(
     private val gitHubDataService: GitHubDataService,
     private val releaseConverter: ReleaseConverter
 ) : ReleaseRepository {
 
+    /**
+     * Получение последнего релиза из GitHub.
+     *
+     * @return Результат запроса, содержащий информацию о релизе или ошибку.
+     */
     override suspend fun getLatestRelease(): ResponseResult<Release> {
         return try {
             // Выполнение запроса
             val response = gitHubDataService.getLatestRelease()
             val body = response.body()
+
             // Проверка на успешный ответ (например, статус 200)
             if (response.isSuccessful && body != null) {
                 // Возвращаем успешный результат

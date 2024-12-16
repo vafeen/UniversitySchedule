@@ -6,6 +6,17 @@ import ru.vafeen.universityschedule.domain.models.model_additions.ReminderType
 import ru.vafeen.universityschedule.domain.scheduler.duration.RepeatDuration
 import java.time.LocalDateTime
 
+/**
+ * Сущность для представления напоминания в базе данных.
+ *
+ * @property id Уникальный идентификатор напоминания (генерируется автоматически).
+ * @property idOfReminder Идентификатор напоминания.
+ * @property title Заголовок напоминания.
+ * @property text Текст напоминания.
+ * @property dt Дата и время, когда должно сработать напоминание.
+ * @property duration Периодичность повторения напоминания (по умолчанию - каждую неделю).
+ * @property type Тип напоминания (по умолчанию - перед парой).
+ */
 @Entity(tableName = "Reminder")
 internal data class ReminderEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
