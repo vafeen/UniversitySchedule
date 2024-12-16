@@ -23,7 +23,7 @@ import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.NewVersionInfoBottomSheet
 import ru.vafeen.universityschedule.presentation.components.screens.MainScreen
 import ru.vafeen.universityschedule.presentation.components.screens.SettingsScreen
-import ru.vafeen.universityschedule.presentation.components.ui_utils.CheckUpdateAndOpenBottomSheetIfNeed
+import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateAvailable
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
 import ru.vafeen.universityschedule.presentation.theme.Theme
@@ -51,15 +51,15 @@ internal fun NavigationRoot(
     }
 
     // Стейт для контроля показа информации о новой версии
-    var updateIsShowed by remember { mutableStateOf(false) }
 
+    var isUpdateAvailable by remember { mutableStateOf(false) }
     // Проверка обновлений и отображение нижнего листа с информацией о версии
-    if (!updateIsShowed) CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
-        updateIsShowed = true
+    LaunchedEffect(null) {
+        isUpdateAvailable = viewModel.checkUpdates()
     }
 
     // Показ информации о новой версии, если она еще не была показана
-    if (updateIsShowed && settings.lastDemonstratedVersion < viewModel.versionCode && settings.releaseBody != "") {
+    if (settings.lastDemonstratedVersion < viewModel.versionCode && settings.releaseBody != "") {
         NewVersionInfoBottomSheet(viewModel = viewModel) {
             if (viewModel.versionCode != settings.lastDemonstratedVersion) {
                 viewModel.saveSettingsToSharedPreferences { settings ->
@@ -103,7 +103,10 @@ internal fun NavigationRoot(
                     SettingsScreen(viewModel)
                 }
             }
-
+            if (isUpdateAvailable) UpdateAvailable {
+                viewModel.update()
+                isUpdateAvailable = false
+            }
             // Показывать индикатор загрузки, если обновление в процессе
             if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
         }
