@@ -23,7 +23,16 @@ import ru.vafeen.universityschedule.presentation.utils.Link
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
 import kotlin.system.exitProcess
 
-
+/**
+ * ViewModel для управления состоянием главной активности приложения.
+ * Обрабатывает обновления, миграцию данных, навигацию и общие ошибки.
+ *
+ * @param getLatestReleaseUseCase UseCase для получения последней версии приложения.
+ * @param downloader Сервис для скачивания и обновлений.
+ * @param context Контекст приложения для работы с ресурсами и управления ошибками.
+ * @param schedulerAPIMigrationManager Менеджер миграции API, который отвечает за перенос с AlarmManager на WorkManager.
+ * @param settingsManager Менеджер для работы с настройками приложения.
+ */
 internal class MainActivityViewModel(
     val getLatestReleaseUseCase: GetLatestReleaseUseCase,
     downloader: Downloader,
@@ -31,16 +40,36 @@ internal class MainActivityViewModel(
     private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
     private val settingsManager: SettingsManager
 ) : ViewModel(), BottomBarNavigator {
+
+    /**
+     * Поток состояния, который отслеживает процесс обновления.
+     */
     val isUpdateInProcessFlow = downloader.isUpdateInProcessFlow
+
+    /**
+     * Поток состояния, который отслеживает процент выполнения обновления.
+     */
     val percentageFlow = downloader.percentageFlow
 
+    /**
+     * Поток состояния, содержащий текущие настройки приложения.
+     */
     val settings = settingsManager.settingsFlow
 
+    /**
+     * Функция для сохранения настроек в SharedPreferences.
+     * Принимает функцию, изменяющую текущие настройки.
+     *
+     * @param saving Функция, изменяющая настройки.
+     */
     fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
         settingsManager.save(saving)
     }
 
-
+    /**
+     * Запускает процесс миграции данных с AlarmManager на WorkManager, если миграция еще не была выполнена.
+     * Обновляет настройки после успешной миграции.
+     */
     suspend fun callSchedulerAPIMigration() {
         if (!settings.value.isMigrationFromAlarmManagerToWorkManagerSuccessful) {
             schedulerAPIMigrationManager.migrate()
@@ -50,6 +79,12 @@ internal class MainActivityViewModel(
         }
     }
 
+    /**
+     * Регистрирует обработчик необработанных исключений для приложения.
+     * В случае ошибки копирует информацию об ошибке в буфер обмена и завершает процесс.
+     *
+     * @param context Контекст приложения, используемый для работы с буфером обмена.
+     */
     private fun registerGeneralExceptionCallback(context: Context) {
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             context.copyTextToClipBoard(
@@ -62,14 +97,30 @@ internal class MainActivityViewModel(
     }
 
     init {
+        // Регистрируем обработчик исключений при инициализации ViewModel.
         registerGeneralExceptionCallback(context = context)
     }
 
+    /**
+     * Экран, который должен отображаться при запуске приложения.
+     */
     val startScreen = Screen.Main
+
+    /**
+     * Контроллер навигации, управляющий переходами между экранами.
+     */
     override var navController: NavHostController? = null
+
+    /**
+     * Поток состояния, отслеживающий текущий экран приложения.
+     */
     private val _currentScreen: MutableStateFlow<Screen> = MutableStateFlow(startScreen)
     override val currentScreen: StateFlow<Screen> = _currentScreen.asStateFlow()
 
+    /**
+     * Эмитирует текущий экран на основе стека навигации.
+     * Отслеживает изменения в backStack навигации и обновляет состояние текущего экрана.
+     */
     private fun emitCurrentScreen() {
         viewModelScope.launch(Dispatchers.Main) {
             navController?.currentBackStackEntryFlow?.collect { backStackEntry ->
@@ -82,12 +133,19 @@ internal class MainActivityViewModel(
         }
     }
 
-
+    /**
+     * Обрабатывает действие "Назад". Переходит на предыдущий экран в навигации.
+     */
     override fun back() {
         navController?.popBackStack()
         emitCurrentScreen()
     }
 
+    /**
+     * Переходит на указанный экран.
+     *
+     * @param screen Целевой экран для навигации.
+     */
     override fun navigateTo(screen: Screen) {
         if (screen != Screen.Main)
             navController?.navigate(screen)
@@ -95,6 +153,8 @@ internal class MainActivityViewModel(
         emitCurrentScreen()
     }
 
-
+    /**
+     * Получает версию приложения.
+     */
     val versionCode = context.getVersionCode()
 }
