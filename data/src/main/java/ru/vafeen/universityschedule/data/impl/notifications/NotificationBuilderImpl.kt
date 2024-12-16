@@ -6,11 +6,23 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import org.koin.java.KoinJavaComponent.inject
-import ru.vafeen.universityschedule.resources.R
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
 import ru.vafeen.universityschedule.domain.notifications.NotificationChannelInfo
+import ru.vafeen.universityschedule.resources.R
 
+/**
+ * Реализация интерфейса [NotificationBuilder] для создания уведомлений.
+ */
 internal class NotificationBuilderImpl : NotificationBuilder {
+
+    /**
+     * Создает уведомление о начале пары за 15 минут до ее начала.
+     *
+     * @param title Заголовок уведомления.
+     * @param text Текст уведомления.
+     * @param intent [Intent], который будет запущен при нажатии на уведомление.
+     * @return Сформированное уведомление.
+     */
     override fun createNotificationAbout15MinutesBeforeLesson(
         title: String,
         text: String,
@@ -38,6 +50,14 @@ internal class NotificationBuilderImpl : NotificationBuilder {
             .build()
     }
 
+    /**
+     * Создает уведомление о начале пары о необходимости отметки на паре.
+     *
+     * @param title Заголовок уведомления.
+     * @param text Текст уведомления.
+     * @param intent [Intent], который будет запущен при нажатии на уведомление.
+     * @return Сформированное уведомление.
+     */
     override fun createNotificationAfterBeginningLessonForBeCheckedAtThisLesson(
         title: String,
         text: String,
@@ -65,6 +85,14 @@ internal class NotificationBuilderImpl : NotificationBuilder {
             .build()
     }
 
+    /**
+     * Создает уведомление о восстановлении напоминания.
+     *
+     * @param title Заголовок уведомления.
+     * @param text Текст уведомления.
+     * @param intent [Intent], который будет запущен при нажатии на уведомление.
+     * @return Сформированное уведомление.
+     */
     override fun createNotificationReminderRecovery(
         title: String,
         text: String,
@@ -79,6 +107,7 @@ internal class NotificationBuilderImpl : NotificationBuilder {
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
+
         return NotificationCompat.Builder(
             context,
             NotificationChannelInfo.ReminderRecovery.notificationChannelID
