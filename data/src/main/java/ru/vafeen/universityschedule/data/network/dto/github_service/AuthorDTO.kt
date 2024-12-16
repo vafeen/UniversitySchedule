@@ -2,6 +2,28 @@ package ru.vafeen.universityschedule.data.network.dto.github_service
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * Данные об авторе (uploader) из GitHub API.
+ *
+ * @property login Логин автора на GitHub.
+ * @property id Уникальный идентификатор автора.
+ * @property nodeId Идентификатор узла автора.
+ * @property avatarUrl URL аватара автора.
+ * @property gravatarId Идентификатор Gravatar автора.
+ * @property url URL профиля автора на GitHub.
+ * @property htmlUrl URL профиля автора в формате HTML.
+ * @property followersUrl URL для получения подписчиков автора.
+ * @property followingUrl URL для получения пользователей, на которых подписан автор.
+ * @property gistsUrl URL для получения гистов автора.
+ * @property starredUrl URL для получения звездочек, поставленных автором.
+ * @property subscriptionsUrl URL для получения подписок автора.
+ * @property organizationsUrl URL для получения организаций, в которых состоит автор.
+ * @property reposUrl URL для получения репозиториев автора.
+ * @property eventsUrl URL для получения событий, связанных с автором.
+ * @property receivedEventsUrl URL для получения событий, полученных автором.
+ * @property type Тип пользователя (например, "User" или "Organization").
+ * @property siteAdmin Флаг, указывающий, является ли автор администратором сайта GitHub.
+ */
 internal data class AuthorDTO(
     @SerializedName("login") val login: String,
     @SerializedName("id") val id: Long,

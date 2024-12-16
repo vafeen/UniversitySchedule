@@ -6,32 +6,30 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
 
-
 /**
- * Parent DAO interface with base methods
+ * Родительский интерфейс DAO с базовыми методами
  */
 @Dao
 internal interface DataAccessObject<T> {
 
     /**
-     * Inserting && Updating in database one or more entities
-     * @param entity [Set of entities to put in database]
+     * Вставка и обновление одной или нескольких сущностей в базе данных
+     * @param entities [Набор сущностей для добавления в базу данных]
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)// insert && update
+    @Insert(onConflict = OnConflictStrategy.REPLACE) // вставка и обновление
     suspend fun insert(entities: List<T>)
 
     /**
-     * Updating in database one or more entities
-     * @param entities [Set of entities to update in database]
+     * Обновление одной или нескольких сущностей в базе данных
+     * @param entities [Набор сущностей для обновления в базе данных]
      */
     @Update
     suspend fun update(entities: List<T>)
 
     /**
-     * Deleting from database one or more entities
-     * @param entities [Set of entities to remove from database]
+     * Удаление одной или нескольких сущностей из базы данных
+     * @param entities [Набор сущностей для удаления из базы данных]
      */
     @Delete
     suspend fun delete(entities: List<T>)
-
 }

@@ -32,20 +32,33 @@ import ru.vafeen.universityschedule.presentation.theme.Theme
 internal fun NavigationRoot(
     viewModel: MainActivityViewModel,
 ) {
+    // Подписка на состояние процесса обновления и процента скачанных данных
     val isUpdateInProcess by viewModel.isUpdateInProcessFlow.collectAsState(false)
     val downloadedPercentage by viewModel.percentageFlow.collectAsState(0f)
+
+    // Определение текущей темы (светлая или темная)
     val dark = isSystemInDarkTheme()
     val defaultColor = Theme.colors.mainColor
+
+    // Получение настроек пользователя
     val settings by viewModel.settings.collectAsState()
+
+    // Определение основного цвета в зависимости от текущей темы
     val mainColor by remember {
         derivedStateOf {
             settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
         }
     }
+
+    // Стейт для контроля показа информации о новой версии
     var updateIsShowed by remember { mutableStateOf(false) }
+
+    // Проверка обновлений и отображение нижнего листа с информацией о версии
     if (!updateIsShowed) CheckUpdateAndOpenBottomSheetIfNeed(viewModel = viewModel) {
         updateIsShowed = true
     }
+
+    // Показ информации о новой версии, если она еще не была показана
     if (updateIsShowed && settings.lastDemonstratedVersion < viewModel.versionCode && settings.releaseBody != "") {
         NewVersionInfoBottomSheet(viewModel = viewModel) {
             if (viewModel.versionCode != settings.lastDemonstratedVersion) {
@@ -55,9 +68,13 @@ internal fun NavigationRoot(
             }
         }
     }
+
+    // Лаунч эффекта для вызова миграции API
     LaunchedEffect(null) {
         viewModel.callSchedulerAPIMigration()
     }
+
+    // Scaffold для отображения интерфейса с нижней панелью
     Scaffold(containerColor = Theme.colors.singleTheme,
         bottomBar = {
             val selectedScreen by viewModel.currentScreen.collectAsState()
@@ -67,11 +84,13 @@ internal fun NavigationRoot(
                 containerColor = mainColor,
             )
         }) { innerPadding ->
+        // Основное содержимое экрана
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .background(Theme.colors.singleTheme)
         ) {
+            // Навигация между экранами с помощью NavHost
             NavHost(
                 modifier = Modifier.weight(1f),
                 navController = viewModel.navController as NavHostController,
@@ -84,6 +103,8 @@ internal fun NavigationRoot(
                     SettingsScreen(viewModel)
                 }
             }
+
+            // Показывать индикатор загрузки, если обновление в процессе
             if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)
         }
     }

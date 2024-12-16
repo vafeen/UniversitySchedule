@@ -34,7 +34,7 @@ class App : Application() {
         val settings = sharedPreferences.getSettingsOrCreateIfNull()
         val getSheetDataAndUpdateDBUseCase = get<GetSheetDataAndUpdateDBUseCase>()
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-            settings.link?.let { link -> getSheetDataAndUpdateDBUseCase.use(link) }
+            settings.link?.let { link -> getSheetDataAndUpdateDBUseCase.invoke(link) }
         }
         val notificationManager =
             applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
