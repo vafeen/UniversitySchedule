@@ -15,8 +15,18 @@ import ru.vafeen.universityschedule.domain.notifications.NotificationService
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerExtra
 import ru.vafeen.universityschedule.domain.usecase.db.GetReminderByIdOfReminderUseCase
 
+/**
+ * Рабочий класс для обработки напоминаний в фоновом режиме.
+ *
+ * @property notificationService Сервис для отображения уведомлений.
+ * @property notificationBuilder Строитель уведомлений для создания уведомлений.
+ * @property getReminderByIdOfReminderUseCase Используется для получения напоминания по его идентификатору.
+ * @property mainActivityIntentProvider Провайдер интента для запуска главной активности.
+ * @property data Данные, переданные в рабочий класс.
+ */
 class ReminderWorker(context: Context, params: WorkerParameters) :
     Worker(context, params) {
+
     private val notificationService: NotificationService by inject(
         clazz = NotificationService::class.java
     )
@@ -24,10 +34,17 @@ class ReminderWorker(context: Context, params: WorkerParameters) :
     private val getReminderByIdOfReminderUseCase: GetReminderByIdOfReminderUseCase = getKoin().get()
     private val mainActivityIntentProvider = getKoin().get<MainActivityIntentProvider>()
     private val data = params.inputData
+
+    /**
+     * Выполняет работу по обработке напоминаний.
+     *
+     * @return Результат выполнения работы. Возвращает [Result.success()] при успешном завершении,
+     *         или [Result.failure()] в случае ошибки.
+     */
     override fun doWork(): Result = try {
         val idOfReminder = data.getInt(
             SchedulerExtra.ID_OF_REMINDER,
-            -1
+            -1 // Значение по умолчанию, если ID не найден
         )
         CoroutineScope(Dispatchers.IO).launch {
             val reminder = getReminderByIdOfReminderUseCase.invoke(
@@ -57,8 +74,8 @@ class ReminderWorker(context: Context, params: WorkerParameters) :
                 }
             }
         }
-        Result.success()
+        Result.success() // Возвращаем успех после запуска корутины
     } catch (ex: Exception) {
-        Result.failure()
+        Result.failure() // Возвращаем ошибку в случае исключения
     }
 }
