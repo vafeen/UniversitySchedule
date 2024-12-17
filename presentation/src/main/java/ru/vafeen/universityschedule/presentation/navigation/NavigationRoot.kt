@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.NewVersionInfoBottomSheet
@@ -52,10 +53,10 @@ internal fun NavigationRoot(
 
     // Стейт для контроля показа информации о новой версии
 
-    var isUpdateAvailable by remember { mutableStateOf(false) }
+    var releaseForUpdates: Release? by remember { mutableStateOf(null) }
     // Проверка обновлений и отображение нижнего листа с информацией о версии
     LaunchedEffect(null) {
-        isUpdateAvailable = viewModel.checkUpdates()
+        releaseForUpdates = viewModel.checkUpdates()
     }
 
     // Показ информации о новой версии, если она еще не была показана
@@ -103,9 +104,11 @@ internal fun NavigationRoot(
                     SettingsScreen(viewModel)
                 }
             }
-            if (isUpdateAvailable) UpdateAvailable {
-                viewModel.update()
-                isUpdateAvailable = false
+            releaseForUpdates?.let {
+                UpdateAvailable(release = it) {
+                    viewModel.update()
+                    releaseForUpdates = null
+                }
             }
             // Показывать индикатор загрузки, если обновление в процессе
             if (isUpdateInProcess) UpdateProgress(percentage = downloadedPercentage)

@@ -44,7 +44,8 @@ internal class MainActivityViewModel(
     private val settingsManager: SettingsManager,
     private val downloader: Downloader
 ) : ViewModel(), BottomBarNavigator {
-    private var release: Release? = null
+    var release: Release? = null
+        private set
 
     /**
      * Получает версию приложения.
@@ -52,21 +53,22 @@ internal class MainActivityViewModel(
     val versionCode = context.getVersionCode()
     val versionName = context.getVersionName()
 
-    suspend fun checkUpdates(): Boolean {
-        release = getLatestReleaseUseCase.invoke()
-        saveSettingsToSharedPreferences {
-            it.copy(releaseBody = release?.body ?: "")
-        }
-        val localRelease = release
-        return localRelease != null && versionName != null &&
-                localRelease.tagName.substringAfter("v") != versionName
+    suspend fun checkUpdates(): Release? {
+        val localRelease = getLatestReleaseUseCase.invoke()
+        return if (localRelease != null && versionName != null &&
+            localRelease.tagName.substringAfter("v") != versionName
+        ) {
+            saveSettingsToSharedPreferences {
+                it.copy(releaseBody = localRelease.body)
+            }
+            release = localRelease
+            release
+        } else null
     }
 
     fun update() {
         release?.let {
-            downloader.downloadApk(
-                url = "vafeen/UniversitySchedule/releases/download/${it.tagName}/${it.assets[0]}",
-            )
+            downloader.downloadApk(url = it.apkUrl)
         }
     }
 

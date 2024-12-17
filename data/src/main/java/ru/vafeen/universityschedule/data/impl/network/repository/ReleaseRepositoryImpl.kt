@@ -28,12 +28,11 @@ internal class ReleaseRepositoryImpl(
         return try {
             // Выполнение запроса
             val response = gitHubDataService.getLatestRelease()
-            val body = response.body()
-
-            // Проверка на успешный ответ (например, статус 200)
-            if (response.isSuccessful && body != null) {
+            val release = releaseConverter.convertAB(response.body())
+            // Проверка на успешный ответ и релиза на null после конвертации
+            if (response.isSuccessful && release != null) {
                 // Возвращаем успешный результат
-                ResponseResult.Success(releaseConverter.convertAB(body))
+                ResponseResult.Success(release)
             } else {
                 // Обработка HTTP ошибки, если статус не успешен
                 ResponseResult.Error(Exception("Ошибка сервера: ${response.code()}"))
