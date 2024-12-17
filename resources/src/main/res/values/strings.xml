@@ -76,4 +76,6 @@
     <string name="view_code">Посмотреть код</string>
     <string name="clear_text">Очистить</string>
     <string name="meow">Мяу&lt;3</string>
+    <string name="update_app">Обновить приложение</string>
+    <string name="mb">МБ</string>
 </resources>

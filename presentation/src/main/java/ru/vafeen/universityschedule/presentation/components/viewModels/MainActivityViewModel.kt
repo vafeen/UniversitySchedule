@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.models.Settings
 import ru.vafeen.universityschedule.domain.network.service.Downloader
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
@@ -18,6 +19,7 @@ import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManage
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.RebootingRemindersUseCase
 import ru.vafeen.universityschedule.domain.utils.getVersionCode
+import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
@@ -35,13 +37,40 @@ import kotlin.system.exitProcess
  * @param settingsManager Менеджер для работы с настройками приложения.
  */
 internal class MainActivityViewModel(
-    val getLatestReleaseUseCase: GetLatestReleaseUseCase,
+    private val getLatestReleaseUseCase: GetLatestReleaseUseCase,
     private val rebootingRemindersUseCase: RebootingRemindersUseCase,
-    downloader: Downloader,
     context: Context,
     private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
-    private val settingsManager: SettingsManager
+    private val settingsManager: SettingsManager,
+    private val downloader: Downloader
 ) : ViewModel(), BottomBarNavigator {
+    var release: Release? = null
+        private set
+
+    /**
+     * Получает версию приложения.
+     */
+    val versionCode = context.getVersionCode()
+    val versionName = context.getVersionName()
+
+    suspend fun checkUpdates(): Release? {
+        val localRelease = getLatestReleaseUseCase.invoke()
+        return if (localRelease != null && versionName != null &&
+            localRelease.tagName.substringAfter("v") != versionName
+        ) {
+            saveSettingsToSharedPreferences {
+                it.copy(releaseBody = localRelease.body)
+            }
+            release = localRelease
+            release
+        } else null
+    }
+
+    fun update() {
+        release?.let {
+            downloader.downloadApk(url = it.apkUrl)
+        }
+    }
 
     /**
      * Поток состояния, который отслеживает процесс обновления.
@@ -161,8 +190,5 @@ internal class MainActivityViewModel(
         emitCurrentScreen()
     }
 
-    /**
-     * Получает версию приложения.
-     */
-    val versionCode = context.getVersionCode()
+
 }

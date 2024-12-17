@@ -11,7 +11,7 @@ import ru.vafeen.universityschedule.domain.models.Release
  * полученных с сервера, в доменную модель, используемую в приложении.
  * Обратное преобразование не реализовано, так как это не предусмотрено логикой приложения.
  */
-internal class ReleaseConverter : BaseConverter<ReleaseDTO, Release> {
+internal class ReleaseConverter : BaseConverter<ReleaseDTO?, Release?> {
 
     /**
      * Преобразует [ReleaseDTO] в [Release].
@@ -19,13 +19,19 @@ internal class ReleaseConverter : BaseConverter<ReleaseDTO, Release> {
      * @param a Экземпляр [ReleaseDTO], полученный из сетевого слоя.
      * @return Экземпляр [Release], используемый в доменном уровне приложения.
      */
-    override fun convertAB(a: ReleaseDTO): Release = Release(
-        tagName = a.tagName,
-        assets = a.assets.map {
-            it.name
-        },
-        body = a.body
-    )
+    override fun convertAB(a: ReleaseDTO?): Release? {
+        val apk = a?.assets?.find {
+            it.browserDownloadUrl.contains(".apk")
+        }
+        return if (a != null && apk != null) {
+            Release(
+                tagName = a.tagName,
+                apkUrl = apk.browserDownloadUrl,
+                size = apk.size,
+                body = a.body
+            )
+        } else null
+    }
 
     /**
      * Преобразование [Release] в [ReleaseDTO] не реализовано.
@@ -34,7 +40,7 @@ internal class ReleaseConverter : BaseConverter<ReleaseDTO, Release> {
      * @throws Exception Всегда выбрасывает исключение, так как обратное преобразование
      * недоступно из-за особенностей логики приложения.
      */
-    override fun convertBA(b: Release): ReleaseDTO {
+    override fun convertBA(b: Release?): ReleaseDTO? {
         throw Exception("ru.vafeen.universityschedule.domain.converters.ReleaseConverterImpl::convertBA body not yet implemented")
     }
 }
