@@ -90,9 +90,6 @@ internal fun UpdaterBottomSheet(
                 contentDescription = stringResource(R.string.icon_updating_qr),
                 modifier = Modifier
                     .clickable {
-                        downloader.downloadApk(
-                            url = "vafeen/UniversitySchedule/releases/download/${release.tagName}/${release.assets[0]}",
-                        )
                         onDismissRequest(true) // Закрытие окна после начала загрузки.
                     }
                     .size(150.dp)

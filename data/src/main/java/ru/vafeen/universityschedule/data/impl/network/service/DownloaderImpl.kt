@@ -57,12 +57,14 @@ internal class DownloaderImpl(
 
                 is ResponseResult.Success -> {
                     val file = File(apkFilePath) // Создаем объект файла для сохранения APK
-                    val inputStream = result.data.stream // Получаем InputStream из результата загрузки
+                    val inputStream =
+                        result.data.stream // Получаем InputStream из результата загрузки
                     val outputStream = FileOutputStream(file) // Создаем поток для записи в файл
                     val buffer = ByteArray(8 * 1024) // Буфер для чтения данных (8 КБ)
                     var bytesRead: Int // Переменная для хранения количества прочитанных байтов
                     var totalBytesRead: Long = 0 // Общая длина загруженных байтов
-                    val contentLength = result.data.contentLength // Общая длина загружаемого контента
+                    val contentLength =
+                        result.data.contentLength // Общая длина загружаемого контента
 
                     // Чтение данных из InputStream и запись в файл
                     while (inputStream.read(buffer).also { bytesRead = it } != -1) {
