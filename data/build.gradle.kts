@@ -51,4 +51,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     //work manager
     implementation(libs.work.runtime.ktx)
+    //Direct-Refresher
+    implementation(libs.direct.refresher)
 }
