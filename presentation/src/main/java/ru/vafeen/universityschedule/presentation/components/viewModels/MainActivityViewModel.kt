@@ -8,12 +8,17 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.models.Settings
-import ru.vafeen.universityschedule.domain.network.service.Downloader
+import ru.vafeen.universityschedule.domain.network.result.DownloadStatus
+import ru.vafeen.universityschedule.domain.network.service.Refresher
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.scheduler.SchedulerAPIMigrationManager
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
@@ -23,6 +28,7 @@ import ru.vafeen.universityschedule.domain.utils.getVersionName
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.navigation.Screen
 import ru.vafeen.universityschedule.presentation.utils.Link
+import ru.vafeen.universityschedule.presentation.utils.RefresherInfo
 import ru.vafeen.universityschedule.presentation.utils.copyTextToClipBoard
 import kotlin.system.exitProcess
 
@@ -31,7 +37,7 @@ import kotlin.system.exitProcess
  * Обрабатывает обновления, миграцию данных, навигацию и общие ошибки.
  *
  * @param getLatestReleaseUseCase UseCase для получения последней версии приложения.
- * @param downloader Сервис для скачивания и обновлений.
+ * @param refresher Сервис для скачивания и обновлений.
  * @param context Контекст приложения для работы с ресурсами и управления ошибками.
  * @param schedulerAPIMigrationManager Менеджер миграции API, который отвечает за перенос с AlarmManager на WorkManager.
  * @param settingsManager Менеджер для работы с настройками приложения.
@@ -42,7 +48,7 @@ internal class MainActivityViewModel(
     context: Context,
     private val schedulerAPIMigrationManager: SchedulerAPIMigrationManager,
     private val settingsManager: SettingsManager,
-    private val downloader: Downloader
+    private val refresher: Refresher,
 ) : ViewModel(), BottomBarNavigator {
     var release: Release? = null
         private set
@@ -68,19 +74,29 @@ internal class MainActivityViewModel(
 
     fun update() {
         release?.let {
-            downloader.downloadApk(url = it.apkUrl)
+            viewModelScope.launch(Dispatchers.IO) {
+                refresher.refresh(viewModelScope, it.apkUrl, RefresherInfo.APK_FILE_NAME)
+            }
         }
     }
 
     /**
      * Поток состояния, который отслеживает процесс обновления.
      */
-    val isUpdateInProcessFlow = downloader.isUpdateInProcessFlow
+    val isUpdateInProcessFlow: SharedFlow<Boolean> = refresher.progressFlow.map {
+        it !is DownloadStatus.Error && it !is DownloadStatus.Success
+    }.shareIn(viewModelScope, SharingStarted.Lazily)
 
     /**
      * Поток состояния, который отслеживает процент выполнения обновления.
      */
-    val percentageFlow = downloader.percentageFlow
+    val percentageFlow: SharedFlow<Float> = refresher.progressFlow.map {
+        when (it) {
+            is DownloadStatus.InProgress -> it.percentage
+            DownloadStatus.Success -> 100f
+            else -> 0f
+        }
+    }.shareIn(viewModelScope, SharingStarted.Lazily)
 
     /**
      * Поток состояния, содержащий текущие настройки приложения.
