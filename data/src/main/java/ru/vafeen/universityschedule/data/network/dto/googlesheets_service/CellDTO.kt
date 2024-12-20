@@ -10,6 +10,5 @@ import com.google.gson.annotations.SerializedName
 internal data class CellDTO(
     @SerializedName("v") val value: String? // Значение ячейки
 ) {
-    override fun toString(): String =
-        value.toString() // Переопределение метода toString для удобства отображения значения ячейки
+    override fun toString(): String = value.toString() // Переопределение метода toString для удобства отображения значения ячейки
 }

@@ -18,6 +18,5 @@ internal data class ResponseWrapper(
     @SerializedName("sig") val sig: String,
     @SerializedName("table") val table: TableDTO
 ) {
-    override fun toString(): String =
-        table.toString() // Переопределение метода toString для удобства отображения данных таблицы
+    override fun toString(): String = table.toString() // Переопределение метода toString для удобства отображения данных таблицы
 }

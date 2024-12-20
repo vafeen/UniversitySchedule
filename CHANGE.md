@@ -1,6 +1,5 @@
-New version 6.1.15!!
+New version 6.1.16!!
 
-What's fix:
+What's new:
 
-- Repeating notifications
-- Some logic bugs
+- New updates UI

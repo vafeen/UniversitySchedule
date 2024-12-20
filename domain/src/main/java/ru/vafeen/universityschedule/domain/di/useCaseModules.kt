@@ -14,7 +14,6 @@ import ru.vafeen.universityschedule.domain.usecase.db.InsertLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.InsertRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.UpdateLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.UpdateRemindersUseCase
-import ru.vafeen.universityschedule.domain.usecase.network.DownloadFileUseCase
 import ru.vafeen.universityschedule.domain.usecase.network.GetLatestReleaseUseCase
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataAndUpdateDBUseCase
 import ru.vafeen.universityschedule.domain.usecase.network.GetSheetDataUseCase
@@ -28,7 +27,6 @@ internal val plannerUseCaseModule = module {
 }
 
 internal val networkUseCaseModule = module {
-    singleOf(::DownloadFileUseCase)
     singleOf(::GetLatestReleaseUseCase)
     singleOf(::GetSheetDataUseCase)
 }

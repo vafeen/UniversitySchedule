@@ -8,7 +8,6 @@ import ru.vafeen.universityschedule.domain.models.Reminder
 interface Scheduler {
 
     fun scheduleOneTimeJob(reminder: Reminder)
-
     /**
      * Запланировать повторяющуюся задачу на основе указанного напоминания.
      *

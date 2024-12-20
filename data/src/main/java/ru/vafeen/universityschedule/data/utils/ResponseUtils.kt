@@ -36,8 +36,7 @@ internal fun RowDTO.toLesson(): LessonEntity? = this.cells.map {
 internal fun ResponseWrapper.toLessonsList(): List<LessonEntity> {
     val result = mutableListOf<LessonEntity>()
     for (row in this.table.rows) {
-        row.toLesson()
-            ?.let { result.add(element = it) } // Добавляем каждое преобразованное занятие в список
+        row.toLesson()?.let { result.add(element = it) } // Добавляем каждое преобразованное занятие в список
     }
     return result // Возвращаем список уроков
 }

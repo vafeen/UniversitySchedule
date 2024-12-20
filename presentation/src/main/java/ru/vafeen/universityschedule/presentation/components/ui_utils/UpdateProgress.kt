@@ -32,7 +32,7 @@ internal fun UpdateProgress(percentage: Float) {
         LinearProgressIndicator(
             color = Theme.colors.oppositeTheme,
             trackColor = Theme.colors.singleTheme,
-            progress = { percentage.toFloat() },
+            progress = { percentage },
             modifier = Modifier.fillMaxWidth(),
         )
     }
