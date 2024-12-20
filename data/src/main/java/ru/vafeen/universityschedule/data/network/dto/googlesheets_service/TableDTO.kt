@@ -14,6 +14,5 @@ internal data class TableDTO(
     @SerializedName("rows") val rows: List<RowDTO>, // Список строк таблицы
     @SerializedName("parsedNumHeaders") val parsedNumHeaders: Int // Количество заголовков
 ) {
-    override fun toString(): String =
-        rows.toString() // Переопределение метода toString для удобства отображения данных строк
+    override fun toString(): String = rows.toString() // Переопределение метода toString для удобства отображения данных строк
 }

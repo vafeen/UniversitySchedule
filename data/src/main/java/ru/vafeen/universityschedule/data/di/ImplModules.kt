@@ -12,11 +12,9 @@ import ru.vafeen.universityschedule.data.impl.database.LessonRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.database.ReminderRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.end_points.DownloadServiceLink
 import ru.vafeen.universityschedule.data.impl.network.end_points.GitHubDataServiceLink
-import ru.vafeen.universityschedule.data.impl.network.repository.DownloadFileRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.ReleaseRepositoryImpl
 import ru.vafeen.universityschedule.data.impl.network.repository.SheetDataRepositoryImpl
-import ru.vafeen.universityschedule.data.impl.network.service.DownloaderImpl
-import ru.vafeen.universityschedule.data.impl.network.service.InstallerImpl
+import ru.vafeen.universityschedule.data.impl.network.service.RefresherImpl
 import ru.vafeen.universityschedule.data.impl.network.service.SettingsManagerImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationBuilderImpl
 import ru.vafeen.universityschedule.data.impl.notifications.NotificationServiceImpl
@@ -29,9 +27,7 @@ import ru.vafeen.universityschedule.domain.database.LessonRepository
 import ru.vafeen.universityschedule.domain.database.ReminderRepository
 import ru.vafeen.universityschedule.domain.network.GoogleSheetsServiceLink
 import ru.vafeen.universityschedule.domain.network.repository.SheetDataRepository
-import ru.vafeen.universityschedule.domain.network.service.DownloadFileRepository
-import ru.vafeen.universityschedule.domain.network.service.Downloader
-import ru.vafeen.universityschedule.domain.network.service.Installer
+import ru.vafeen.universityschedule.domain.network.service.Refresher
 import ru.vafeen.universityschedule.domain.network.service.ReleaseRepository
 import ru.vafeen.universityschedule.domain.network.service.SettingsManager
 import ru.vafeen.universityschedule.domain.notifications.NotificationBuilder
@@ -54,9 +50,6 @@ internal val databaseModuleImpl = module {
 }
 
 internal val networkRepositoryModuleImpl = module {
-    singleOf(::DownloadFileRepositoryImpl) {
-        bind<DownloadFileRepository>()
-    }
     singleOf(::SheetDataRepositoryImpl) {
         bind<SheetDataRepository>()
     }
@@ -94,16 +87,13 @@ internal val servicesModuleImpl = module {
     singleOf(::SchedulerImpl) {
         bind<Scheduler>()
     }
-    singleOf(::DownloaderImpl) {
-        bind<Downloader>()
-    }
-    singleOf(::InstallerImpl) {
-        bind<Installer>()
-    }
     singleOf(::SchedulerAPIMigrationManagerImpl) {
         bind<SchedulerAPIMigrationManager>()
     }
     singleOf(::SettingsManagerImpl) {
         bind<SettingsManager>()
+    }
+    singleOf(::RefresherImpl) {
+        bind<Refresher>()
     }
 }
