@@ -1,5 +1,5 @@
-New version 6.1.16!!
+New version 6.1.17!!
 
-What's new:
+What's fix:
 
-- New updates UI
+- Optimize navigating between screens
