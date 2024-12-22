@@ -1,6 +1,9 @@
 package ru.vafeen.universityschedule.presentation.navigation
 
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -95,7 +98,11 @@ internal fun NavigationRoot(
             NavHost(
                 modifier = Modifier.weight(1f),
                 navController = viewModel.navController as NavHostController,
-                startDestination = viewModel.startScreen
+                startDestination = viewModel.startScreen,
+                enterTransition = { fadeIn(animationSpec = tween()) },
+                exitTransition = { fadeOut(animationSpec = tween()) },
+                popEnterTransition = { fadeIn(animationSpec = tween()) },
+                popExitTransition = { fadeOut(animationSpec = tween()) },
             ) {
                 composable<Screen.Main> {
                     MainScreen(viewModel)
