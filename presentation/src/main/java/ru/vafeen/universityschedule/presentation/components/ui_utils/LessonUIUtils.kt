@@ -144,13 +144,7 @@ internal fun Lesson.StringForSchedule(
                     modifier = Modifier.weight(1f),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .clickable {
-                                isAdditionalInfoExpanded = !isAdditionalInfoExpanded
-                            },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         if (idOfReminderBeforeLesson == null || idOfReminderAfterBeginningLesson == null || note?.isNotEmpty() != true) Icon(
                             painter = painterResource(id = R.drawable.add),
                             contentDescription = stringResource(R.string.edit_notifications_about_this_lesson),
