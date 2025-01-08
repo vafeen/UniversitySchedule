@@ -75,7 +75,7 @@
     <string name="paste">paste</string>
     <string name="view_code">view code</string>
     <string name="clear_text">Clear text</string>
-    <string name="meow">Meow&lt;3</string>
+    <string name="meow">Meow:3</string>
     <string name="update_app">Update application</string>
     <string name="mb">MB</string>
 </resources>
