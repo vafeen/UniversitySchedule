@@ -30,9 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
-import ru.vafeen.universityschedule.domain.utils.getSettingsOrCreateIfNull
-import ru.vafeen.universityschedule.domain.utils.save
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
