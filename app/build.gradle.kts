@@ -9,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "ru.vafeen.universityschedule2"
+        applicationId = "ru.vafeen.universityschedule"
         minSdk = 26
         targetSdk = 35
         versionCode = 52
