@@ -57,15 +57,9 @@ internal class MainScreenViewModel(
     private val updateLessonsUseCase: UpdateLessonsUseCase,
     private val settingsManager: SettingsManager
 ) : BaseStateViewModel<MainScreenState, MainScreenEvent>() {
-    private val _state = MutableStateFlow(MainScreenState())
+    override val _state = MutableStateFlow(MainScreenState())
 
     override val state: StateFlow<MainScreenState> = _state
-
-    @Synchronized
-    override fun updateState(lambda: (MainScreenState) -> MainScreenState) {
-        // здесь syncronized потому что у stateFlow не syncronized getter
-        _state.value = lambda(_state.value)
-    }
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
