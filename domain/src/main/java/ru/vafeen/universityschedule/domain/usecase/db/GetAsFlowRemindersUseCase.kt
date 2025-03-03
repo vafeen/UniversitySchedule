@@ -20,5 +20,5 @@ class GetAsFlowRemindersUseCase(private val reminderRepository: ReminderReposito
      *
      * @return [Flow] с итерацией напоминаний [Reminder].
      */
-    fun invoke(): Flow<Iterable<Reminder>> = reminderRepository.getAsFlowReminders()
+    fun invoke(): Flow<List<Reminder>> = reminderRepository.getAsFlowReminders()
 }

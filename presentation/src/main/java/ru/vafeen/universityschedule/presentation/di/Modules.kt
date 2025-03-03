@@ -8,7 +8,7 @@ import ru.vafeen.universityschedule.domain.MainActivityIntentProvider
 import ru.vafeen.universityschedule.presentation.MainActivityIntentProviderImpl
 import ru.vafeen.universityschedule.presentation.components.edit_link_dialog.EditLinkDialogViewModel
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel
-import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
+import ru.vafeen.universityschedule.presentation.features.main_screen.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
 
 

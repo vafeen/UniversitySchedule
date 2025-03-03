@@ -20,5 +20,5 @@ class GetAsFlowLessonsUseCase(private val lessonRepository: LessonRepository) : 
      *
      * @return [Flow] с итерацией пар [Lesson].
      */
-    fun invoke(): Flow<Iterable<Lesson>> = lessonRepository.getAsFlowLessons()
+    fun invoke(): Flow<List<Lesson>> = lessonRepository.getAsFlowLessons()
 }

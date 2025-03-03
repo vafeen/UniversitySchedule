@@ -12,7 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
-import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
+import ru.vafeen.universityschedule.presentation.features.main_screen.MainScreenEvent
+import ru.vafeen.universityschedule.presentation.features.main_screen.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.resources.R
 
@@ -36,7 +37,7 @@ internal fun WeekDay(
             GifPlayer(
                 size = 150.dp,
                 modifier = Modifier
-                    .clickable { viewModel.meow() },
+                    .clickable { viewModel.sendEvent(MainScreenEvent.MeowEvent) },
                 imageUri = Uri.parse(AssetsInfo.DANCING_CAT)
             )
         }
