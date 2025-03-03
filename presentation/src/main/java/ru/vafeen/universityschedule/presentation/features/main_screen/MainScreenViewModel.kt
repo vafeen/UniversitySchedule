@@ -1,9 +1,12 @@
-package ru.vafeen.universityschedule.presentation.components.viewModels
+package ru.vafeen.universityschedule.presentation.features.main_screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Lesson
@@ -20,6 +23,8 @@ import ru.vafeen.universityschedule.domain.usecase.db.InsertRemindersUseCase
 import ru.vafeen.universityschedule.domain.usecase.db.UpdateLessonsUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.CancelJobUseCase
 import ru.vafeen.universityschedule.domain.usecase.scheduler.ScheduleRepeatingJobUseCase
+import ru.vafeen.universityschedule.domain.utils.launchIO
+import ru.vafeen.universityschedule.presentation.components.viewModels.BaseStateViewModel
 import java.time.LocalDate
 
 /**
@@ -51,45 +56,100 @@ internal class MainScreenViewModel(
     private val cancelJobUseCase: CancelJobUseCase,
     private val updateLessonsUseCase: UpdateLessonsUseCase,
     private val settingsManager: SettingsManager
-) : ViewModel() {
+) : BaseStateViewModel<MainScreenState, MainScreenEvent>() {
+    override val _state = MutableStateFlow(MainScreenState())
 
-    // Переменная для отслеживания текущего состояния пары
-    var nowIsLesson: Boolean = false
+    override val state: StateFlow<MainScreenState> = _state
 
-    // Количество дней для отображения в расписании (например, 365 дней)
-    val pageNumber = 365
-
-    // Текущая дата
-    val todayDate: LocalDate = LocalDate.now()
-
-    // Поток данных с парами
-    val lessonsFlow = getAsFlowLessonsUseCase.invoke().map {
-        it.toList()
-    }
-
-    // Поток данных с напоминаниями
-    val remindersFlow = getAsFlowRemindersUseCase.invoke()
-
-    // Поток с настройками приложения
-    val settingsFlow = settingsManager.settingsFlow
-
-    /**
-     * Вызов "мяу" на котиках.
-     */
-    fun meow() {
-        catMeowUseCase.invoke()
-    }
-
-    /**
-     * Функция для обновления данных о паре.
-     * @param lesson Пара, данные которой нужно обновить.
-     */
-    fun updateLesson(lesson: Lesson) {
+    init {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("update", "обновление ${lesson.note}")
-            updateLessonsUseCase.invoke(lesson)
+            settingsManager.settingsFlow.collect { s ->
+                updateState {
+                    it.copy(settings = s)
+                }
+            }
+        }
+        viewModelScope.launchIO {
+            getAsFlowLessonsUseCase.invoke().collect {
+                updateState { s ->
+                    s.copy(lessons = it)
+                }
+            }
+        }
+        viewModelScope.launchIO {
+            getAsFlowRemindersUseCase.invoke().collect {
+                updateState { s ->
+                    s.copy(reminders = it)
+                }
+            }
         }
     }
+
+    override fun sendEvent(event: MainScreenEvent) {
+        when (event) {
+            is MainScreenEvent.NowIsLessonEvent -> {
+                updateState {
+                    it.copy(nowIsLesson = event.nowIsLesson)
+                }
+            }
+            /**
+             * Вызов "мяу" на котиках.
+             */
+            MainScreenEvent.MeowEvent -> {
+                catMeowUseCase.invoke()
+            }
+            /**
+             * Функция для сохранения настроек в SharedPreferences.
+             */
+            is MainScreenEvent.SaveSettingsEvent -> {
+                settingsManager.save(event.saving)
+            }
+
+            is MainScreenEvent.IsFrequencyChangingEvent -> {
+                updateState {
+                    it.copy(isFrequencyChanging = event.isFrequencyChanging)
+                }
+            }
+
+            is MainScreenEvent.AddReminderAbout15MinutesBeforeLessonAndUpdateLocalDB -> {
+                viewModelScope.launchIO {
+                    addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
+                        event.lesson,
+                        event.newReminder
+                    )
+                }
+            }
+
+            is MainScreenEvent.AddReminderAboutCheckingOnLessonAndUpdateLocalDB -> {
+                viewModelScope.launchIO {
+                    addReminderAboutCheckingOnLessonAndUpdateLocalDB(
+                        event.lesson,
+                        event.newReminder
+                    )
+                }
+            }
+
+            is MainScreenEvent.RemoveReminderAbout15MinutesBeforeLessonAndUpdateLocalDB -> {
+                viewModelScope.launchIO {
+                    removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(event.lesson)
+                }
+            }
+
+            is MainScreenEvent.RemoveReminderAboutCheckingOnLessonAndUpdateLocalDB -> {
+                viewModelScope.launchIO {
+                    removeReminderAboutCheckingOnLessonAndUpdateLocalDB(event.lesson)
+                }
+            }
+
+            is MainScreenEvent.UpdateLessonEvent -> {
+                viewModelScope.launchIO {
+                    updateLessonsUseCase.invoke(event.lesson)
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Функция для добавления напоминания за 15 минут до начала пары
@@ -97,7 +157,7 @@ internal class MainScreenViewModel(
      * @param lesson Пара, для которой создается напоминание.
      * @param newReminder Новое напоминание.
      */
-    suspend fun addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
+    private suspend fun addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
         lesson: Lesson, newReminder: Reminder
     ) {
         val newLesson = lesson.copy(idOfReminderBeforeLesson = newReminder.idOfReminder)
@@ -111,7 +171,7 @@ internal class MainScreenViewModel(
      * и обновления локальной базы данных.
      * @param lesson Пара, для которой удаляется напоминание.
      */
-    suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
+    private suspend fun removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
         lesson: Lesson
     ) {
         val newLesson = lesson.copy(idOfReminderBeforeLesson = null)
@@ -125,13 +185,6 @@ internal class MainScreenViewModel(
         }
     }
 
-    /**
-     * Функция для сохранения настроек в SharedPreferences.
-     * @param saving Функция, изменяющая настройки.
-     */
-    fun saveSettingsToSharedPreferences(saving: (Settings) -> Settings) {
-        settingsManager.save(saving)
-    }
 
     /**
      * Функция для добавления напоминания об отметке на паре
@@ -139,7 +192,7 @@ internal class MainScreenViewModel(
      * @param lesson Пара, для которой создается напоминание.
      * @param newReminder Новое напоминание.
      */
-    suspend fun addReminderAboutCheckingOnLessonAndUpdateLocalDB(
+    private suspend fun addReminderAboutCheckingOnLessonAndUpdateLocalDB(
         lesson: Lesson, newReminder: Reminder
     ) {
         insertLessonsUseCase.invoke(lesson.copy(idOfReminderAfterBeginningLesson = newReminder.idOfReminder))
@@ -153,7 +206,7 @@ internal class MainScreenViewModel(
      * и обновления локальной базы данных.
      * @param lesson Пара, для которой удаляется напоминание.
      */
-    suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
+    private suspend fun removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
         lesson: Lesson,
     ) {
         val newLesson = lesson.copy(idOfReminderAfterBeginningLesson = null)

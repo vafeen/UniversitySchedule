@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.presentation.components.screens
+package ru.vafeen.universityschedule.presentation.features.main_screen
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
@@ -59,7 +59,6 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.CardOfNextL
 import ru.vafeen.universityschedule.presentation.components.ui_utils.StringForSchedule
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
 import ru.vafeen.universityschedule.presentation.components.ui_utils.WeekDay
-import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
@@ -87,20 +86,18 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
     val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateFlow.collectAsState()
     val viewModel: MainScreenViewModel = koinViewModel()
     val context = LocalContext.current
-
+    val state by viewModel.state.collectAsState()
     // Подписка на настройки из ViewModel.
-    val settings by viewModel.settingsFlow.collectAsState()
     val defaultColor = Theme.colors.mainColor
 
     // Определение текущей темы (темная или светлая).
     val dark = isSystemInDarkTheme()
     val mainColor by remember {
         mutableStateOf(
-            settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
+            state.settings.getMainColorForThisTheme(isDark = dark) ?: defaultColor
         )
     }
 
-    var isFrequencyInChanging by remember { mutableStateOf(false) }
     val cor = rememberCoroutineScope()
     var localTime by remember { mutableStateOf(LocalTime.now()) }
     var localDate by remember { mutableStateOf(LocalDate.now()) }
@@ -109,24 +106,23 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
     val weekOfYear by remember {
         derivedStateOf {
             localDate.getFrequencyByLocalDate()
-                .changeFrequencyIfDefinedInSettings(settings = settings)
+                .changeFrequencyIfDefinedInSettings(settings = state.settings)
         }
     }
 
-    // Получение списка уроков из ViewModel.
-    val lessons by viewModel.lessonsFlow.collectAsState(listOf())
     val cardsWithDateState = rememberLazyListState()
 
     // Функция для выбора типа частоты.
     fun chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency: Frequency?) {
-        viewModel.saveSettingsToSharedPreferences {
-            it.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers = selectedFrequency?.let { localDate.getFrequencyByLocalDate() == it })
-        }
-        isFrequencyInChanging = false // Сброс состояния изменения частоты.
+        viewModel.sendEvent(MainScreenEvent.SaveSettingsEvent {
+            it.copy(isSelectedFrequencyCorrespondsToTheWeekNumbers =
+            selectedFrequency?.let { d -> localDate.getFrequencyByLocalDate() == d })
+        })
+        viewModel.sendEvent(MainScreenEvent.IsFrequencyChangingEvent(false)) // Сброс состояния изменения частоты.
     }
 
     // Создание состояния для горизонтального пагера.
-    val pagerState = rememberPagerState(pageCount = { viewModel.pageNumber }, initialPage = 0)
+    val pagerState = rememberPagerState(pageCount = { state.pageNumber }, initialPage = 0)
 
     // Обработка нажатия кнопки "Назад".
     BackHandler {
@@ -156,7 +152,7 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
 
     // Обновление даты при смене страницы в пагере.
     LaunchedEffect(key1 = pagerState.currentPage) {
-        localDate = viewModel.todayDate.plusDays(pagerState.currentPage.toLong())
+        localDate = state.todayDate.plusDays(pagerState.currentPage.toLong())
         cardsWithDateState.animateScrollToItem(if (pagerState.currentPage > 0) pagerState.currentPage - 1 else pagerState.currentPage)
     }
 
@@ -181,16 +177,21 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable { isFrequencyInChanging = true }) {
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        viewModel.sendEvent(
+                            MainScreenEvent.IsFrequencyChangingEvent(
+                                true
+                            )
+                        )
+                    }) {
                     Text(
                         text = stringResource(id = weekOfYear.resourceName),
                         fontSize = FontSize.big22,
                         color = Theme.colors.oppositeTheme,
                     )
                     Icon(
-                        painter = painterResource(id = if (isFrequencyInChanging) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down),
+                        painter = painterResource(id = if (state.isFrequencyChanging) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down),
                         contentDescription = stringResource(R.string.icon_fold_or_unfold_list_with_frequency),
                         tint = Theme.colors.oppositeTheme,
                     )
@@ -201,26 +202,28 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                     modifier = Modifier
                         .background(Theme.colors.singleTheme)
                         .border(BorderStroke(width = 2.dp, color = Theme.colors.oppositeTheme)),
-                    expanded = isFrequencyInChanging,
-                    onDismissRequest = { isFrequencyInChanging = false },
+                    expanded = state.isFrequencyChanging,
+                    onDismissRequest = {
+                        viewModel.sendEvent(
+                            MainScreenEvent.IsFrequencyChangingEvent(
+                                false
+                            )
+                        )
+                    },
                 ) {
-                    DropdownMenuItem(
-                        text = {
-                            Row {
-                                TextForThisTheme(
-                                    text = stringResource(id = Frequency.Numerator.resourceName),
-                                    fontSize = FontSize.medium19
-                                )
-                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null
-                                    && weekOfYear == Frequency.Numerator
-                                )
-                                    Icon(
-                                        painterResource(id = R.drawable.done),
-                                        contentDescription = stringResource(R.string.this_is_selected_or_not),
-                                        tint = Theme.colors.oppositeTheme
-                                    )
-                            }
-                        },
+                    DropdownMenuItem(text = {
+                        Row {
+                            TextForThisTheme(
+                                text = stringResource(id = Frequency.Numerator.resourceName),
+                                fontSize = FontSize.medium19
+                            )
+                            if (state.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Numerator) Icon(
+                                painterResource(id = R.drawable.done),
+                                contentDescription = stringResource(R.string.this_is_selected_or_not),
+                                tint = Theme.colors.oppositeTheme
+                            )
+                        }
+                    },
                         onClick = { chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Numerator) })
 
                     Spacer(
@@ -230,23 +233,19 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                             .background(color = Theme.colors.oppositeTheme)
                     )
 
-                    DropdownMenuItem(
-                        text = {
-                            Row {
-                                TextForThisTheme(
-                                    text = stringResource(id = Frequency.Denominator.resourceName),
-                                    fontSize = FontSize.medium19
-                                )
-                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null
-                                    && weekOfYear == Frequency.Denominator
-                                )
-                                    Icon(
-                                        painterResource(id = R.drawable.done),
-                                        contentDescription = stringResource(R.string.this_is_selected_or_not),
-                                        tint = Theme.colors.oppositeTheme
-                                    )
-                            }
-                        },
+                    DropdownMenuItem(text = {
+                        Row {
+                            TextForThisTheme(
+                                text = stringResource(id = Frequency.Denominator.resourceName),
+                                fontSize = FontSize.medium19
+                            )
+                            if (state.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers != null && weekOfYear == Frequency.Denominator) Icon(
+                                painterResource(id = R.drawable.done),
+                                contentDescription = stringResource(R.string.this_is_selected_or_not),
+                                tint = Theme.colors.oppositeTheme
+                            )
+                        }
+                    },
                         onClick = { chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = Frequency.Denominator) })
 
                     Spacer(
@@ -256,21 +255,19 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                             .background(color = Theme.colors.oppositeTheme)
                     )
 
-                    DropdownMenuItem(
-                        text = {
-                            Row {
-                                TextForThisTheme(
-                                    text = stringResource(id = R.string.auto),
-                                    fontSize = FontSize.medium19
-                                )
-                                if (settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null)
-                                    Icon(
-                                        painterResource(id = R.drawable.done),
-                                        contentDescription = stringResource(R.string.this_is_selected_or_not),
-                                        tint = Theme.colors.oppositeTheme
-                                    )
-                            }
-                        },
+                    DropdownMenuItem(text = {
+                        Row {
+                            TextForThisTheme(
+                                text = stringResource(id = R.string.auto),
+                                fontSize = FontSize.medium19
+                            )
+                            if (state.settings.isSelectedFrequencyCorrespondsToTheWeekNumbers == null) Icon(
+                                painterResource(id = R.drawable.done),
+                                contentDescription = stringResource(R.string.this_is_selected_or_not),
+                                tint = Theme.colors.oppositeTheme
+                            )
+                        }
+                    },
                         onClick = { chooseTypeOfDefinitionFrequencyDependsOn(selectedFrequency = null) })
                 }
             }
@@ -282,16 +279,16 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-            items(count = viewModel.pageNumber) { index ->
-                val day by remember { mutableStateOf(viewModel.todayDate.plusDays(index.toLong())) }
+            items(count = state.pageNumber) { index ->
+                val day by remember { mutableStateOf(state.todayDate.plusDays(index.toLong())) }
                 Column {
                     Card(
                         modifier = Modifier
                             .fillParentMaxWidth(1 / 3f)
                             .padding(horizontal = 5.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (day == viewModel.todayDate) mainColor else Theme.colors.buttonColor,
-                            contentColor = (if (day == viewModel.todayDate) mainColor else Theme.colors.buttonColor).suitableColor(),
+                            containerColor = if (day == state.todayDate) mainColor else Theme.colors.buttonColor,
+                            contentColor = (if (day == state.todayDate) mainColor else Theme.colors.buttonColor).suitableColor(),
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                     ) {
@@ -311,15 +308,14 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                     }
 
                     // Отображение разделителя для текущей даты.
-                    if (day == localDate)
-                        Card(
-                            modifier = Modifier
-                                .fillParentMaxWidth(1 / 3f)
-                                .padding(top = 2.dp)
-                                .padding(horizontal = 18.dp)
-                                .height(2.dp),
-                            colors = CardDefaults.cardColors(containerColor = Theme.colors.oppositeTheme)
-                        ) {}
+                    if (day == localDate) Card(
+                        modifier = Modifier
+                            .fillParentMaxWidth(1 / 3f)
+                            .padding(top = 2.dp)
+                            .padding(horizontal = 18.dp)
+                            .height(2.dp),
+                        colors = CardDefaults.cardColors(containerColor = Theme.colors.oppositeTheme)
+                    ) {}
                 }
             }
         }
@@ -331,21 +327,17 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                 .fillMaxWidth()
                 .weight(10f),
         ) { page ->
-            val dateOfThisLesson = viewModel.todayDate.plusDays(page.toLong())
+            val dateOfThisLesson = state.todayDate.plusDays(page.toLong())
             val weekOfYearOfThisDay = dateOfThisLesson.getFrequencyByLocalDate()
-                .changeFrequencyIfDefinedInSettings(settings = settings)
+                .changeFrequencyIfDefinedInSettings(settings = state.settings)
 
             // Фильтрация уроков по дню недели и частоте.
-            val lessonsOfThisDay = lessons.filter {
-                it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
-                        (it.frequency == null || it.frequency == weekOfYearOfThisDay) &&
-                        (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+            val lessonsOfThisDay = state.lessons.filter {
+                it.dayOfWeek == dateOfThisLesson.dayOfWeek && (it.frequency == null || it.frequency == weekOfYearOfThisDay) && (it.subGroup == state.settings.subgroup || state.settings.subgroup == null || it.subGroup == null)
             }.sorted()
 
-            val lessonsInOppositeNumAndDenDay = lessons.filter {
-                it.dayOfWeek == dateOfThisLesson.dayOfWeek &&
-                        it.frequency == weekOfYearOfThisDay.getOpposite() &&
-                        (it.subGroup == settings.subgroup || settings.subgroup == null || it.subGroup == null)
+            val lessonsInOppositeNumAndDenDay = state.lessons.filter {
+                it.dayOfWeek == dateOfThisLesson.dayOfWeek && it.frequency == weekOfYearOfThisDay.getOpposite() && (it.subGroup == state.settings.subgroup || state.settings.subgroup == null || it.subGroup == null)
             }.sorted()
 
             Box {
@@ -356,40 +348,39 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                         .padding(horizontal = 10.dp),
                 ) {
                     if (lessonsOfThisDay.isNotEmpty()) {
-                        viewModel.nowIsLesson = false
+                        viewModel.sendEvent(MainScreenEvent.NowIsLessonEvent(false))
 
                         lessonsOfThisDay.forEach { lesson ->
-                            if (lesson.nowIsLesson(localTime) && viewModel.todayDate == dateOfThisLesson) {
-                                viewModel.nowIsLesson = true
+                            if (lesson.nowIsLesson(localTime) && state.todayDate == dateOfThisLesson) {
+                                viewModel.sendEvent(MainScreenEvent.NowIsLessonEvent(true))
 
                                 lesson.StringForSchedule(
                                     colorBack = mainColor,
                                     dateOfThisLesson = null,
                                     viewModel = viewModel,
-                                    isNoteAvailable = settings.notesAboutLesson,
-                                    isNotificationsAvailable = settings.notificationsAboutLesson,
+                                    isNoteAvailable = state.settings.notesAboutLesson,
+                                    isNotificationsAvailable = state.settings.notificationsAboutLesson,
                                 )
-                            } else if (viewModel.todayDate == dateOfThisLesson && lessonsOfThisDay.any { it.startTime > localTime } && lesson == lessonsOfThisDay.filter { it.startTime > localTime }[0] && !viewModel.nowIsLesson) {
+                            } else if (state.todayDate == dateOfThisLesson && lessonsOfThisDay.any { it.startTime > localTime } && lesson == lessonsOfThisDay.filter { it.startTime > localTime }[0] && !state.nowIsLesson) {
                                 CardOfNextLesson(colorOfCard = mainColor) {
                                     lesson.StringForSchedule(
                                         paddingValues = PaddingValues(),
                                         colorBack = Theme.colors.buttonColor,
                                         dateOfThisLesson = dateOfThisLesson,
                                         viewModel = viewModel,
-                                        isNoteAvailable = settings.notesAboutLesson,
-                                        isNotificationsAvailable = settings.notificationsAboutLesson,
+                                        isNoteAvailable = state.settings.notesAboutLesson,
+                                        isNotificationsAvailable = state.settings.notificationsAboutLesson,
                                     )
                                 }
                             } else lesson.StringForSchedule(
                                 colorBack = Theme.colors.buttonColor,
                                 dateOfThisLesson = dateOfThisLesson,
                                 viewModel = viewModel,
-                                isNoteAvailable = settings.notesAboutLesson,
-                                isNotificationsAvailable = settings.notificationsAboutLesson,
+                                isNoteAvailable = state.settings.notesAboutLesson,
+                                isNotificationsAvailable = state.settings.notificationsAboutLesson,
                             )
                         }
-                    } else WeekDay(
-                        isCatShowed = settings.weekendCat,
+                    } else WeekDay(isCatShowed = state.settings.weekendCat,
                         viewModel = viewModel,
                         context = context,
                         modifier = Modifier.let {
@@ -414,8 +405,8 @@ internal fun MainScreen(bottomBarNavigator: BottomBarNavigator) {
                                 colorBack = Theme.colors.buttonColor,
                                 dateOfThisLesson = null,
                                 viewModel = viewModel,
-                                isNoteAvailable = settings.notesAboutLesson,
-                                isNotificationsAvailable = settings.notificationsAboutLesson,
+                                isNoteAvailable = state.settings.notesAboutLesson,
+                                isNotificationsAvailable = state.settings.notificationsAboutLesson,
                             )
                         }
                     }

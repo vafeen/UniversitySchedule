@@ -25,8 +25,8 @@ import ru.vafeen.universityschedule.domain.models.Release
 import ru.vafeen.universityschedule.domain.utils.getMainColorForThisTheme
 import ru.vafeen.universityschedule.presentation.components.bottom_bar.BottomBar
 import ru.vafeen.universityschedule.presentation.components.bottom_sheet.NewVersionInfoBottomSheet
-import ru.vafeen.universityschedule.presentation.components.screens.MainScreen
-import ru.vafeen.universityschedule.presentation.components.screens.SettingsScreen
+import ru.vafeen.universityschedule.presentation.features.main_screen.MainScreen
+import ru.vafeen.universityschedule.presentation.features.settings_screen.SettingsScreen
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateAvailable
 import ru.vafeen.universityschedule.presentation.components.ui_utils.UpdateProgress
 import ru.vafeen.universityschedule.presentation.components.viewModels.MainActivityViewModel

@@ -44,7 +44,8 @@ import kotlinx.coroutines.launch
 import ru.vafeen.universityschedule.domain.models.Lesson
 import ru.vafeen.universityschedule.domain.models.model_additions.Frequency
 import ru.vafeen.universityschedule.domain.utils.generateID
-import ru.vafeen.universityschedule.presentation.components.viewModels.MainScreenViewModel
+import ru.vafeen.universityschedule.presentation.features.main_screen.MainScreenEvent
+import ru.vafeen.universityschedule.presentation.features.main_screen.MainScreenViewModel
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
 import ru.vafeen.universityschedule.presentation.utils.NotificationAboutLessonsSettings
@@ -65,12 +66,12 @@ internal fun Lesson.StringForSchedule(
     isNoteAvailable: Boolean,
     isNotificationsAvailable: Boolean,
 ) {
-    suspend fun generateID(): Int = viewModel.remindersFlow.first().map {
+    val state by viewModel.state.collectAsState()
+    fun generateID(): Int = state.reminders.map {
         it.idOfReminder
     }.generateID()
 
     val focusManager = LocalFocusManager.current
-    val settings by viewModel.settingsFlow.collectAsState()
     var text by remember { mutableStateOf(this.note ?: "") }
     var isFocused by remember { mutableStateOf(false) }
     val suitableColor by remember { mutableStateOf(colorBack.suitableColor()) }
@@ -141,7 +142,7 @@ internal fun Lesson.StringForSchedule(
                         fontSize = FontSize.small17
                     )
                 }
-                if (settings.notesAboutLesson || settings.notificationsAboutLesson) {
+                if (state.settings.notesAboutLesson || state.settings.notificationsAboutLesson) {
                     Row(
                         modifier = Modifier.weight(1f),
                         horizontalArrangement = Arrangement.End
@@ -241,14 +242,26 @@ internal fun Lesson.StringForSchedule(
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             focusManager.clearFocus()
-                            viewModel.updateLesson(this@StringForSchedule.copy(note = text))
+                            viewModel.sendEvent(
+                                MainScreenEvent.UpdateLessonEvent(
+                                    this@StringForSchedule.copy(
+                                        note = text
+                                    )
+                                )
+                            )
                         }),
                         trailingIcon = {
                             if (isFocused && text.isNotEmpty()) {
                                 IconButton(onClick = {
                                     text = ""
                                     focusManager.clearFocus()
-                                    viewModel.updateLesson(this@StringForSchedule.copy(note = text))
+                                    viewModel.sendEvent(
+                                        MainScreenEvent.UpdateLessonEvent(
+                                            this@StringForSchedule.copy(
+                                                note = text
+                                            )
+                                        )
+                                    )
                                 }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.clear),
@@ -302,13 +315,17 @@ internal fun Lesson.StringForSchedule(
                                                 ),
                                                 context = context,
                                             )
-                                        viewModel.addReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
-                                            lesson = this@StringForSchedule,
-                                            newReminder = newReminder
+                                        viewModel.sendEvent(
+                                            MainScreenEvent.AddReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
+                                                lesson = this@StringForSchedule,
+                                                newReminder = newReminder
+                                            )
                                         )
                                     } else {
-                                        viewModel.removeReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
-                                            lesson = this@StringForSchedule
+                                        viewModel.sendEvent(
+                                            MainScreenEvent.RemoveReminderAbout15MinutesBeforeLessonAndUpdateLocalDB(
+                                                lesson = this@StringForSchedule
+                                            )
                                         )
                                     }
                                 }
@@ -351,13 +368,17 @@ internal fun Lesson.StringForSchedule(
                                                 ),
                                                 context = context
                                             )
-                                        viewModel.addReminderAboutCheckingOnLessonAndUpdateLocalDB(
-                                            lesson = this@StringForSchedule,
-                                            newReminder = newReminder
+                                        viewModel.sendEvent(
+                                            MainScreenEvent.AddReminderAboutCheckingOnLessonAndUpdateLocalDB(
+                                                lesson = this@StringForSchedule,
+                                                newReminder = newReminder
+                                            )
                                         )
                                     } else {
-                                        viewModel.removeReminderAboutCheckingOnLessonAndUpdateLocalDB(
-                                            lesson = this@StringForSchedule
+                                        viewModel.sendEvent(
+                                            MainScreenEvent.RemoveReminderAboutCheckingOnLessonAndUpdateLocalDB(
+                                                lesson = this@StringForSchedule
+                                            )
                                         )
                                     }
                                 }

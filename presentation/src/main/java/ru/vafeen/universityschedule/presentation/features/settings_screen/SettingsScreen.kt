@@ -1,4 +1,4 @@
-package ru.vafeen.universityschedule.presentation.components.screens
+package ru.vafeen.universityschedule.presentation.features.settings_screen
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
@@ -42,7 +42,6 @@ import ru.vafeen.universityschedule.presentation.components.ui_utils.FeatureOfSe
 import ru.vafeen.universityschedule.presentation.components.ui_utils.TextForThisTheme
 import ru.vafeen.universityschedule.presentation.components.video.AssetsInfo
 import ru.vafeen.universityschedule.presentation.components.video.GifPlayer
-import ru.vafeen.universityschedule.presentation.components.viewModels.SettingsScreenViewModel
 import ru.vafeen.universityschedule.presentation.navigation.BottomBarNavigator
 import ru.vafeen.universityschedule.presentation.theme.FontSize
 import ru.vafeen.universityschedule.presentation.theme.Theme
@@ -58,8 +57,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
     val viewModel: SettingsScreenViewModel = koinViewModel()
     val context = LocalContext.current
     val dark = isSystemInDarkTheme()
-    val subgroupList by viewModel.subgroupFlow.collectAsState()
-    val settings by viewModel.settings.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     var linkIsEditable by remember { mutableStateOf(false) }
     var colorIsEditable by remember { mutableStateOf(false) }
@@ -68,7 +66,6 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
     var catsOnUIIsChanging by remember { mutableStateOf(false) }
 
     val subGroupLazyRowState = rememberLazyListState()
-    val networkState by viewModel.gSheetsServiceRequestStatusFlow.collectAsState()
 
     BackHandler {
         bottomBarNavigator.back()
@@ -89,7 +86,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 Icon(
                     painter = painterResource(
                         id = getIconByRequestStatus(
-                            networkState = networkState
+                            networkState = state.gSheetsServiceRequestStatus
                         )
                     ),
                     contentDescription = stringResource(R.string.icon_data_updating_state),
@@ -114,15 +111,15 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
         if (colorIsEditable) {
             ColorPickerDialog(
                 context = context,
-                firstColor = settings.getMainColorForThisTheme(isDark = dark)
+                firstColor = state.settings.getMainColorForThisTheme(isDark = dark)
                     ?: Theme.colors.mainColor,
                 onDismissRequest = { colorIsEditable = false }
-            ) {
-                viewModel.saveSettingsToSharedPreferences { settings ->
-                    if (dark) settings.copy(
-                        darkThemeColor = it
-                    ) else settings.copy(lightThemeColor = it)
-                }
+            ) { color ->
+                viewModel.sendEvent(SettingsScreenEvent.SaveSettingsEvent {
+                    if (dark) it.copy(
+                        darkThemeColor = color
+                    ) else it.copy(lightThemeColor = color)
+                })
             }
         }
 
@@ -140,12 +137,12 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                     fontSize = FontSize.big22,
                     text = stringResource(R.string.general)
                 )
-                if (settings.catInSettings) {
+                if (state.settings.catInSettings) {
                     GifPlayer(
                         size = 80.dp,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .clickable { viewModel.meow() },
+                            .clickable { viewModel.sendEvent(SettingsScreenEvent.MeowEvent) },
                         imageUri = Uri.parse(AssetsInfo.FUNNY_SETTINGS_CAT)
                     )
                 }
@@ -165,7 +162,7 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
             )
 
             // Карточка для просмотра таблицы
-            if (settings.link != null) {
+            if (state.settings.link != null) {
                 CardOfSettings(
                     text = stringResource(R.string.table),
                     icon = {
@@ -175,12 +172,12 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                             tint = it.suitableColor()
                         )
                     },
-                    onClick = { settings.link?.let { context.openLink(link = it) } }
+                    onClick = { state.settings.link?.let { context.openLink(link = it) } }
                 )
             }
 
             // Подгруппа
-            if (subgroupList.isNotEmpty()) {
+            if (state.subGroups.isNotEmpty()) {
                 CardOfSettings(
                     text = stringResource(R.string.subgroup),
                     icon = {
@@ -192,17 +189,17 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                     },
                     onClick = { isSubGroupChanging = !isSubGroupChanging },
                     additionalContentIsVisible = isSubGroupChanging,
-                    additionalContent = {
+                    additionalContent = { padding ->
                         LazyRow(
                             state = subGroupLazyRowState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = it)
+                                .padding(horizontal = padding)
                         ) {
-                            items(subgroupList) { subgroup ->
+                            items(state.subGroups) { subgroup ->
                                 AssistChip(
                                     leadingIcon = {
-                                        if (subgroup == settings.subgroup) {
+                                        if (subgroup == state.settings.subgroup) {
                                             Icon(
                                                 painter = painterResource(id = R.drawable.done),
                                                 contentDescription = stringResource(R.string.this_is_user_subgroup),
@@ -212,11 +209,11 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                                     },
                                     modifier = Modifier.padding(horizontal = 3.dp),
                                     onClick = {
-                                        viewModel.saveSettingsToSharedPreferences { settings ->
-                                            settings.copy(
-                                                subgroup = if (settings.subgroup != subgroup) subgroup else null
+                                        viewModel.sendEvent(SettingsScreenEvent.SaveSettingsEvent {
+                                            it.copy(
+                                                subgroup = if (it.subgroup != subgroup) subgroup else null
                                             )
-                                        }
+                                        })
                                     },
                                     label = { TextForThisTheme(text = subgroup) }
                                 )
@@ -238,28 +235,27 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 },
                 onClick = { isFeaturesEditable = !isFeaturesEditable },
                 additionalContentIsVisible = isFeaturesEditable
-            ) {
+            ) { padding ->
                 FeatureOfSettings(
                     onClick = {
-                        viewModel.saveSettingsToSharedPreferences { settings ->
-                            settings.copy(notificationsAboutLesson = !settings.notificationsAboutLesson)
-                        }
+                        viewModel.sendEvent(SettingsScreenEvent.SaveSettingsEvent {
+                            it.copy(notificationsAboutLesson = !it.notificationsAboutLesson)
+                        })
                     },
-                    padding = it,
+                    padding = padding,
                     text = stringResource(R.string.notification_about_lesson_before_time),
-                    checked = settings.notificationsAboutLesson
+                    checked = state.settings.notificationsAboutLesson
                 )
                 FeatureOfSettings(
                     onClick = {
-                        viewModel.saveSettingsToSharedPreferences { settings ->
-                            settings.copy(
-                                notesAboutLesson = !settings.notesAboutLesson
-                            )
-                        }
+                        viewModel.sendEvent(SettingsScreenEvent.SaveSettingsEvent {
+                            it.copy(notesAboutLesson = !it.notesAboutLesson)
+                        })
+
                     },
-                    padding = it,
+                    padding = padding,
                     text = stringResource(R.string.note),
-                    checked = settings.notesAboutLesson
+                    checked = state.settings.notesAboutLesson
                 )
             }
 
@@ -301,23 +297,23 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                     Column {
                         FeatureOfSettings(
                             onClick = {
-                                viewModel.saveSettingsToSharedPreferences { settings ->
-                                    settings.copy(weekendCat = !settings.weekendCat)
-                                }
+                                viewModel.sendEvent(SettingsScreenEvent.SaveSettingsEvent {
+                                    it.copy(weekendCat = !it.weekendCat)
+                                })
                             },
                             padding = it,
                             text = stringResource(R.string.weekend_cat),
-                            checked = settings.weekendCat
+                            checked = state.settings.weekendCat
                         )
                         FeatureOfSettings(
                             onClick = {
-                                viewModel.saveSettingsToSharedPreferences { settings ->
-                                    settings.copy(catInSettings = !settings.catInSettings)
-                                }
+                                viewModel.sendEvent(SettingsScreenEvent.SaveSettingsEvent {
+                                    it.copy(catInSettings = !it.catInSettings)
+                                })
                             },
                             padding = it,
                             text = stringResource(R.string.cat_in_settings),
-                            checked = settings.catInSettings
+                            checked = state.settings.catInSettings
                         )
                     }
                 }
@@ -350,13 +346,13 @@ internal fun SettingsScreen(bottomBarNavigator: BottomBarNavigator) {
                 text = stringResource(R.string.report_a_bug),
                 icon = {
                     Icon(
-                    painter = painterResource(id = R.drawable.bug_report),
-                    contentDescription = stringResource(R.string.report_a_bug),
+                        painter = painterResource(id = R.drawable.bug_report),
+                        contentDescription = stringResource(R.string.report_a_bug),
                         tint = it.suitableColor()
                     )
-            }, onClick = {
-                context.sendEmail(email = Link.EMAIL)
-            })
+                }, onClick = {
+                    context.sendEmail(email = Link.EMAIL)
+                })
             // version
             TextForThisTheme(
                 modifier = Modifier
